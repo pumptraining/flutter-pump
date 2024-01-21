@@ -1,0 +1,246 @@
+{
+  "project_info": {
+    "project_number": "784151565290",
+    "project_id": "pump-681ff",
+    "storage_bucket": "pump-681ff.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:784151565290:android:37306672847690aa82d893",
+        "android_client_info": {
+          "package_name": "br.com.pump"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "784151565290-33e6mu5outqh5bgu7hj73h3u2tokjq5h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.pump",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
+          "client_id": "784151565290-emb8bb1g20aqia1ov128777ktc940asu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9qqUiPO__Wz57lh76K7d4DrZw31APHIM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "784151565290-blgo1kn7i1nsar9291f8eq64gu32dl6f.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "784151565290-0nu0mioql7h9dhn494g1m7hgppni8sf1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "br.com.pump.creator.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:784151565290:android:755f2d3a4b30066982d893",
+        "android_client_info": {
+          "package_name": "br.com.pump.creator"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "784151565290-erk8es8r8i5h1amjprh2hcs9rhog6iv6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.pump.creator",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
+          "client_id": "784151565290-emb8bb1g20aqia1ov128777ktc940asu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9qqUiPO__Wz57lh76K7d4DrZw31APHIM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "784151565290-blgo1kn7i1nsar9291f8eq64gu32dl6f.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "784151565290-0nu0mioql7h9dhn494g1m7hgppni8sf1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "br.com.pump.creator.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:784151565290:android:9955b536ea7baa8782d893",
+        "android_client_info": {
+          "package_name": "br.com.pump.pump"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "784151565290-8q0a55uni9fg0n2tjjil5m5adt69rtpg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.pump.pump",
+            "certificate_hash": "06dfdd02d7b875cc9c440da439f2370617cdecfc"
+          }
+        },
+        {
+          "client_id": "784151565290-9iqpf3bbcmlp45901kjld39uduc49prv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.pump.pump",
+            "certificate_hash": "e508fa63cb9ba83ac93764f52ba383c03b574c37"
+          }
+        },
+        {
+          "client_id": "784151565290-h5tn8ml8k1f4op02hfj8senh4s31k55b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.pump.pump",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
+          "client_id": "784151565290-emb8bb1g20aqia1ov128777ktc940asu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9qqUiPO__Wz57lh76K7d4DrZw31APHIM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "784151565290-blgo1kn7i1nsar9291f8eq64gu32dl6f.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "784151565290-0nu0mioql7h9dhn494g1m7hgppni8sf1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "br.com.pump.creator.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:784151565290:android:6d0a86d11b51e9cd82d893",
+        "android_client_info": {
+          "package_name": "com.pump.checkout"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "784151565290-golrq0b1tfaasao1kb10vo4v777ilguu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pump.checkout",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
+          "client_id": "784151565290-emb8bb1g20aqia1ov128777ktc940asu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9qqUiPO__Wz57lh76K7d4DrZw31APHIM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "784151565290-blgo1kn7i1nsar9291f8eq64gu32dl6f.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "784151565290-0nu0mioql7h9dhn494g1m7hgppni8sf1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "br.com.pump.creator.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:784151565290:android:b86d3612f68be55482d893",
+        "android_client_info": {
+          "package_name": "com.pump.pumpcreator"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "784151565290-ismg9b0qpu5l7mhc7r9d9b0dv7ar3l2l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pump.pumpcreator",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
+          "client_id": "784151565290-emb8bb1g20aqia1ov128777ktc940asu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9qqUiPO__Wz57lh76K7d4DrZw31APHIM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "784151565290-blgo1kn7i1nsar9291f8eq64gu32dl6f.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "784151565290-0nu0mioql7h9dhn494g1m7hgppni8sf1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "br.com.pump.creator.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -25,3 +25,9 @@ doc/api/
 
 .flutter-plugins
 .flutter-plugins-dependencies
+
+
+**/**/ios/fastlane/output/
+**/build/
+**/fastlane/output/
+**/**/flutter_build/

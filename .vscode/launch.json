@@ -1,0 +1,58 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Pump - Android Simulador",
+            "cwd": "pump",
+            "request": "launch",
+            "type": "dart",
+            "deviceId": "emulator-5554"
+        },
+        {
+            "name": "Pump - iPhone",
+            "cwd": "pump",
+            "request": "launch",
+            "type": "dart",
+            "deviceId": "00008101-000D14301E52001E"
+        },
+        {
+            "name": "Pump - Android Device",
+            "cwd": "pump",
+            "request": "launch",
+            "type": "dart",
+            "deviceId": "adb-RQCT604JC3X-6QhVp2._adb-tls-connect._tcp",
+            "args": ["build", "apk"]
+          },
+        {
+            "name": "Pump - Simulador",
+            "cwd": "pump",
+            "request": "launch",
+            "type": "dart",
+            "deviceId": "B3A6DFBF-8A68-49E6-9B20-1ED9596FE349"
+        },
+        {
+            "name": "Personal - Simulador",
+            "cwd": "pump_creator",
+            "request": "launch",
+            "type": "dart",
+            "deviceId": "B3A6DFBF-8A68-49E6-9B20-1ED9596FE349"
+        },
+        {
+            "name": "Personal - Android Simulador",
+            "cwd": "pump_creator",
+            "request": "launch",
+            "type": "dart",
+            "deviceId": "emulator-5554"
+        },
+        {
+            "name": "Personal - iPhone",
+            "cwd": "pump_creator",
+            "request": "launch",
+            "type": "dart",
+            "deviceId": "00008101-000D14301E52001E"
+        },
+    ]
+}
