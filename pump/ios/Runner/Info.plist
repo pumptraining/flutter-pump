@@ -44,21 +44,21 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>20240120.01</string>
+	<string>20240122.04</string>
 	<key>FlutterDeepLinkingEnabled</key>
 	<true/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSCameraUsageDescription</key>
-	<string>This app requires access to the camera.</string>
-	<key>NSHealthShareUsageDescription</key>
-	<string>Os dados serão compartilhados entre os dispositivos.</string>
-	<key>NSHealthUpdateUsageDescription</key>
-	<string>Os dados coletados serão salvos no app Pump Training.</string>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>This app requires access to the photo library to add in profile image or save in photo library.</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>This app requires access to the photo library to add in profile image or save in photo library.</string>
+    <key>NSCameraUsageDescription</key>
+    <string>Este aplicativo requer acesso à câmera para capturar fotos e adicionar ao seu perfil.</string>
+    <key>NSHealthShareUsageDescription</key>
+    <string>Os dados de saúde serão compartilhados entre os dispositivos para fornecer uma experiência integrada.</string>
+    <key>NSHealthUpdateUsageDescription</key>
+    <string>Os dados coletados serão salvos no app Pump Training para análise e acompanhamento de progresso.</string>
+    <key>NSPhotoLibraryAddUsageDescription</key>
+    <string>Este aplicativo requer acesso à biblioteca de fotos para adicionar imagens ao perfil ou salvar na biblioteca de fotos.</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Este aplicativo requer acesso à biblioteca de fotos para adicionar imagens ao perfil ou salvar na biblioteca de fotos.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>

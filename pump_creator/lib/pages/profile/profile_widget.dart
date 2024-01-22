@@ -4,6 +4,7 @@ import 'package:aligned_dialog/aligned_dialog.dart';
 import 'package:api_manager/api_requests/pump_creator_api_calls.dart';
 import 'package:api_manager/auth/firebase_auth/auth_util.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_flow/common/user_settings.dart';
 import 'package:flutter_flow/flutter_flow_model.dart';
@@ -1122,7 +1123,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                         ),
                       ),
                       Visibility(
-                        visible: UserSettings().isSubscriber(),
+                        visible: UserSettings().isSubscriber() && FirebaseRemoteConfig.instance.getBool('show_subscribe_view'),
                         child: Padding(
                           padding:
                               EdgeInsetsDirectional.fromSTEB(20, 12, 20, 0),

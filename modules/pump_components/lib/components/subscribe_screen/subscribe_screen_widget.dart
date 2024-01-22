@@ -158,13 +158,11 @@ class _SubscribeScreenWidgetState extends State<SubscribeScreenWidget> {
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(
                                     colors: [
-                                      FlutterFlowTheme.of(context)
-                                          .primaryBackground,
                                       Color(0x00F1F4F8),
                                       FlutterFlowTheme.of(context)
-                                          .primaryBackground
+                                          .secondaryBackground
                                     ],
-                                    stops: [0.0, 0.8, 1.0],
+                                    stops: [0.0, 1.0],
                                     begin: AlignmentDirectional(0.0, -1.0),
                                     end: AlignmentDirectional(0, 1.0),
                                   ),

@@ -28,7 +28,7 @@ end
 
 def fastlane
   {
-      git_url: "https://vminozzi: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@github.com/vminozzi/Pump.git",
+      git_url: "https://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@github.com/vminozzi/Pump.git",
       username: "v.minozzi@me.com",
       branch: "Pump",
       app_identifier: "br.com.pump",

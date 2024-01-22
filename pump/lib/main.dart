@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:api_manager/api_manager/api_manager.dart';
 import 'package:api_manager/api_requests/pump_api_calls.dart';
 import 'package:api_manager/auth/firebase_auth/auth_util.dart';
 import 'package:api_manager/auth/firebase_auth/firebase_user_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -77,8 +79,17 @@ void main() async {
     UserSettings().setFcmToken(fcmToken);
 
     if (currentUser != null) {
-        unawaited(_updateFCMToken(fcmToken));
-      }
+      unawaited(_updateFCMToken(fcmToken));
+    }
+  });
+
+  FirebaseAuth.instance.userChanges().listen((User? user) {
+    if (user == null) {
+      authManager.signOut();
+    } else {
+      ApiManager.setFirebaseUser(user);
+      debugPrint('User is signed in!');
+    }
   });
 
   SystemChrome.setPreferredOrientations([
@@ -89,7 +100,8 @@ void main() async {
 }
 
 Future<void> _updateFCMToken(String token) async {
-  final result = await PumpGroup.updateUserFCMTokenCall.call(params: { 'fcmToken': token });
+  final result =
+      await PumpGroup.updateUserFCMTokenCall.call(params: {'fcmToken': token});
   debugPrint("Result update: ${result.succeeded}");
 }
 
@@ -214,7 +226,13 @@ class _NavBarPageState extends State<NavBarPage> {
         activeColor: FlutterFlowTheme.of(context).info,
         tabBackgroundColor: FlutterFlowTheme.of(context).primary,
         tabBorderRadius: 100.0,
-        tabMargin: EdgeInsetsDirectional.fromSTEB(8.0, 12.0, 8.0, Utils.getBottomSafeArea(context) != 0 ? Utils.getBottomSafeArea(context) : 12),
+        tabMargin: EdgeInsetsDirectional.fromSTEB(
+            8.0,
+            12.0,
+            8.0,
+            Utils.getBottomSafeArea(context) != 0
+                ? Utils.getBottomSafeArea(context)
+                : 12),
         padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
         gap: 8.0,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
