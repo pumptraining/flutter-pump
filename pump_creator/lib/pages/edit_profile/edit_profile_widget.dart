@@ -904,7 +904,7 @@ class _EditProfileWidgetState extends State<EditProfileWidget> {
           return AlertDialog(
             title: Text('Atenção'),
             content: Text(
-                'Antes de salvar, preencha todos os campos, incluindo seu nome e número de telefone.'),
+                'Antes de salvar, preencha todos os campos, incluindo seu nome, número de telefone e foto de perfil.'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(alertDialogContext),

@@ -1,9 +1,12 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:api_manager/api_manager/api_manager.dart';
 import 'package:api_manager/api_requests/pump_creator_api_calls.dart';
 import 'package:api_manager/auth/firebase_auth/auth_util.dart';
 import 'package:api_manager/auth/firebase_auth/firebase_user_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_flow/common/user_settings.dart';
@@ -50,7 +53,8 @@ void main() async {
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       // Processar mensagem ao clicar na notificação enquanto o app está em segundo plano
-      debugPrint("Opened App from Notification: ${message.notification?.title}");
+      debugPrint(
+          "Opened App from Notification: ${message.notification?.title}");
     });
 
     FirebaseMessaging.instance.getToken().then((String? token) {
@@ -77,19 +81,46 @@ void main() async {
     UserSettings().setFcmToken(fcmToken);
 
     if (currentUser != null) {
-        unawaited(_updateFCMToken(fcmToken));
-      }
+      unawaited(_updateFCMToken(fcmToken));
+    }
+  });
+
+  FirebaseAuth.instance.userChanges().listen((User? user) {
+    if (user == null) {
+      authManager.signOut();
+    } else {
+      ApiManager.setFirebaseUser(user);
+      debugPrint('User is signed in!');
+    }
   });
 
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
 
+  _setupRemoteConfig();
+
   runApp(MyApp());
 }
 
+Future<void> _setupRemoteConfig() async {
+  final remoteConfig = FirebaseRemoteConfig.instance;
+  await remoteConfig.setConfigSettings(RemoteConfigSettings(
+    fetchTimeout: const Duration(minutes: 1),
+    minimumFetchInterval: const Duration(hours: 1),
+  ));
+
+  await remoteConfig.setDefaults(const {"show_subscribe_view": true});
+  await remoteConfig.fetchAndActivate();
+
+  remoteConfig.onConfigUpdated.listen((event) async {
+    await remoteConfig.activate();
+  });
+}
+
 Future<void> _updateFCMToken(String token) async {
-  final result = await BaseGroup.updateUserFCMTokenCall.call(params: { 'fcmToken': token });
+  final result =
+      await BaseGroup.updateUserFCMTokenCall.call(params: {'fcmToken': token});
   debugPrint("Result update: ${result.succeeded}");
 }
 
@@ -221,7 +252,13 @@ class _NavBarPageState extends State<NavBarPage> {
               width: 1.0,
             ),
             tabBorderRadius: 50.0,
-            tabMargin: EdgeInsetsDirectional.fromSTEB(8.0, 12.0, 8.0, Utils.getBottomSafeArea(context) + 12.0),
+            tabMargin: EdgeInsetsDirectional.fromSTEB(
+                8.0,
+                12.0,
+                8.0,
+                Utils.getBottomSafeArea(context) != 0
+                    ? Utils.getBottomSafeArea(context)
+                    : 12),
             padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
             gap: 8.0,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

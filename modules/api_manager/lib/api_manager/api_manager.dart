@@ -57,15 +57,10 @@ class ApiManager {
 
   // If your API calls need authentication, populate this field once
   // the user has authenticated. Alter this as needed.
-  static String? _accessToken;
   static User? _user;
 
-  static void setAccessToken(String? accessToken) {
-    _accessToken = accessToken;
-  }
-
-  static String? getAccessToken() {
-    return _accessToken;
+  static Future<String?> getAccessToken() async {
+    return await _user?.getIdToken(true);
   }
 
   static void setFirebaseUser(User? user) async {
@@ -103,7 +98,8 @@ class ApiManager {
     }
     final makeRequest = callType == ApiCallType.GET ? http.get : http.delete;
     final response =
-        await makeRequest(Uri.parse(apiUrl), headers: toStringMap(headers)).timeout(Duration(seconds: 60));
+        await makeRequest(Uri.parse(apiUrl), headers: toStringMap(headers))
+            .timeout(Duration(seconds: 60));
     return ApiCallResponse.fromHttpResponse(response, returnBody, decodeUtf8);
   }
 
@@ -182,7 +178,8 @@ class ApiManager {
       ..files.addAll(files);
     nonFileParams.forEach((key, value) => request.fields[key] = value);
 
-    final response = await http.Response.fromStream(await request.send()).timeout(Duration(seconds: 60));
+    final response = await http.Response.fromStream(await request.send())
+        .timeout(Duration(seconds: 60));
     return ApiCallResponse.fromHttpResponse(response, returnBody, decodeUtf8);
   }
 
@@ -257,12 +254,18 @@ class ApiManager {
     // Refresh token and retry logic
     ApiCallResponse? result;
     for (var retry = 0; retry < 3; retry++) {
-      if (_accessToken != null && _accessToken!.isNotEmpty) {
-        headers[HttpHeaders.authorizationHeader] = 'Bearer $_accessToken';
+      if (_user != null) {
+        final accessToken = await _user?.getIdToken(true);
+        if (accessToken != null && accessToken.isNotEmpty) {
+          headers[HttpHeaders.authorizationHeader] = 'Bearer $accessToken';
+        }
       } else if (_user == null) {
         final storage = await SharedPreferences.getInstance();
         final localUserUid = storage.getString('uid');
-        headers['uid'] = localUserUid;
+
+        if (localUserUid != null && localUserUid.isEmpty) {
+          headers['uid'] = localUserUid;
+        }
       }
 
       if (!apiUrl.startsWith('http')) {
@@ -318,7 +321,8 @@ class ApiManager {
         if (_user == null && result.jsonBody['refreshToken'] != null) {
           String localUserToken = result.jsonBody['refreshToken'];
           if (localUserToken.isNotEmpty) {
-            final UserCredential userCredential = await FirebaseAuth.instance.signInWithCustomToken(localUserToken);
+            final UserCredential userCredential = await FirebaseAuth.instance
+                .signInWithCustomToken(localUserToken);
             _user = userCredential.user;
           }
         } else if (result.jsonBody['refreshToken'] == null) {
@@ -326,13 +330,9 @@ class ApiManager {
           break;
         }
 
-        final token = await _user?.getIdToken();
-
-        if (token == null) {
+        if (_user == null) {
           authManager.signOut();
           break;
-        } else {
-          ApiManager.setAccessToken(token);
         }
 
         continue;

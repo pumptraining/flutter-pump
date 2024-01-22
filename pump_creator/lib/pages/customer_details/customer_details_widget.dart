@@ -637,10 +637,20 @@ class _CustomerDetailsWidgetState extends State<CustomerDetailsWidget>
       message:
           "O aluno ainda não possui um programa de treino ativo.\nDeseja adicionar um programa?",
       onButtonPressed: () async {
-        String text = 'https://pumpapp.com.br';
-        String subject = 'Pump Training: Cadastre-se!';
-
-        await Share.share('$subject\n$text');
+        context.pushNamed('WorkoutSheetPickerWidget', queryParameters: {
+          'customerId': serializeParam(widget.customerId, ParamType.String),
+          'pickerEnabled': serializeParam(true, ParamType.bool),
+          'showConfirmAlert':
+              serializeParam(_model.hasActiveSheet(), ParamType.bool),
+        }).then((value) => {
+              if (value != null && value is bool && value)
+                {
+                  safeSetState(() {
+                    _model.reloadBack = true;
+                    apiLoaderController.reload?.call();
+                  })
+                }
+            });
       },
     );
   }

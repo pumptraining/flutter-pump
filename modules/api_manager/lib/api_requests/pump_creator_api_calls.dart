@@ -14,7 +14,7 @@ export '../common/requestable.dart';
 
 class Environment {
   static String get baseUrl {
-    return 'https://pump-api.herokuapp.com/api/v1';
+    // return 'https://pump-api.herokuapp.com/api/v1';
     return kReleaseMode
         ? 'https://pump-api.herokuapp.com/api/v1'
         : 'http://localhost:4242/api/v1';
@@ -582,7 +582,7 @@ class UploadImageCall {
     var request = http.MultipartRequest(
         'POST', Uri.parse('${BaseGroup.baseUrl}/personal-app/upload-image'));
 
-    final token = ApiManager.getAccessToken();
+    final token = await ApiManager.getAccessToken();
     request.headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
     request.files
         .add(await http.MultipartFile.fromPath('image', imageFilePath));

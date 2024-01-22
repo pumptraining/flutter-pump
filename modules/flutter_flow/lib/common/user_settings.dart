@@ -1,3 +1,5 @@
+import 'package:firebase_remote_config/firebase_remote_config.dart';
+
 class UserSettings {
   static final UserSettings _instance = UserSettings._internal();
   bool _isSubscriber = true;
@@ -15,6 +17,10 @@ class UserSettings {
   }
 
   bool isSubscriber() {
+    final showSubscribe = FirebaseRemoteConfig.instance.getBool('show_subscribe_view');
+    if (showSubscribe == false) {
+      return true;
+    }
     return _isSubscriber;
   }
 

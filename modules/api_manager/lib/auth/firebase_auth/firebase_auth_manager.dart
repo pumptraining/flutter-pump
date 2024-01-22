@@ -248,8 +248,6 @@ class FirebaseAuthManager extends AuthManager
       final userCredential = await signInFunc();
       if (userCredential?.user != null) {
 
-        final token = await userCredential?.user?.getIdToken();
-        ApiManager.setAccessToken(token);
         ApiManager.setFirebaseUser(userCredential?.user);
       }
       return userCredential == null

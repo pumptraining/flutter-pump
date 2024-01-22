@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:api_manager/auth/firebase_auth/auth_util.dart';
 import 'package:flutter_flow/flutter_flow_model.dart';
 import 'package:api_manager/api_requests/pump_creator_api_calls.dart';
@@ -7,6 +9,7 @@ import 'package:flutter_flow/flutter_flow_util.dart';
 import 'package:flutter_flow/nav/serialization_util.dart';
 import 'package:flutter_flow/transition_info.dart';
 import 'package:pump_creator/flutter_flow/nav/nav.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../backend/firebase_analytics/analytics.dart';
 import 'package:flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
@@ -498,6 +501,72 @@ class _SignInWidgetState extends State<SignInWidget>
                                 ),
                               ),
                             ),
+                            Visibility(
+                              visible: Platform.isIOS,
+                              child: Padding(
+                                padding:
+                                    EdgeInsetsDirectional.fromSTEB(0, 0, 0, 16),
+                                child: FFButtonWidget(
+                                  onPressed: () async {
+                                    GoRouter.of(context).prepareAuthEvent();
+                                    final user = await authManager
+                                        .signInWithApple(context);
+                                    if (user == null) {
+                                      return;
+                                    }
+
+                                    final response =
+                                        await BaseGroup.authCall.call();
+                                    if (response.response?.statusCode == 200) {
+                                      final isNew =
+                                          response.jsonBody['isNew'] ?? false;
+
+                                      goToAuthFlow(context, isNew);
+                                    } else {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            'Ocorreu um erro. Por favor, tente novamente.',
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  text: 'Entre com Apple',
+                                  icon: FaIcon(
+                                    FontAwesomeIcons.apple,
+                                    size: 20,
+                                  ),
+                                  options: FFButtonOptions(
+                                    width: double.infinity,
+                                    height: 44,
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        0, 0, 0, 0),
+                                    iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                        0, 0, 0, 0),
+                                    color: FlutterFlowTheme.of(context)
+                                        .secondaryBackground,
+                                    textStyle: FlutterFlowTheme.of(context)
+                                        .titleSmall
+                                        .override(
+                                          fontFamily: 'Poppins',
+                                          color: FlutterFlowTheme.of(context)
+                                              .primaryText,
+                                        ),
+                                    elevation: 0,
+                                    borderSide: BorderSide(
+                                      color: FlutterFlowTheme.of(context)
+                                          .secondaryText,
+                                      width: 2,
+                                    ),
+                                    borderRadius: BorderRadius.circular(12),
+                                    hoverColor: FlutterFlowTheme.of(context)
+                                        .primaryBackground,
+                                  ),
+                                ),
+                              ),
+                            ),
                             Padding(
                               padding: EdgeInsetsDirectional.fromSTEB(
                                   0.0, 12.0, 0.0, 12.0),
@@ -558,7 +627,10 @@ class _SignInWidgetState extends State<SignInWidget>
     );
   }
 
-  void goToAuthFlow(BuildContext context, bool isNew) {
+  void goToAuthFlow(BuildContext context, bool isNew) async {
+    final storage = await SharedPreferences.getInstance();
+    await storage.setString('uid', currentUserUid);
+
     if (isNew) {
       context.goNamedAuth('EditProfile', context.mounted, queryParameters: {
         'showBackButton': serializeParam(false, ParamType.bool)!
