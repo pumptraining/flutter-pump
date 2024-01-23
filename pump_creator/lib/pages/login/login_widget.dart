@@ -535,7 +535,7 @@ class _LoginWidgetState extends State<LoginWidget>
                                                 response.jsonBody['isNew'] ??
                                                     false;
 
-                                            goToAuthFlow(context, isNew);
+                                            goToAuthFlow(context, isNew, false);
                                           } else {
                                             ScaffoldMessenger.of(context)
                                                 .showSnackBar(
@@ -610,7 +610,7 @@ class _LoginWidgetState extends State<LoginWidget>
                                                 response.jsonBody['isNew'] ??
                                                     false;
 
-                                            goToAuthFlow(context, isNew);
+                                            goToAuthFlow(context, isNew, false);
                                           } else {
                                             ScaffoldMessenger.of(context)
                                                 .showSnackBar(
@@ -684,7 +684,7 @@ class _LoginWidgetState extends State<LoginWidget>
                                                   response.jsonBody['isNew'] ??
                                                       false;
 
-                                              goToAuthFlow(context, isNew);
+                                              goToAuthFlow(context, isNew, true);
                                             } else {
                                               ScaffoldMessenger.of(context)
                                                   .showSnackBar(
@@ -814,11 +814,11 @@ class _LoginWidgetState extends State<LoginWidget>
     );
   }
 
-  void goToAuthFlow(BuildContext context, bool isNew) async {
+  void goToAuthFlow(BuildContext context, bool isNew, bool isApple) async {
     final storage = await SharedPreferences.getInstance();
     await storage.setString('uid', currentUserUid);
 
-    if (isNew) {
+    if (isNew && !isApple) {
       context.goNamedAuth('EditProfile', context.mounted, queryParameters: {
         'showBackButton': serializeParam(false, ParamType.bool)!
       });

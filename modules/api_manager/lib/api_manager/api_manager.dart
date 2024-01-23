@@ -69,6 +69,10 @@ class ApiManager {
     await storage.setString('uid', currentUserUid);
   }
 
+  static User? getFirebaseUser() {
+    return _user;
+  }
+
   // You may want to call this if, for example, you make a change to the
   // database and no longer want the cached result of a call that may
   // have changed.
