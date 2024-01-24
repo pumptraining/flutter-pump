@@ -14,7 +14,7 @@ export '../common/requestable.dart';
 
 class Environment {
   static String get baseUrl {
-    return 'https://pump-api.herokuapp.com/api/v1';
+    // return 'https://pump-api.herokuapp.com/api/v1';
     return kReleaseMode
         ? 'https://pump-api.herokuapp.com/api/v1'
         : 'http://localhost:4242/api/v1';
@@ -60,6 +60,8 @@ class BaseGroup {
   static DeleteAccountCall deleteAccountCall = DeleteAccountCall();
   static CancelSubscriptionCall cancelSubscriptionCall = CancelSubscriptionCall();
   static UpdateUserFCMTokenCall updateUserFCMTokenCall = UpdateUserFCMTokenCall();
+  static CustomerPaymentsCall customerPaymentsCall = CustomerPaymentsCall();
+  static StripeOboardingLinkCall stripeOboardingLinkCall = StripeOboardingLinkCall();
 }
 
 class AuthCall extends Requestable {
@@ -966,6 +968,54 @@ ${personalJson}''';
     );
   }
 }
+
+class CustomerPaymentsCall extends Requestable {
+  @override
+  Future<ApiCallResponse> call({
+    dynamic params,
+  }) {
+    final customerId = params['customerId'];
+    
+    return ApiManager.instance.makeApiCall(
+      callName: 'CustomerPaymentsCall',
+      apiUrl: '${BaseGroup.baseUrl}/personal-app/customer-payments?customerId=$customerId',
+      callType: ApiCallType.GET,
+      headers: {
+        ...BaseGroup.headers,
+      },
+      params: {},
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+}
+
+
+class StripeOboardingLinkCall extends Requestable {
+  @override
+  Future<ApiCallResponse> call({
+    dynamic params,
+  }) {
+    return ApiManager.instance.makeApiCall(
+      callName: 'StripeOboardingLinkCall',
+      apiUrl: '${BaseGroup.baseUrl}/personal-app/get-stripe-onboarding',
+      callType: ApiCallType.GET,
+      headers: {
+        ...BaseGroup.headers,
+      },
+      params: {},
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+}
+
 
 // Paging
 

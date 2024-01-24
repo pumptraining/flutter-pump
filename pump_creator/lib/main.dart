@@ -99,7 +99,6 @@ void main() async {
   ]);
 
   _setupRemoteConfig();
-
   runApp(MyApp());
 }
 

@@ -23,6 +23,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:share_plus/share_plus.dart';
 import '../../backend/firebase_analytics/analytics.dart';
+import 'package:badges/badges.dart' as badges;
 import 'customer_details_model.dart';
 export 'customer_details_model.dart';
 
@@ -529,17 +530,19 @@ class _CustomerDetailsWidgetState extends State<CustomerDetailsWidget>
                 width: double.infinity,
                 height: 60,
                 decoration: BoxDecoration(
-                  color: FlutterFlowTheme.of(context).secondaryBackground,
-                  boxShadow: [
-                    BoxShadow(
-                      blurRadius: 5,
-                      color: Color(0x3416202A),
-                      offset: Offset(0, 2),
-                    )
-                  ],
-                  borderRadius: BorderRadius.circular(12),
-                  shape: BoxShape.rectangle,
-                ),
+                    color: FlutterFlowTheme.of(context).primaryBackground,
+                    boxShadow: [
+                      BoxShadow(
+                        blurRadius: 5,
+                        color: Color(0x3416202A),
+                        offset: Offset(0, 2),
+                      )
+                    ],
+                    borderRadius: BorderRadius.circular(12),
+                    shape: BoxShape.rectangle,
+                    border: Border.all(
+                      color: FlutterFlowTheme.of(context).secondaryBackground,
+                    )),
                 child: Padding(
                   padding: EdgeInsets.all(8),
                   child: Row(
@@ -557,7 +560,7 @@ class _CustomerDetailsWidgetState extends State<CustomerDetailsWidget>
                         padding: EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
                         child: Text(
                           'Atividades',
-                          style: FlutterFlowTheme.of(context).titleMedium,
+                          style: FlutterFlowTheme.of(context).titleSmall,
                         ),
                       ),
                       Expanded(
@@ -575,7 +578,127 @@ class _CustomerDetailsWidgetState extends State<CustomerDetailsWidget>
                 ),
               ),
             ),
-          )
+          ),
+          Visibility(
+              visible: true,
+              child: Padding(
+                padding: EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
+                child: InkWell(
+                  splashColor: Colors.transparent,
+                  focusColor: Colors.transparent,
+                  hoverColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                  onTap: () async {
+                    context
+                        .pushNamed('CustomerPaymentsWidget', queryParameters: {
+                      'customerId':
+                          serializeParam(widget.customerId, ParamType.String)
+                    });
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    height: 60,
+                    decoration: BoxDecoration(
+                      color: FlutterFlowTheme.of(context).primaryBackground,
+                      boxShadow: [
+                        BoxShadow(
+                          blurRadius: 5,
+                          color: Color(0x3416202A),
+                          offset: Offset(0, 2),
+                        )
+                      ],
+                      borderRadius: BorderRadius.circular(12),
+                      shape: BoxShape.rectangle,
+                      border: Border.all(
+                        color: FlutterFlowTheme.of(context).secondaryBackground,
+                      ),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(8),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(6, 0, 0, 0),
+                            child: Icon(
+                              Icons.attach_money,
+                              color: FlutterFlowTheme.of(context).secondaryText,
+                              size: 28,
+                            ),
+                          ),
+                          Padding(
+                            padding:
+                                EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
+                            child: Text(
+                              'Pagamentos',
+                              style: FlutterFlowTheme.of(context).titleSmall,
+                            ),
+                          ),
+                          Expanded(
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      0, 0, 8, 0),
+                                  child: Text(
+                                    'inativo',
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'Poppins',
+                                          color: FlutterFlowTheme.of(context)
+                                              .error,
+                                          fontSize: 12,
+                                        ),
+                                  ),
+                                ),
+                                badges.Badge(
+                                  badgeContent: Text(
+                                    '!',
+                                    style: FlutterFlowTheme.of(context)
+                                        .titleSmall
+                                        .override(
+                                          fontFamily: 'Poppins',
+                                          color: Colors.white,
+                                        ),
+                                  ),
+                                  showBadge: true,
+                                  shape: badges.BadgeShape.circle,
+                                  badgeColor:
+                                      FlutterFlowTheme.of(context).error,
+                                  elevation: 4,
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      8, 8, 8, 8),
+                                  position: badges.BadgePosition.topEnd(),
+                                  animationType:
+                                      badges.BadgeAnimationType.scale,
+                                  toAnimate: true,
+                                  child: Align(
+                                    alignment: AlignmentDirectional(0.9, 0),
+                                    child: Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          0, 0, 8, 0),
+                                      child: Icon(
+                                        Icons.arrow_forward_ios,
+                                        color: FlutterFlowTheme.of(context)
+                                            .secondaryText,
+                                        size: 18,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              )),
         ],
       ),
     );

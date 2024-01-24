@@ -1,4 +1,3 @@
-import 'package:api_manager/api_manager/api_manager.dart';
 import 'package:api_manager/api_requests/pump_api_calls.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_flow/flutter_flow_choice_chips.dart';

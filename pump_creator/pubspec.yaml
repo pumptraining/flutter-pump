@@ -26,6 +26,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   auto_size_text: 3.0.0
+  badges: 2.0.2
   cached_network_image: ^3.2.3
   dropdown_button2: 2.0.0
   easy_debounce: 2.0.1
@@ -102,6 +103,7 @@ dependencies:
   flutter_stripe: ^9.3.0
   otpless_flutter: 2.0.0
   mask_text_input_formatter: ^2.7.0
+  uni_links: ^0.5.1
   api_manager:
     path: ../modules/api_manager
   flutter_flow:

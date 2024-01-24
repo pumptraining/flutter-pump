@@ -856,8 +856,11 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                             logFirebaseEvent('PROFILE_PAGE_TERMS_ON_TAP');
                             logFirebaseEvent('Container_navigate_to');
 
+                            // launchURL(
+                            //     'https://pumpapp.com.br/pol%C3%ADtica-de-privacidade');
+
                             launchURL(
-                                'https://pumpapp.com.br/pol%C3%ADtica-de-privacidade');
+                                'pumpcreator://home');
                           },
                           child: Container(
                             width: double.infinity,

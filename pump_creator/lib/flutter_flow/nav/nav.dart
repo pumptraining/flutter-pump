@@ -20,6 +20,8 @@ import 'package:pump_workout_sheet/workout_sheet_picker/workout_sheet_picker_wid
 import '../../index.dart';
 import '../../main.dart';
 import 'package:flutter_flow/nav/serialization_util.dart';
+
+import '../../pages/customer_payments/customer_payments_widget.dart';
 export 'package:go_router/go_router.dart';
 
 class AppStateNotifier extends ChangeNotifier {
@@ -282,6 +284,13 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
             pickerEnabled: params.getParam('pickerEnabled', ParamType.bool),
             showConfirmAlert:
                 params.getParam('showConfirmAlert', ParamType.bool),
+          ),
+        ),
+        FFRoute(
+          name: 'CustomerPaymentsWidget',
+          path: '/customerPaymentsWidget',
+          builder: (context, params) => CustomerPaymentsWidget(
+            customerId: params.getParam('customerId', ParamType.String),
           ),
         ),
         FFRoute(
