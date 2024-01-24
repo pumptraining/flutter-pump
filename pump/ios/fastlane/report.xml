@@ -5,52 +5,52 @@
     
     
       
-      <testcase classname="fastlane.lanes" name="0: default_platform" time="0.000194">
+      <testcase classname="fastlane.lanes" name="0: default_platform" time="0.000198">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="1: xcversion" time="0.081554">
+      <testcase classname="fastlane.lanes" name="1: xcversion" time="0.093228">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="2: Switch to match_appstore lane" time="9.0e-05">
+      <testcase classname="fastlane.lanes" name="2: Switch to match_appstore lane" time="0.000207">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="3: match" time="1.623704">
+      <testcase classname="fastlane.lanes" name="3: match" time="4.716849">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="4: Switch to security lane" time="0.000103">
+      <testcase classname="fastlane.lanes" name="4: Switch to security lane" time="7.7e-05">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="5: security set-key-partition-list -S apple-tool:,apple: -s -k temppassword ~/Library/Keychains/fastlane_enterprise-db" time="0.177186">
+      <testcase classname="fastlane.lanes" name="5: security set-key-partition-list -S apple-tool:,apple: -s -k temppassword ~/Library/Keychains/fastlane_enterprise-db" time="0.184471">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="6: increment_build_number" time="0.72351">
+      <testcase classname="fastlane.lanes" name="6: increment_build_number" time="0.898683">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="7: gym" time="193.879336">
+      <testcase classname="fastlane.lanes" name="7: gym" time="161.770625">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="8: app_store_connect_api_key" time="0.03271">
+      <testcase classname="fastlane.lanes" name="8: app_store_connect_api_key" time="0.013875">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="9: upload_to_testflight" time="92.854216">
+      <testcase classname="fastlane.lanes" name="9: upload_to_testflight" time="144.057032">
         
       </testcase>
     
