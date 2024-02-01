@@ -309,8 +309,8 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                                         children: [
                                           Expanded(
                                             child: Text(
-                                              _model.content['firstName'] !=
-                                                      null
+                                              (_model.content != null && _model.content['firstName'] !=
+                                                      null)
                                                   ? _model.content['firstName']
                                                   : currentUserDisplayName,
                                               style:
@@ -328,8 +328,9 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                                               padding: EdgeInsetsDirectional
                                                   .fromSTEB(0, 4, 0, 0),
                                               child: AutoSizeText(
+                                                _model.content != null ?
                                                 _model.content['email'] ??
-                                                    currentUserEmail,
+                                                    currentUserEmail : '',
                                                 maxLines: 1,
                                                 style:
                                                     FlutterFlowTheme.of(context)
@@ -855,12 +856,8 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                           onTap: () async {
                             logFirebaseEvent('PROFILE_PAGE_TERMS_ON_TAP');
                             logFirebaseEvent('Container_navigate_to');
-
-                            // launchURL(
-                            //     'https://pumpapp.com.br/pol%C3%ADtica-de-privacidade');
-
                             launchURL(
-                                'pumpcreator://home');
+                                'https://pumpapp.com.br/politica-de-privacidade');
                           },
                           child: Container(
                             width: double.infinity,
@@ -922,7 +919,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                             logFirebaseEvent('Container_navigate_to');
 
                             var name = _model.content['firstName'].toString().trim();
-                            var contact = "+5511987194717";
+                            var contact = "+5511993792387";
                             var androidUrl =
                                 "whatsapp://send?phone=$contact&text=Olá, sou $name, Personal Trainer, preciso de ajuda com o Pump App.";
                             var iosUrl =

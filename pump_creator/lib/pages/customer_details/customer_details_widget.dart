@@ -308,18 +308,11 @@ class _CustomerDetailsWidgetState extends State<CustomerDetailsWidget>
                             height: 120,
                             decoration: BoxDecoration(
                               color: FlutterFlowTheme.of(context)
-                                  .secondaryBackground,
-                              boxShadow: [
-                                BoxShadow(
-                                  blurRadius: 4,
-                                  color: Color(0x1F000000),
-                                  offset: Offset(0, 2),
-                                )
-                              ],
+                                  .primaryBackground,
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
                                 color: FlutterFlowTheme.of(context)
-                                    .primaryBackground,
+                                    .secondaryBackground,
                                 width: 1,
                               ),
                             ),
@@ -334,14 +327,14 @@ class _CustomerDetailsWidgetState extends State<CustomerDetailsWidget>
                                     height: 60,
                                     decoration: BoxDecoration(
                                       color: FlutterFlowTheme.of(context)
-                                          .primaryBackground,
+                                          .secondaryBackground,
                                       shape: BoxShape.circle,
                                     ),
                                     alignment: AlignmentDirectional(0, 0),
                                     child: Card(
                                       clipBehavior: Clip.antiAliasWithSaveLayer,
                                       color:
-                                          FlutterFlowTheme.of(context).tertiary,
+                                          FlutterFlowTheme.of(context).secondaryBackground,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(40),
                                       ),
@@ -350,7 +343,7 @@ class _CustomerDetailsWidgetState extends State<CustomerDetailsWidget>
                                             12, 12, 12, 12),
                                         child: Icon(
                                           Icons.fitness_center,
-                                          color: Colors.white,
+                                          color: FlutterFlowTheme.of(context).primaryText,
                                           size: 24,
                                         ),
                                       ),
@@ -416,18 +409,11 @@ class _CustomerDetailsWidgetState extends State<CustomerDetailsWidget>
                             height: 120,
                             decoration: BoxDecoration(
                               color: FlutterFlowTheme.of(context)
-                                  .secondaryBackground,
-                              boxShadow: [
-                                BoxShadow(
-                                  blurRadius: 4,
-                                  color: Color(0x1F000000),
-                                  offset: Offset(0, 2),
-                                )
-                              ],
+                                  .primaryBackground,
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
                                 color: FlutterFlowTheme.of(context)
-                                    .primaryBackground,
+                                    .secondaryBackground,
                                 width: 1,
                               ),
                             ),
@@ -442,14 +428,14 @@ class _CustomerDetailsWidgetState extends State<CustomerDetailsWidget>
                                     height: 60,
                                     decoration: BoxDecoration(
                                       color: FlutterFlowTheme.of(context)
-                                          .primaryBackground,
+                                          .secondaryBackground,
                                       shape: BoxShape.circle,
                                     ),
                                     alignment: AlignmentDirectional(0, 0),
                                     child: Card(
                                       clipBehavior: Clip.antiAliasWithSaveLayer,
                                       color:
-                                          FlutterFlowTheme.of(context).primary,
+                                          FlutterFlowTheme.of(context).secondaryBackground,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(40),
                                       ),
@@ -458,7 +444,7 @@ class _CustomerDetailsWidgetState extends State<CustomerDetailsWidget>
                                             12, 12, 12, 12),
                                         child: Icon(
                                           Icons.featured_play_list,
-                                          color: Colors.white,
+                                          color: FlutterFlowTheme.of(context).primaryText,
                                           size: 24,
                                         ),
                                       ),
@@ -531,13 +517,6 @@ class _CustomerDetailsWidgetState extends State<CustomerDetailsWidget>
                 height: 60,
                 decoration: BoxDecoration(
                     color: FlutterFlowTheme.of(context).primaryBackground,
-                    boxShadow: [
-                      BoxShadow(
-                        blurRadius: 5,
-                        color: Color(0x3416202A),
-                        offset: Offset(0, 2),
-                      )
-                    ],
                     borderRadius: BorderRadius.circular(12),
                     shape: BoxShape.rectangle,
                     border: Border.all(
@@ -560,7 +539,7 @@ class _CustomerDetailsWidgetState extends State<CustomerDetailsWidget>
                         padding: EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
                         child: Text(
                           'Atividades',
-                          style: FlutterFlowTheme.of(context).titleSmall,
+                          style: FlutterFlowTheme.of(context).labelMedium,
                         ),
                       ),
                       Expanded(
@@ -580,7 +559,7 @@ class _CustomerDetailsWidgetState extends State<CustomerDetailsWidget>
             ),
           ),
           Visibility(
-              visible: true,
+              visible: false,
               child: Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
                 child: InkWell(
@@ -600,13 +579,6 @@ class _CustomerDetailsWidgetState extends State<CustomerDetailsWidget>
                     height: 60,
                     decoration: BoxDecoration(
                       color: FlutterFlowTheme.of(context).primaryBackground,
-                      boxShadow: [
-                        BoxShadow(
-                          blurRadius: 5,
-                          color: Color(0x3416202A),
-                          offset: Offset(0, 2),
-                        )
-                      ],
                       borderRadius: BorderRadius.circular(12),
                       shape: BoxShape.rectangle,
                       border: Border.all(
@@ -632,7 +604,7 @@ class _CustomerDetailsWidgetState extends State<CustomerDetailsWidget>
                                 EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
                             child: Text(
                               'Pagamentos',
-                              style: FlutterFlowTheme.of(context).titleSmall,
+                              style: FlutterFlowTheme.of(context).labelMedium,
                             ),
                           ),
                           Expanded(
@@ -656,7 +628,7 @@ class _CustomerDetailsWidgetState extends State<CustomerDetailsWidget>
                                   ),
                                 ),
                                 badges.Badge(
-                                  badgeContent: Text(
+                                  badgeContent: AutoSizeText(
                                     '!',
                                     style: FlutterFlowTheme.of(context)
                                         .titleSmall
@@ -670,8 +642,7 @@ class _CustomerDetailsWidgetState extends State<CustomerDetailsWidget>
                                   badgeColor:
                                       FlutterFlowTheme.of(context).error,
                                   elevation: 4,
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      8, 8, 8, 8),
+                                  padding: EdgeInsetsDirectional.all(6),
                                   position: badges.BadgePosition.topEnd(),
                                   animationType:
                                       badges.BadgeAnimationType.scale,
@@ -843,8 +814,8 @@ class _CustomerDetailsWidgetState extends State<CustomerDetailsWidget>
                               if (_model.content['userImageUrl'] != null &&
                                   _model.content['userImageUrl']!.isNotEmpty)
                                 Container(
-                                  width: 70.0,
-                                  height: 70.0,
+                                  width: 64.0,
+                                  height: 64.0,
                                   clipBehavior: Clip.antiAlias,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
@@ -857,8 +828,8 @@ class _CustomerDetailsWidgetState extends State<CustomerDetailsWidget>
                               if (_model.content['userImageUrl'] == null ||
                                   _model.content['userImageUrl']!.isEmpty)
                                 Container(
-                                  width: 70.0,
-                                  height: 70.0,
+                                  width: 64.0,
+                                  height: 64.0,
                                   clipBehavior: Clip.antiAlias,
                                   decoration: BoxDecoration(
                                       shape: BoxShape.circle,

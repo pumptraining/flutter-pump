@@ -4,7 +4,7 @@
 <dict>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
-		<string>applinks:pumpapp.page.link</string>
+		<string>applinks:pumpapp.page.link/pump</string>
 	</array>
     <key>aps-environment</key>
     <string>production</string>

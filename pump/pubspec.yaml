@@ -46,6 +46,7 @@ dependencies:
   firebase_auth_platform_interface: ^7.0.9
   firebase_auth_web: ^5.8.13
   firebase_messaging: ^14.7.10
+  firebase_remote_config: ^4.3.8
   fl_chart: 0.55.0
   flutter_animate: 4.1.1+1
   flutter_cache_manager: ^3.3.1

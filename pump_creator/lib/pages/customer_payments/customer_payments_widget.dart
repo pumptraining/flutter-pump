@@ -9,9 +9,12 @@ import 'package:flutter_flow/flutter_flow_model.dart';
 import 'package:flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter_flow/flutter_flow_util.dart';
 import 'package:flutter_flow/flutter_flow_widgets.dart';
+import 'package:pump_components/components/bottom_button_fixed/bottom_button_fixed_widget.dart';
 import 'package:pump_components/components/subscribe_screen/subscribe_screen_widget.dart';
 import 'package:pump_creator/flutter_flow/nav/nav.dart';
 import 'package:uni_links/uni_links.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import 'dart:async';
 import '../../backend/firebase_analytics/analytics.dart';
 import 'customer_payments_model.dart';
@@ -63,12 +66,8 @@ class _CustomerPaymentsWidgetState extends State<CustomerPaymentsWidget>
 
   Future<void> _initUniLinks() async {
     _sub = linkStream.listen((String? link) {
-      
-      String path = link?.replaceFirst('pumpcreator://', '') ?? '/';
-      context.pushReplacementNamed('/${path}');
-
-    }, onError: (err) {
-    });
+      _apiLoaderController.reload?.call();
+    }, onError: (err) {});
   }
 
   void _onExpandableStateChanged() {
@@ -84,7 +83,7 @@ class _CustomerPaymentsWidgetState extends State<CustomerPaymentsWidget>
     }
   }
 
-  final ApiLoaderController apiLoaderController = ApiLoaderController();
+  final ApiLoaderController _apiLoaderController = ApiLoaderController();
 
   @override
   Widget build(BuildContext context) {
@@ -127,9 +126,8 @@ class _CustomerPaymentsWidgetState extends State<CustomerPaymentsWidget>
         top: false,
         bottom: false,
         child: ApiLoaderWidget(
-          apiCall: BaseGroup.customerPaymentsCall,
-          params: {'customerId': widget.customerId},
-          controller: apiLoaderController,
+          apiCall: BaseGroup.bankAccountCall,
+          controller: _apiLoaderController,
           builder: (context, snapshot) {
             _model.content = snapshot?.data?.jsonBody['response'];
             return Stack(children: [
@@ -157,7 +155,7 @@ class _CustomerPaymentsWidgetState extends State<CustomerPaymentsWidget>
   }
 
   List<Widget> _buildBankHeader() {
-    final circleColor = FlutterFlowTheme.of(context).secondaryBackground;
+    final circleColor = _model.circleColor(context);
     return [
       Padding(
         padding: EdgeInsetsDirectional.fromSTEB(0, 44, 0, 0),
@@ -202,7 +200,7 @@ class _CustomerPaymentsWidgetState extends State<CustomerPaymentsWidget>
                       alignment: AlignmentDirectional(0, 0),
                       child: Icon(
                         Icons.account_balance_sharp,
-                        color: Colors.white,
+                        color: FlutterFlowTheme.of(context).primaryText,
                         size: 28,
                       ),
                     ),
@@ -222,7 +220,7 @@ class _CustomerPaymentsWidgetState extends State<CustomerPaymentsWidget>
               child: Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
                 child: Text(
-                  'Conectar Conta Bancária',
+                  _model.getTitle(),
                   textAlign: TextAlign.center,
                   style: FlutterFlowTheme.of(context).titleLarge.override(
                         fontFamily: 'Poppins',
@@ -245,7 +243,7 @@ class _CustomerPaymentsWidgetState extends State<CustomerPaymentsWidget>
               child: Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
                 child: Text(
-                  'Desbloqueie as assinaturas mensais agora!\nConecte sua conta bancária para receber os pagamentos dos seus alunos de maneira prática e segura',
+                  _model.getSubtitle(),
                   textAlign: TextAlign.center,
                   style: FlutterFlowTheme.of(context).bodyLarge.override(
                         fontFamily: 'Poppins',
@@ -410,164 +408,201 @@ class _CustomerPaymentsWidgetState extends State<CustomerPaymentsWidget>
   Widget _buildBottomButton(BuildContext context) {
     return Align(
       alignment: AlignmentDirectional(0, 1),
-      child: Container(
-        width: MediaQuery.sizeOf(context).width,
-        decoration: BoxDecoration(
-          color: FlutterFlowTheme.of(context).secondaryBackground,
-          boxShadow: [
-            BoxShadow(
-              blurRadius: 5,
-              color: FlutterFlowTheme.of(context).primary,
-              offset: Offset(0, -1),
+      child: !_model.showTerms()
+          ? BottomButtonFixedWidget(
+              buttonTitle: _model.getBottomButtonTitle(),
+              onPressed: () async {
+                // if (!UserSettings().isSubscriber()) { TODO: REMOVER
+                //   showSubscribeScreen(context);
+                //   return;
+                // }
+
+                await _showStripeDashboard(context);
+              },
             )
-          ],
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(0, 12, 12, 0),
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
+          : Container(
+              width: MediaQuery.sizeOf(context).width,
+              decoration: BoxDecoration(
+                color: FlutterFlowTheme.of(context).secondaryBackground,
+                boxShadow: [
+                  BoxShadow(
+                    blurRadius: 5,
+                    color: FlutterFlowTheme.of(context).primary,
+                    offset: Offset(0, -1),
+                  )
+                ],
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(16, 0, 0, 0),
-                    child: Theme(
-                      data: ThemeData(
-                        checkboxTheme: CheckboxThemeData(
-                          visualDensity: VisualDensity.compact,
-                          materialTapTargetSize:
-                              MaterialTapTargetSize.shrinkWrap,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                        ),
-                        unselectedWidgetColor:
-                            FlutterFlowTheme.of(context).secondaryText,
-                      ),
-                      child: Checkbox(
-                        value: _model.checkboxValue ??= false,
-                        onChanged: (newValue) async {
-                          HapticFeedback.mediumImpact();
-                          setState(() => _model.checkboxValue = newValue!);
-                        },
-                        activeColor: FlutterFlowTheme.of(context).primary,
-                        checkColor: FlutterFlowTheme.of(context).primaryText,
-                      ),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () async {
-                      await launchURL('https://pumpapp.com.br/termos-de-uso');
-                    },
-                    child: Expanded(
-                      child: Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(8, 0, 0, 0),
-                        child: RichText(
-                          textScaleFactor:
-                              MediaQuery.of(context).textScaleFactor,
-                          text: TextSpan(
-                            children: [
-                              TextSpan(
-                                text: 'Li e concordo com os ',
-                                style: TextStyle(
-                                  color:
-                                      FlutterFlowTheme.of(context).primaryText,
-                                  fontSize: 12,
+                    padding: EdgeInsetsDirectional.fromSTEB(0, 12, 12, 0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(16, 0, 0, 0),
+                          child: Theme(
+                            data: ThemeData(
+                              checkboxTheme: CheckboxThemeData(
+                                visualDensity: VisualDensity.compact,
+                                materialTapTargetSize:
+                                    MaterialTapTargetSize.shrinkWrap,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(4),
                                 ),
                               ),
-                              TextSpan(
-                                text: 'Termos de Uso.',
-                                style: TextStyle(
-                                  color: FlutterFlowTheme.of(context).primary,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12,
-                                ),
-                              )
-                            ],
-                            style: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 12,
-                                ),
+                              unselectedWidgetColor:
+                                  FlutterFlowTheme.of(context).secondaryText,
+                            ),
+                            child: Checkbox(
+                              value: _model.checkboxValue ??= false,
+                              onChanged: (newValue) async {
+                                HapticFeedback.mediumImpact();
+                                setState(
+                                    () => _model.checkboxValue = newValue!);
+                              },
+                              activeColor: FlutterFlowTheme.of(context).primary,
+                              checkColor:
+                                  FlutterFlowTheme.of(context).primaryText,
+                            ),
                           ),
-                          textAlign: TextAlign.start,
                         ),
-                      ),
+                        InkWell(
+                          onTap: () async {
+                            await launchURL(
+                                'https://pumpapp.com.br/termos-de-uso');
+                          },
+                          child: Expanded(
+                            child: Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(8, 0, 0, 0),
+                              child: RichText(
+                                textScaleFactor:
+                                    MediaQuery.of(context).textScaleFactor,
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: 'Li e concordo com os ',
+                                      style: TextStyle(
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: 'Termos de Uso.',
+                                      style: TextStyle(
+                                        color: FlutterFlowTheme.of(context)
+                                            .primary,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 12,
+                                      ),
+                                    )
+                                  ],
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .override(
+                                        fontFamily: 'Poppins',
+                                        fontSize: 12,
+                                      ),
+                                ),
+                                textAlign: TextAlign.start,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
-            ),
-            Divider(
-              thickness: 1,
-              indent: 16,
-              endIndent: 16,
-              color: FlutterFlowTheme.of(context).primaryBackground,
-            ),
-            Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(
-                  0,
-                  8,
-                  0,
-                  Utils.getBottomSafeArea(context) == 0
-                      ? 16
-                      : Utils.getBottomSafeArea(context)),
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
-                      child: FFButtonWidget(
-                        onPressed: () async {
-                          if (!(_model.checkboxValue ?? false)) {
-                            return;
-                          }
-                          if (!UserSettings().isSubscriber()) {
-                            showSubscribeScreen(context);
-                            return;
-                          }
-                          
-                          final result = await BaseGroup.stripeOboardingLinkCall();
+                  Divider(
+                    thickness: 1,
+                    indent: 16,
+                    endIndent: 16,
+                    color: FlutterFlowTheme.of(context).primaryBackground,
+                  ),
+                  Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(
+                        0,
+                        8,
+                        0,
+                        Utils.getBottomSafeArea(context) == 0
+                            ? 16
+                            : Utils.getBottomSafeArea(context)),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding:
+                                EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
+                            child: FFButtonWidget(
+                              onPressed: () async {
+                                if (!(_model.checkboxValue ?? false)) {
+                                  return;
+                                }
+                                if (!UserSettings().isSubscriber()) {
+                                  showSubscribeScreen(context);
+                                  return;
+                                }
 
-                          if (result.succeeded) {
-                            await launchURL(result.jsonBody['response']['url']);
-                          }
-                        },
-                        text: 'Conectar Conta',
-                        options: FFButtonOptions(
-                          height: 44,
-                          padding: EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
-                          iconPadding:
-                              EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-                          color: (_model.checkboxValue ?? false)
-                              ? FlutterFlowTheme.of(context).primary
-                              : Color.fromARGB(255, 103, 210, 148),
-                          textStyle:
-                              FlutterFlowTheme.of(context).titleSmall.override(
-                                    fontFamily: 'Poppins',
-                                    color: Colors.white,
-                                  ),
-                          elevation: 3,
-                          borderSide: BorderSide(
-                            color: Colors.transparent,
-                            width: 1,
+                                _showStripeDashboard(context);
+                              },
+                              text: 'Conectar Conta',
+                              options: FFButtonOptions(
+                                height: 44,
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    24, 0, 24, 0),
+                                iconPadding:
+                                    EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                                color: (_model.checkboxValue ?? false)
+                                    ? FlutterFlowTheme.of(context).primary
+                                    : Color.fromARGB(255, 103, 210, 148),
+                                textStyle: FlutterFlowTheme.of(context)
+                                    .titleSmall
+                                    .override(
+                                      fontFamily: 'Poppins',
+                                      color: Colors.white,
+                                    ),
+                                elevation: 3,
+                                borderSide: BorderSide(
+                                  color: Colors.transparent,
+                                  width: 1,
+                                ),
+                                borderRadius: BorderRadius.circular(22),
+                              ),
+                            ),
                           ),
-                          borderRadius: BorderRadius.circular(22),
                         ),
-                      ),
+                      ],
                     ),
                   ),
                 ],
               ),
             ),
-          ],
-        ),
-      ),
     );
+  }
+
+  Future<void> _showStripeDashboard(BuildContext context) async {
+    final result = await BaseGroup.stripeOboardingLinkCall();
+
+    if (result.succeeded) {
+      final urlString = result.jsonBody['response']['url'];
+      await launchUrlString(urlString, mode: LaunchMode.externalApplication);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          'Ocorreu um erro. Por favor, tente novamente.',
+          style: TextStyle(
+            fontSize: 14,
+            color: FlutterFlowTheme.of(context).info,
+          ),
+        ),
+        duration: Duration(milliseconds: 3000),
+        backgroundColor: FlutterFlowTheme.of(context).error,
+      ));
+    }
   }
 
   void showSubscribeScreen(BuildContext context) {

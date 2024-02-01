@@ -47,6 +47,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="pumpcreator" android:host="pump.com" />
+                <data android:scheme="https" android:host="pumpapp/personal" />
             </intent-filter>
 
         </activity>

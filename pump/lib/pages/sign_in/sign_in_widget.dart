@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:api_manager/auth/firebase_auth/auth_util.dart';
 import 'package:api_manager/api_requests/pump_api_calls.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_flow/flutter_flow_animations.dart';
 import 'package:flutter_flow/flutter_flow_model.dart';
 import 'package:flutter_flow/flutter_flow_theme.dart';
@@ -420,79 +421,93 @@ class _SignInWidgetState extends State<SignInWidget>
                                 ),
                               ),
                             ),
-                            Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  16.0, 0.0, 16.0, 16.0),
-                              child: Text(
-                                'ou entre com',
-                                textAlign: TextAlign.center,
-                                style: FlutterFlowTheme.of(context).labelLarge,
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(0, 0, 0, 16),
-                              child: FFButtonWidget(
-                                onPressed: () async {
-                                  GoRouter.of(context).prepareAuthEvent();
-                                  final user = await authManager
-                                      .signInWithGoogle(context);
-                                  if (user == null) {
-                                    return;
-                                  }
-
-                                  final response =
-                                      await PumpGroup.authCall.call();
-                                  if (response.response?.statusCode == 200) {
-                                    final isNew =
-                                        response.jsonBody['isNew'] ?? false;
-
-                                    goToAuthFlow(context, isNew, false);
-                                  } else {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(
-                                          'Ocorreu um erro. Por favor, tente novamente.',
-                                        ),
-                                      ),
-                                    );
-                                  }
-                                },
-                                text: 'Entre com Google',
-                                icon: FaIcon(
-                                  FontAwesomeIcons.google,
-                                  size: 20,
-                                ),
-                                options: FFButtonOptions(
-                                  width: double.infinity,
-                                  height: 44,
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      0, 0, 0, 0),
-                                  iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                      0, 0, 0, 0),
-                                  color: FlutterFlowTheme.of(context)
-                                      .secondaryBackground,
-                                  textStyle: FlutterFlowTheme.of(context)
-                                      .titleSmall
-                                      .override(
-                                        fontFamily: 'Poppins',
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryText,
-                                      ),
-                                  elevation: 0,
-                                  borderSide: BorderSide(
-                                    color: FlutterFlowTheme.of(context)
-                                        .secondaryText,
-                                    width: 2,
-                                  ),
-                                  borderRadius: BorderRadius.circular(12),
-                                  hoverColor: FlutterFlowTheme.of(context)
-                                      .primaryBackground,
+                            Visibility(
+                              visible: FirebaseRemoteConfig.instance
+                                      .getBool('apple_signin_button_enabled') ||
+                                  FirebaseRemoteConfig.instance
+                                      .getBool('google_signin_button_enabled'),
+                              child: Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    16.0, 0.0, 16.0, 16.0),
+                                child: Text(
+                                  'ou entre com',
+                                  textAlign: TextAlign.center,
+                                  style:
+                                      FlutterFlowTheme.of(context).labelLarge,
                                 ),
                               ),
                             ),
                             Visibility(
-                              visible: Platform.isIOS,
+                              visible: FirebaseRemoteConfig.instance
+                                  .getBool('google_signin_button_enabled'),
+                              child: Padding(
+                                padding:
+                                    EdgeInsetsDirectional.fromSTEB(0, 0, 0, 16),
+                                child: FFButtonWidget(
+                                  onPressed: () async {
+                                    GoRouter.of(context).prepareAuthEvent();
+                                    final user = await authManager
+                                        .signInWithGoogle(context);
+                                    if (user == null) {
+                                      return;
+                                    }
+
+                                    final response =
+                                        await PumpGroup.authCall.call();
+                                    if (response.response?.statusCode == 200) {
+                                      final isNew =
+                                          response.jsonBody['isNew'] ?? false;
+
+                                      goToAuthFlow(context, isNew, false);
+                                    } else {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            'Ocorreu um erro. Por favor, tente novamente.',
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  text: 'Entre com Google',
+                                  icon: FaIcon(
+                                    FontAwesomeIcons.google,
+                                    size: 20,
+                                  ),
+                                  options: FFButtonOptions(
+                                    width: double.infinity,
+                                    height: 44,
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        0, 0, 0, 0),
+                                    iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                        0, 0, 0, 0),
+                                    color: FlutterFlowTheme.of(context)
+                                        .secondaryBackground,
+                                    textStyle: FlutterFlowTheme.of(context)
+                                        .titleSmall
+                                        .override(
+                                          fontFamily: 'Poppins',
+                                          color: FlutterFlowTheme.of(context)
+                                              .primaryText,
+                                        ),
+                                    elevation: 0,
+                                    borderSide: BorderSide(
+                                      color: FlutterFlowTheme.of(context)
+                                          .secondaryText,
+                                      width: 2,
+                                    ),
+                                    borderRadius: BorderRadius.circular(12),
+                                    hoverColor: FlutterFlowTheme.of(context)
+                                        .primaryBackground,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Visibility(
+                              visible: Platform.isIOS &&
+                                  FirebaseRemoteConfig.instance
+                                      .getBool('apple_signin_button_enabled'),
                               child: Padding(
                                 padding:
                                     EdgeInsetsDirectional.fromSTEB(0, 0, 0, 16),

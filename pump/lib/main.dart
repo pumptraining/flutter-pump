@@ -6,6 +6,7 @@ import 'package:api_manager/auth/firebase_auth/auth_util.dart';
 import 'package:api_manager/auth/firebase_auth/firebase_user_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_flow/common/user_settings.dart';
@@ -35,6 +36,7 @@ void main() async {
   if (!kIsWeb) {
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 
+    await _setupRemoteConfig();
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
     FirebaseMessaging messaging = FirebaseMessaging.instance;
@@ -97,6 +99,24 @@ void main() async {
   ]);
 
   runApp(MyApp());
+}
+
+Future<void> _setupRemoteConfig() async {
+  final remoteConfig = FirebaseRemoteConfig.instance;
+  await remoteConfig.setConfigSettings(RemoteConfigSettings(
+    fetchTimeout: const Duration(minutes: 1),
+    minimumFetchInterval: const Duration(hours: 1),
+  ));
+
+  final toggle = FirebaseRemoteConfig.instance.getBool('apple_signin_button_enabled');
+
+  await remoteConfig.setDefaults(const {"apple_signin_button_enabled": false});
+  await remoteConfig.setDefaults(const {"google_signin_button_enabled": false});
+  await remoteConfig.fetchAndActivate();
+
+  remoteConfig.onConfigUpdated.listen((event) async {
+    await remoteConfig.activate();
+  });
 }
 
 Future<void> _updateFCMToken(String token) async {

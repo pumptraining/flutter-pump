@@ -60,7 +60,7 @@ class BaseGroup {
   static DeleteAccountCall deleteAccountCall = DeleteAccountCall();
   static CancelSubscriptionCall cancelSubscriptionCall = CancelSubscriptionCall();
   static UpdateUserFCMTokenCall updateUserFCMTokenCall = UpdateUserFCMTokenCall();
-  static CustomerPaymentsCall customerPaymentsCall = CustomerPaymentsCall();
+  static BankAccountCall bankAccountCall = BankAccountCall();
   static StripeOboardingLinkCall stripeOboardingLinkCall = StripeOboardingLinkCall();
 }
 
@@ -969,16 +969,14 @@ ${personalJson}''';
   }
 }
 
-class CustomerPaymentsCall extends Requestable {
+class BankAccountCall extends Requestable {
   @override
   Future<ApiCallResponse> call({
     dynamic params,
   }) {
-    final customerId = params['customerId'];
-    
     return ApiManager.instance.makeApiCall(
       callName: 'CustomerPaymentsCall',
-      apiUrl: '${BaseGroup.baseUrl}/personal-app/customer-payments?customerId=$customerId',
+      apiUrl: '${BaseGroup.baseUrl}/personal-app/bank-account',
       callType: ApiCallType.GET,
       headers: {
         ...BaseGroup.headers,

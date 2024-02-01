@@ -14,7 +14,7 @@ ENV['SPACESHIP_AVOID_XCODE_API'] = '0'
 #----------------------------------------------------------------------------------#
 
 default_platform(:ios)
-xcversion(version: "~> 14.0")
+xcversion(version: "~> 15.2")
 
 
 def proj

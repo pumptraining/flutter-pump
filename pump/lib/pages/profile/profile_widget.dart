@@ -765,7 +765,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                             logFirebaseEvent('Container_navigate_to');
 
                             launchURL(
-                                'https://pumpapp.com.br/pol%C3%ADtica-de-privacidade');
+                                'https://pumpapp.com.br/politica-de-privacidade');
                           },
                           child: Container(
                             width: double.infinity,
