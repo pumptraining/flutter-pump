@@ -12,15 +12,18 @@ abstract class FlutterFlowTheme {
   static Future initialize() async {
     _prefs = await SharedPreferences.getInstance();
   }
+
   static ThemeMode get themeMode {
-    return ThemeMode.system;
+    return (_prefs?.getBool(kThemeModeKey) ?? false)
+        ? ThemeMode.dark
+        : ThemeMode.light;
   }
 
   static void saveThemeMode(ThemeMode mode) {
     mode == ThemeMode.system
-      ? _prefs?.remove(kThemeModeKey)
-      : _prefs?.setBool(kThemeModeKey, mode == ThemeMode.dark);
-  } 
+        ? _prefs?.remove(kThemeModeKey)
+        : _prefs?.setBool(kThemeModeKey, mode == ThemeMode.dark);
+  }
 
   static FlutterFlowTheme of(BuildContext context) {
     return Theme.of(context).brightness == Brightness.dark

@@ -165,7 +165,7 @@ class _UserPurchaseWorkoutSheetWidgetState
                     child: SizedBox(
                       width: 50.0,
                       height: 50.0,
-                      child: CircularProgressIndicator(
+                      child: CircularProgressIndicator(strokeWidth: 1.0,
                         color: FlutterFlowTheme.of(context).primary,
                       ),
                     ),

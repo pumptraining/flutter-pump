@@ -141,7 +141,7 @@ class _EditProfileWidgetState extends State<EditProfileWidget> {
                   child: SizedBox(
                     width: 40,
                     height: 40,
-                    child: CircularProgressIndicator(
+                    child: CircularProgressIndicator(strokeWidth: 1.0,
                       color: FlutterFlowTheme.of(context).primary,
                     ),
                   ),

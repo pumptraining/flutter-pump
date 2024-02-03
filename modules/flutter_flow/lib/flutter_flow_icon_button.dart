@@ -129,7 +129,7 @@ class _FlutterFlowIconButtonState extends State<FlutterFlowIconButton> {
                 ? Container(
                     width: iconSize,
                     height: iconSize,
-                    child: CircularProgressIndicator(
+                    child: CircularProgressIndicator(strokeWidth: 1.0,
                       valueColor: AlwaysStoppedAnimation<Color>(
                         iconColor ?? Colors.white,
                       ),

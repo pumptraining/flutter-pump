@@ -273,7 +273,7 @@ class _WorkoutDetailsWidgetState extends State<WorkoutDetailsWidget>
                         child: SizedBox(
                           width: 40.0,
                           height: 40.0,
-                          child: CircularProgressIndicator(
+                          child: CircularProgressIndicator(strokeWidth: 1.0,
                             color: FlutterFlowTheme.of(context).primary,
                           ),
                         ),

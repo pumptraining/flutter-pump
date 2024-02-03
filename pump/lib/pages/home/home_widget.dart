@@ -1,6 +1,7 @@
 import 'package:aligned_dialog/aligned_dialog.dart';
 import 'package:api_manager/api_requests/pump_api_calls.dart';
 import 'package:api_manager/auth/firebase_auth/auth_util.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_flow/flutter_flow_animations.dart';
 import 'package:flutter_flow/flutter_flow_icon_button.dart';
@@ -14,9 +15,9 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:pump/flutter_flow/nav/nav.dart';
+import 'package:pump/pages/home/home_animation_map.dart';
 import 'package:pump_components/components/information_dialog/information_dialog_widget.dart';
 import '../../backend/firebase_analytics/analytics.dart';
 import 'home_model.dart';
@@ -36,661 +37,10 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
   bool isLoading = false;
   bool isError = false;
   ApiCallResponse? response;
+  String deeplinkInvite = "";
+  bool hasDeeplinkInvite = false;
 
-  final animationsMap = {
-    'containerOnPageLoadAnimation1': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        VisibilityEffect(duration: 1.ms),
-        FadeEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 600.ms,
-          begin: 0,
-          end: 1,
-        ),
-        MoveEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 600.ms,
-          begin: Offset(100, 0),
-          end: Offset(0, 0),
-        ),
-      ],
-    ),
-    'containerOnPageLoadAnimation2': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        VisibilityEffect(duration: 1.ms),
-        FadeEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 600.ms,
-          begin: 0,
-          end: 1,
-        ),
-        ScaleEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 600.ms,
-          begin: Offset(0.8, 0.8),
-          end: Offset(1, 1),
-        ),
-      ],
-    ),
-    'textOnPageLoadAnimation1': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        VisibilityEffect(duration: 180.ms),
-        FadeEffect(
-          curve: Curves.easeInOut,
-          delay: 180.ms,
-          duration: 600.ms,
-          begin: 0,
-          end: 1,
-        ),
-        MoveEffect(
-          curve: Curves.easeInOut,
-          delay: 180.ms,
-          duration: 600.ms,
-          begin: Offset(20, 0),
-          end: Offset(0, 0),
-        ),
-      ],
-    ),
-    'textOnPageLoadAnimation2': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        VisibilityEffect(duration: 200.ms),
-        FadeEffect(
-          curve: Curves.easeInOut,
-          delay: 200.ms,
-          duration: 600.ms,
-          begin: 0,
-          end: 1,
-        ),
-        MoveEffect(
-          curve: Curves.easeInOut,
-          delay: 200.ms,
-          duration: 600.ms,
-          begin: Offset(40, 0),
-          end: Offset(0, 0),
-        ),
-      ],
-    ),
-    'containerOnPageLoadAnimation3': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        VisibilityEffect(duration: 1.ms),
-        FadeEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 600.ms,
-          begin: 0,
-          end: 1,
-        ),
-        MoveEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 600.ms,
-          begin: Offset(120, 0),
-          end: Offset(0, 0),
-        ),
-      ],
-    ),
-    'containerOnPageLoadAnimation4': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        VisibilityEffect(duration: 1.ms),
-        FadeEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 600.ms,
-          begin: 0,
-          end: 1,
-        ),
-        ScaleEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 600.ms,
-          begin: Offset(0.8, 0.8),
-          end: Offset(1, 1),
-        ),
-      ],
-    ),
-    'textOnPageLoadAnimation3': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        VisibilityEffect(duration: 220.ms),
-        FadeEffect(
-          curve: Curves.easeInOut,
-          delay: 220.ms,
-          duration: 600.ms,
-          begin: 0,
-          end: 1,
-        ),
-        MoveEffect(
-          curve: Curves.easeInOut,
-          delay: 220.ms,
-          duration: 600.ms,
-          begin: Offset(20, 0),
-          end: Offset(0, 0),
-        ),
-      ],
-    ),
-    'textOnPageLoadAnimation4': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        VisibilityEffect(duration: 240.ms),
-        FadeEffect(
-          curve: Curves.easeInOut,
-          delay: 240.ms,
-          duration: 600.ms,
-          begin: 0,
-          end: 1,
-        ),
-        MoveEffect(
-          curve: Curves.easeInOut,
-          delay: 240.ms,
-          duration: 600.ms,
-          begin: Offset(40, 0),
-          end: Offset(0, 0),
-        ),
-      ],
-    ),
-    'textOnPageLoadAnimation5': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        VisibilityEffect(duration: 600.ms),
-        FadeEffect(
-          curve: Curves.easeInOut,
-          delay: 600.ms,
-          duration: 600.ms,
-          begin: 0,
-          end: 1,
-        ),
-        MoveEffect(
-          curve: Curves.easeInOut,
-          delay: 600.ms,
-          duration: 600.ms,
-          begin: Offset(0, 30),
-          end: Offset(0, 0),
-        ),
-      ],
-    ),
-    'containerOnPageLoadAnimation5': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        FadeEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 600.ms,
-          begin: 0,
-          end: 1,
-        ),
-        MoveEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 600.ms,
-          begin: Offset(0, 50),
-          end: Offset(0, 0),
-        ),
-      ],
-    ),
-    'textOnPageLoadAnimation6': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        VisibilityEffect(duration: 600.ms),
-        FadeEffect(
-          curve: Curves.easeInOut,
-          delay: 600.ms,
-          duration: 600.ms,
-          begin: 0,
-          end: 1,
-        ),
-        MoveEffect(
-          curve: Curves.easeInOut,
-          delay: 600.ms,
-          duration: 600.ms,
-          begin: Offset(0, 30),
-          end: Offset(0, 0),
-        ),
-      ],
-    ),
-    'containerOnPageLoadAnimation6': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        FadeEffect(
-          curve: Curves.easeInOut,
-          delay: 800.ms,
-          duration: 600.ms,
-          begin: 0,
-          end: 1,
-        ),
-        MoveEffect(
-          curve: Curves.easeInOut,
-          delay: 800.ms,
-          duration: 600.ms,
-          begin: Offset(0, 50),
-          end: Offset(0, 0),
-        ),
-      ],
-    ),
-    'progressBarOnPageLoadAnimation1': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        VisibilityEffect(duration: 1200.ms),
-        FadeEffect(
-          curve: Curves.easeInOut,
-          delay: 1200.ms,
-          duration: 400.ms,
-          begin: 0,
-          end: 1,
-        ),
-        ScaleEffect(
-          curve: Curves.easeInOut,
-          delay: 1200.ms,
-          duration: 400.ms,
-          begin: Offset(0.8, 0.8),
-          end: Offset(1, 1),
-        ),
-      ],
-    ),
-    'progressBarOnPageLoadAnimation2': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        VisibilityEffect(duration: 1200.ms),
-        FadeEffect(
-          curve: Curves.easeInOut,
-          delay: 1200.ms,
-          duration: 400.ms,
-          begin: 0,
-          end: 1,
-        ),
-        ScaleEffect(
-          curve: Curves.easeInOut,
-          delay: 1200.ms,
-          duration: 400.ms,
-          begin: Offset(0.8, 0.8),
-          end: Offset(1, 1),
-        ),
-      ],
-    ),
-    'dividerOnPageLoadAnimation': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        VisibilityEffect(duration: 1400.ms),
-        FadeEffect(
-          curve: Curves.easeInOut,
-          delay: 1400.ms,
-          duration: 600.ms,
-          begin: 0,
-          end: 1,
-        ),
-        MoveEffect(
-          curve: Curves.easeInOut,
-          delay: 1400.ms,
-          duration: 600.ms,
-          begin: Offset(0, 30),
-          end: Offset(0, 0),
-        ),
-      ],
-    ),
-    'textOnPageLoadAnimation7': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        VisibilityEffect(duration: 1600.ms),
-        FadeEffect(
-          curve: Curves.easeInOut,
-          delay: 1600.ms,
-          duration: 600.ms,
-          begin: 0,
-          end: 1,
-        ),
-        MoveEffect(
-          curve: Curves.easeInOut,
-          delay: 1600.ms,
-          duration: 600.ms,
-          begin: Offset(0, 30),
-          end: Offset(0, 0),
-        ),
-      ],
-    ),
-    'textOnPageLoadAnimation8': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        VisibilityEffect(duration: 1600.ms),
-        FadeEffect(
-          curve: Curves.easeInOut,
-          delay: 1600.ms,
-          duration: 600.ms,
-          begin: 0,
-          end: 1,
-        ),
-        MoveEffect(
-          curve: Curves.easeInOut,
-          delay: 1600.ms,
-          duration: 600.ms,
-          begin: Offset(0, 50),
-          end: Offset(0, 0),
-        ),
-      ],
-    ),
-    'containerOnPageLoadAnimation7': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        VisibilityEffect(duration: 1600.ms),
-        FadeEffect(
-          curve: Curves.easeInOut,
-          delay: 1600.ms,
-          duration: 600.ms,
-          begin: 0,
-          end: 1,
-        ),
-        MoveEffect(
-          curve: Curves.easeInOut,
-          delay: 1600.ms,
-          duration: 600.ms,
-          begin: Offset(0, 90),
-          end: Offset(0, 0),
-        ),
-      ],
-    ),
-    'textOnPageLoadAnimation9': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        VisibilityEffect(duration: 200.ms),
-        FadeEffect(
-          curve: Curves.easeInOut,
-          delay: 200.ms,
-          duration: 600.ms,
-          begin: 0,
-          end: 1,
-        ),
-        MoveEffect(
-          curve: Curves.easeInOut,
-          delay: 200.ms,
-          duration: 600.ms,
-          begin: Offset(40, 0),
-          end: Offset(0, 0),
-        ),
-      ],
-    ),
-    'textOnPageLoadAnimation10': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        VisibilityEffect(duration: 180.ms),
-        FadeEffect(
-          curve: Curves.easeInOut,
-          delay: 180.ms,
-          duration: 600.ms,
-          begin: 0,
-          end: 1,
-        ),
-        MoveEffect(
-          curve: Curves.easeInOut,
-          delay: 180.ms,
-          duration: 600.ms,
-          begin: Offset(20, 0),
-          end: Offset(0, 0),
-        ),
-      ],
-    ),
-    'containerOnPageLoadAnimation8': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        VisibilityEffect(duration: 1.ms),
-        FadeEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 600.ms,
-          begin: 0,
-          end: 1,
-        ),
-        ScaleEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 600.ms,
-          begin: Offset(0.8, 0.8),
-          end: Offset(1, 1),
-        ),
-      ],
-    ),
-    'containerOnPageLoadAnimation9': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        FadeEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 400.ms,
-          begin: 0,
-          end: 1,
-        ),
-        ScaleEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 400.ms,
-          begin: Offset(0.9, 0.9),
-          end: Offset(1, 1),
-        ),
-        MoveEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 400.ms,
-          begin: Offset(0, 20),
-          end: Offset(0, 0),
-        ),
-      ],
-    ),
-    'containerOnPageLoadAnimation10': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        FadeEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 400.ms,
-          begin: 0,
-          end: 1,
-        ),
-        ScaleEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 400.ms,
-          begin: Offset(0.9, 0.9),
-          end: Offset(1, 1),
-        ),
-        MoveEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 400.ms,
-          begin: Offset(0, 20),
-          end: Offset(0, 0),
-        ),
-      ],
-    ),
-    'containerOnPageLoadAnimation11': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        FadeEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 400.ms,
-          begin: 0,
-          end: 1,
-        ),
-        ScaleEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 400.ms,
-          begin: Offset(0.9, 0.9),
-          end: Offset(1, 1),
-        ),
-        MoveEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 400.ms,
-          begin: Offset(0, 20),
-          end: Offset(0, 0),
-        ),
-      ],
-    ),
-    'containerOnPageLoadAnimation12': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        FadeEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 400.ms,
-          begin: 0,
-          end: 1,
-        ),
-        ScaleEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 400.ms,
-          begin: Offset(0.9, 0.9),
-          end: Offset(1, 1),
-        ),
-        MoveEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 400.ms,
-          begin: Offset(0, 20),
-          end: Offset(0, 0),
-        ),
-      ],
-    ),
-    'containerOnPageLoadAnimation13': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        VisibilityEffect(duration: 1600.ms),
-        FadeEffect(
-          curve: Curves.easeInOut,
-          delay: 1600.ms,
-          duration: 600.ms,
-          begin: 0,
-          end: 1,
-        ),
-        MoveEffect(
-          curve: Curves.easeInOut,
-          delay: 1600.ms,
-          duration: 600.ms,
-          begin: Offset(0, 90),
-          end: Offset(0, 0),
-        ),
-      ],
-    ),
-    'textOnPageLoadAnimation11': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        VisibilityEffect(duration: 200.ms),
-        FadeEffect(
-          curve: Curves.easeInOut,
-          delay: 200.ms,
-          duration: 600.ms,
-          begin: 0,
-          end: 1,
-        ),
-        MoveEffect(
-          curve: Curves.easeInOut,
-          delay: 200.ms,
-          duration: 600.ms,
-          begin: Offset(40, 0),
-          end: Offset(0, 0),
-        ),
-      ],
-    ),
-    'textOnPageLoadAnimation12': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        VisibilityEffect(duration: 180.ms),
-        FadeEffect(
-          curve: Curves.easeInOut,
-          delay: 180.ms,
-          duration: 600.ms,
-          begin: 0,
-          end: 1,
-        ),
-        MoveEffect(
-          curve: Curves.easeInOut,
-          delay: 180.ms,
-          duration: 600.ms,
-          begin: Offset(20, 0),
-          end: Offset(0, 0),
-        ),
-      ],
-    ),
-    'containerOnPageLoadAnimation14': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        VisibilityEffect(duration: 1.ms),
-        FadeEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 600.ms,
-          begin: 0,
-          end: 1,
-        ),
-        ScaleEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 600.ms,
-          begin: Offset(0.8, 0.8),
-          end: Offset(1, 1),
-        ),
-      ],
-    ),
-    'containerOnPageLoadAnimation15': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        FadeEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 600.ms,
-          begin: 0,
-          end: 1,
-        ),
-        MoveEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 600.ms,
-          begin: Offset(0, 50),
-          end: Offset(0, 0),
-        ),
-      ],
-    ),
-    'containerOnPageLoadAnimation16': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        FadeEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 600.ms,
-          begin: 0,
-          end: 1,
-        ),
-        MoveEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 600.ms,
-          begin: Offset(0, 50),
-          end: Offset(0, 0),
-        ),
-      ],
-    ),
-    'containerOnPageLoadAnimation17': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        MoveEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 600.ms,
-          begin: Offset(0, 30),
-          end: Offset(0, 0),
-        ),
-      ],
-    ),
-  };
+  final animationsMap = HomeAnimationMap.animations;
 
   @override
   void initState() {
@@ -698,6 +48,37 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
     _model = createModel(context, () => HomeModel());
 
     logFirebaseEvent('screen_view', parameters: {'screen_name': 'Home'});
+    _fetchLinkData();
+  }
+
+  void _fetchLinkData() async {
+    var link = await FirebaseDynamicLinks.instance.getInitialLink();
+    if (link != null) {
+      _handleLinkData(link);
+    }
+
+    FirebaseDynamicLinks.instance.onLink
+        .listen((PendingDynamicLinkData dynamicLink) async {
+      _handleLinkData(dynamicLink);
+    });
+  }
+
+  void _handleLinkData(PendingDynamicLinkData data) {
+    final Uri uri = data.link;
+    final queryParams = uri.queryParameters;
+    if (queryParams.length > 0) {
+      if (queryParams["personal"] != null && !hasDeeplinkInvite) {
+        String? invite = queryParams["personal"];
+        if (invite != null && invite.isNotEmpty) {
+          deeplinkInvite = invite;
+          hasDeeplinkInvite = true;
+          setState(() {
+            response = null;
+            _loadContent();
+          });
+        }
+      }
+    }
   }
 
   @override
@@ -713,13 +94,15 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
     isError = false;
 
     if (response == null) {
-      response = await PumpGroup.userHomeCall.call();
+      response =
+          await PumpGroup.userHomeCall.call(params: {'invite': deeplinkInvite});
     }
 
     if (response?.succeeded ?? false) {
       isLoading = false;
       isError = false;
     } else {
+      response = null;
       isLoading = false;
       isError = true;
     }
@@ -767,6 +150,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                       width: 40.0,
                       height: 40.0,
                       child: CircularProgressIndicator(
+                        strokeWidth: 1.0,
                         color: FlutterFlowTheme.of(context).primary,
                       ),
                     ),
@@ -972,6 +356,8 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                     params: {'personalInvite': 'accepted'});
 
                             if (result.succeeded) {
+                              hasDeeplinkInvite = false;
+                              deeplinkInvite = '';
                               safeSetState(() {
                                 response = null;
                                 _loadContent();
@@ -1056,6 +442,8 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                       });
 
                                   if (result.succeeded) {
+                                    hasDeeplinkInvite = false;
+                                    deeplinkInvite = '';
                                     safeSetState(() {
                                       response = null;
                                       _loadContent();
@@ -1261,7 +649,9 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'Hora de começar!',
+                          _model.hasPendingPersonalAddWorkout()
+                              ? 'Nenhum treino adicionado'
+                              : 'Hora de começar!',
                           textAlign: TextAlign.center,
                           style: FlutterFlowTheme.of(context)
                               .headlineSmall
@@ -1282,7 +672,9 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                       children: [
                         Expanded(
                           child: Text(
-                            'Encontre seu próximo programa de treino \ne comece agora',
+                            _model.hasPendingPersonalAddWorkout()
+                                ? 'Fique atento! ${_model.content?['personalInvite']['personalName']} está criando seu treino personalizado'
+                                : 'Encontre seu próximo programa de treino \ne comece agora',
                             textAlign: TextAlign.center,
                             style:
                                 FlutterFlowTheme.of(context).bodySmall.override(
@@ -1297,36 +689,40 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                       ],
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(0, 28, 0, 0),
-                    child: FFButtonWidget(
-                      onPressed: () {
-                        HapticFeedback.lightImpact();
+                  Visibility(
+                    visible: !_model.hasPendingPersonalAddWorkout(),
+                    child: Padding(
+                      padding: EdgeInsetsDirectional.fromSTEB(0, 28, 0, 0),
+                      child: FFButtonWidget(
+                        onPressed: () {
+                          HapticFeedback.lightImpact();
 
-                        context.pushReplacementNamed(
-                          'HomeWorkoutSheets',
-                        );
-                      },
-                      text: 'Buscar Programa',
-                      options: FFButtonOptions(
-                        width: 170,
-                        height: 50,
-                        padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-                        iconPadding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-                        color: FlutterFlowTheme.of(context).primaryBackground,
-                        textStyle:
-                            FlutterFlowTheme.of(context).titleSmall.override(
-                                  fontFamily: 'Lexend Deca',
-                                  color: FlutterFlowTheme.of(context).primary,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.normal,
-                                ),
-                        elevation: 2,
-                        borderSide: BorderSide(
-                          color: FlutterFlowTheme.of(context).primary,
-                          width: 1,
+                          context.pushReplacementNamed(
+                            'HomeWorkoutSheets',
+                          );
+                        },
+                        text: 'Buscar Programa',
+                        options: FFButtonOptions(
+                          width: 170,
+                          height: 44,
+                          padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                          iconPadding:
+                              EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                          color: FlutterFlowTheme.of(context).primaryBackground,
+                          textStyle:
+                              FlutterFlowTheme.of(context).titleSmall.override(
+                                    fontFamily: 'Lexend Deca',
+                                    color: FlutterFlowTheme.of(context).primary,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                          elevation: 2,
+                          borderSide: BorderSide(
+                            color: FlutterFlowTheme.of(context).primary,
+                            width: 1,
+                          ),
+                          borderRadius: BorderRadius.all(Radius.circular(25)),
                         ),
-                        borderRadius: BorderRadius.all(Radius.circular(25)),
                       ),
                     ),
                   ),

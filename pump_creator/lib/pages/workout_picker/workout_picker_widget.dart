@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_flow/flutter_flow_model.dart';
 import 'package:flutter_flow/nav/serialization_util.dart';
 import 'package:pump_components/components/bottom_button_fixed/bottom_button_fixed_widget.dart';
@@ -207,7 +208,7 @@ class _WorkoutPickerWidgetState extends State<WorkoutPickerWidget>
                   child: SizedBox(
                     width: 40.0,
                     height: 40.0,
-                    child: CircularProgressIndicator(
+                    child: CircularProgressIndicator(strokeWidth: 1.0,
                       color: FlutterFlowTheme.of(context).primary,
                     ),
                   ),

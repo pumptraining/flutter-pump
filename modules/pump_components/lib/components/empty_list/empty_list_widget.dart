@@ -12,7 +12,8 @@ class EmptyListWidget extends StatefulWidget {
     this.message,
     this.buttonTitle,
     this.onButtonPressed,
-    this.buttonBorderColor
+    this.buttonBorderColor,
+    this.iconData
   }) : super(key: key);
 
   final String? title;
@@ -20,6 +21,7 @@ class EmptyListWidget extends StatefulWidget {
   final String? buttonTitle;
   final VoidCallback? onButtonPressed;
   final Color? buttonBorderColor;
+  final IconData? iconData;
 
   @override
   _EmptyListWidgetState createState() => _EmptyListWidgetState();
@@ -63,7 +65,7 @@ class _EmptyListWidgetState extends State<EmptyListWidget> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
-                    Icons.featured_play_list_outlined,
+                    widget.iconData ?? Icons.featured_play_list_outlined,
                     color: FlutterFlowTheme.of(context).secondaryText,
                     size: 50,
                   ),

@@ -5,6 +5,7 @@ import 'package:flutter_flow/transition_info.dart';
 import 'package:go_router/go_router.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:pump_activity/activity/activity_widget.dart';
+import 'package:pump_components/components/faq/faq_screen.dart';
 import 'package:pump_components/components/subscribe_screen/subscribe_screen_widget.dart';
 import 'package:pump_creator/pages/add_customer/add_customer_widget.dart';
 import 'package:pump_creator/pages/customer_details/customer_details_widget.dart';
@@ -297,6 +298,13 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           name: 'SubscribeScreenWidget',
           path: '/subscribeScreenWidget',
           builder: (context, params) => SubscribeScreenWidget(),
+        ),
+        FFRoute(
+          name: 'FaqScreenWidget',
+          path: '/FaqScreenWidget',
+          builder: (context, params) => FaqScreenWidget(
+            questions: params.getParam('questions', ParamType.JSON, true),
+          ),
         ),
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );

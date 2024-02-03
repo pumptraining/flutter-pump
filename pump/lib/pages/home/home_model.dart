@@ -52,10 +52,11 @@ class HomeModel extends FlutterFlowModel {
   }
 
   bool workoutIsCompleted(String workoutId) {
-    var workoutCompleted = content?['activeSheet']['currentWeek']['workoutCompleted'] ?? [];
-    var resultado = workoutCompleted
-        .firstWhere((workout) => workout['workoutId'] == workoutId,
-            orElse: () => null);
+    var workoutCompleted =
+        content?['activeSheet']['currentWeek']['workoutCompleted'] ?? [];
+    var resultado = workoutCompleted.firstWhere(
+        (workout) => workout['workoutId'] == workoutId,
+        orElse: () => null);
     return resultado != null;
   }
 
@@ -100,6 +101,17 @@ class HomeModel extends FlutterFlowModel {
   }
 
   bool showPersonalInviteHeader() {
-    return (content['personalInvite'] != null) && content['personalInvite']['personalInvite'] == 'pending';
+    return (content != null && content['personalInvite'] != null) &&
+        content['personalInvite']['personalInvite'] == 'pending';
+  }
+
+  bool hasPendingPersonalAddWorkout() {
+    if (content != null &&
+        content['personalInvite'] != null &&
+        content['personalInvite']['personalId'] != null &&
+        content['personalInvite']['personalId'] != '') {
+      return !hasActiveSheet();
+    }
+    return false;
   }
 }

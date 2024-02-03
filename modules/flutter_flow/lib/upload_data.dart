@@ -306,7 +306,7 @@ void showUploadMessage(BuildContext context, String message,
             if (showLoading)
               Padding(
                 padding: EdgeInsetsDirectional.only(end: 10.0),
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator(strokeWidth: 1.0,),
               ),
             Text(message),
           ],
