@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_flow/flutter_flow_model.dart';
 import 'package:flutter_flow/flutter_flow_theme.dart';
+import 'package:pump_components/components/edit_workout_series/edit_workout_series_component_widget.dart';
 import 'edit_workout_series_model.dart';
 
 class EditWorkoutSeriesWidget extends StatefulWidget {
@@ -23,6 +24,7 @@ class _EditWorkoutSeriesWidgetState extends State<EditWorkoutSeriesWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => EditWorkoutSeriesModel());
+    _model.workout = widget.workout;
   }
 
   @override
@@ -61,7 +63,9 @@ class _EditWorkoutSeriesWidgetState extends State<EditWorkoutSeriesWidget> {
         centerTitle: false,
         elevation: 2.0,
       ),
-      body: Container()
+      body: SingleChildScrollView(
+        child: EditWorkoutSeriesComponentWidget(workout: _model.workout),
+      ),
     );
   }
 }

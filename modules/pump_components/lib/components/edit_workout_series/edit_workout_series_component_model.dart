@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_flow/flutter_flow_model.dart';
 import 'package:flutter_flow/form_field_controller.dart';
 
-class EditWorkoutSeriesModel extends FlutterFlowModel {
+class EditWorkoutSeriesComponentModel extends FlutterFlowModel {
 
   FormFieldController<String>? dropDownIntensityController;
   FormFieldController<String>? dropDownIntervalController;

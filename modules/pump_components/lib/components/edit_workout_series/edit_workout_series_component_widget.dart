@@ -7,10 +7,10 @@ import 'package:flutter_flow/flutter_flow_model.dart';
 import 'package:flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter_flow/form_field_controller.dart';
-import 'edit_workout_series_model.dart';
+import 'edit_workout_series_component_model.dart';
 
-class EditWorkoutSeriesWidget extends StatefulWidget {
-  const EditWorkoutSeriesWidget({
+class EditWorkoutSeriesComponentWidget extends StatefulWidget {
+  const EditWorkoutSeriesComponentWidget({
     Key? key,
     this.workout,
   }) : super(key: key);
@@ -18,12 +18,12 @@ class EditWorkoutSeriesWidget extends StatefulWidget {
   final dynamic workout;
 
   @override
-  _EditWorkoutSeriesWidgetState createState() =>
-      _EditWorkoutSeriesWidgetState();
+  _EditWorkoutSeriesComponentWidgetState createState() =>
+      _EditWorkoutSeriesComponentWidgetState();
 }
 
-class _EditWorkoutSeriesWidgetState extends State<EditWorkoutSeriesWidget> {
-  late EditWorkoutSeriesModel _model;
+class _EditWorkoutSeriesComponentWidgetState extends State<EditWorkoutSeriesComponentWidget> {
+  late EditWorkoutSeriesComponentModel _model;
 
   @override
   void setState(VoidCallback callback) {
@@ -34,7 +34,7 @@ class _EditWorkoutSeriesWidgetState extends State<EditWorkoutSeriesWidget> {
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => EditWorkoutSeriesModel());
+    _model = createModel(context, () => EditWorkoutSeriesComponentModel());
 
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }

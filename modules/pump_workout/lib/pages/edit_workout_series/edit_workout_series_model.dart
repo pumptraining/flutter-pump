@@ -3,6 +3,8 @@ import 'package:flutter_flow/flutter_flow_model.dart';
 
 class EditWorkoutSeriesModel extends FlutterFlowModel {
 
+  dynamic workout;
+
   @override
   void initState(BuildContext context) {
   }
