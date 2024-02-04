@@ -14,7 +14,7 @@ export '../common/requestable.dart';
 
 class Environment {
   static String get baseUrl {
-    return 'https://pump-api.herokuapp.com/api/v1';
+    // return 'https://pump-api.herokuapp.com/api/v1';
     return kReleaseMode
         ? 'https://pump-api.herokuapp.com/api/v1'
         : 'http://localhost:4242/api/v1';
@@ -22,7 +22,6 @@ class Environment {
 }
 
 class BaseGroup {
-
   static String get baseUrl => Environment.baseUrl;
   static Map<String, String> headers = {
     'Content-Type': 'application/json',
@@ -54,14 +53,18 @@ class BaseGroup {
   static PersonalTagsCall personalTagsCall = PersonalTagsCall();
   static CustomerHomeCall customerHomeCall = CustomerHomeCall();
   static EditCustomerTagCall editCustomerTagCall = EditCustomerTagCall();
-  static ChangeCustomerStatusCall changeCustomerStatusCall = ChangeCustomerStatusCall();
+  static ChangeCustomerStatusCall changeCustomerStatusCall =
+      ChangeCustomerStatusCall();
   static RemoveCustomerCall removeCustomerCall = RemoveCustomerCall();
   static PaymentIntentCall paymentIntentCall = PaymentIntentCall();
   static DeleteAccountCall deleteAccountCall = DeleteAccountCall();
-  static CancelSubscriptionCall cancelSubscriptionCall = CancelSubscriptionCall();
-  static UpdateUserFCMTokenCall updateUserFCMTokenCall = UpdateUserFCMTokenCall();
+  static CancelSubscriptionCall cancelSubscriptionCall =
+      CancelSubscriptionCall();
+  static UpdateUserFCMTokenCall updateUserFCMTokenCall =
+      UpdateUserFCMTokenCall();
   static BankAccountCall bankAccountCall = BankAccountCall();
-  static StripeOboardingLinkCall stripeOboardingLinkCall = StripeOboardingLinkCall();
+  static StripeOboardingLinkCall stripeOboardingLinkCall =
+      StripeOboardingLinkCall();
 }
 
 class AuthCall extends Requestable {
@@ -282,7 +285,14 @@ class PersonalWorkoutSheetsCall extends Requestable {
 }
 
 class PersonalWorkoutCall extends Requestable {
+  @override
   Future<ApiCallResponse> call({dynamic params}) {
+    String personalId = currentUserUid;
+
+    if (params != null && params['personalId'] != null) {
+      personalId = params['personalId'];
+    }
+
     return ApiManager.instance.makeApiCall(
       callName: 'PersonalWorkout',
       apiUrl: '${BaseGroup.baseUrl}/personal/workouts', // ok
@@ -291,7 +301,7 @@ class PersonalWorkoutCall extends Requestable {
         ...BaseGroup.headers,
       },
       params: {
-        'personalId': currentUserUid,
+        'personalId': personalId,
       },
       returnBody: true,
       encodeBodyUtf8: false,
@@ -893,7 +903,6 @@ class PaymentIntentCall extends Requestable {
   }
 }
 
-
 class DeleteAccountCall extends Requestable {
   @override
   Future<ApiCallResponse> call({dynamic params}) {
@@ -917,7 +926,6 @@ $json''';
     );
   }
 }
-
 
 class CancelSubscriptionCall extends Requestable {
   @override
@@ -991,7 +999,6 @@ class BankAccountCall extends Requestable {
   }
 }
 
-
 class StripeOboardingLinkCall extends Requestable {
   @override
   Future<ApiCallResponse> call({
@@ -1013,7 +1020,6 @@ class StripeOboardingLinkCall extends Requestable {
     );
   }
 }
-
 
 // Paging
 

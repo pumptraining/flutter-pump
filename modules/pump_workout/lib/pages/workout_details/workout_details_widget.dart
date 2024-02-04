@@ -28,12 +28,17 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart'
 
 class WorkoutDetailsWidget extends StatefulWidget {
   const WorkoutDetailsWidget(
-      {Key? key, this.workoutId, this.userId, this.isPersonal})
+      {Key? key,
+      this.workoutId,
+      this.userId,
+      this.isPersonal,
+      this.showMoreButton})
       : super(key: key);
 
   final String? workoutId;
   final String? userId;
   final bool? isPersonal;
+  final bool? showMoreButton;
 
   @override
   // ignore: library_private_types_in_public_api
@@ -51,6 +56,7 @@ class _WorkoutDetailsWidgetState extends State<WorkoutDetailsWidget>
   String userId = currentUserUid;
   late ApiCallResponse responseContent;
   Color _appBarBackgroundColor = Colors.black;
+  bool showMoreButton = true;
 
   final animationsMap = {
     'containerOnPageLoadAnimation1': AnimationInfo(
@@ -192,6 +198,7 @@ class _WorkoutDetailsWidgetState extends State<WorkoutDetailsWidget>
 
     workoutId = widget.workoutId ?? '';
     _loadContent();
+    showMoreButton = widget.showMoreButton ?? true;
 
     if (Platform.isAndroid) {
       leftPadding = 50.0;
@@ -273,7 +280,8 @@ class _WorkoutDetailsWidgetState extends State<WorkoutDetailsWidget>
                         child: SizedBox(
                           width: 40.0,
                           height: 40.0,
-                          child: CircularProgressIndicator(strokeWidth: 1.0,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 1.0,
                             color: FlutterFlowTheme.of(context).primary,
                           ),
                         ),
@@ -360,7 +368,7 @@ class _WorkoutDetailsWidgetState extends State<WorkoutDetailsWidget>
       automaticallyImplyLeading: true,
       actions: [
         Visibility(
-          visible: _model.isPersonal,
+          visible: _model.isPersonal && showMoreButton,
           child: Container(
             padding: EdgeInsets.all(8.0),
             child: FlutterFlowIconButton(
@@ -968,7 +976,8 @@ class _WorkoutDetailsWidgetState extends State<WorkoutDetailsWidget>
                                           ),
                                         ),
                                         Visibility(
-                                          visible: _model.showRating(),
+                                          visible: _model.showRating() &&
+                                              showMoreButton,
                                           child: Padding(
                                             padding:
                                                 EdgeInsetsDirectional.fromSTEB(
@@ -1034,66 +1043,71 @@ class _WorkoutDetailsWidgetState extends State<WorkoutDetailsWidget>
                   ),
                 ).animateOnPageLoad(
                     animationsMap['containerOnPageLoadAnimation3']!),
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 24.0, 0.0, 12.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                        padding:
-                            EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 0.0, 0.0),
-                        child: Text(
-                          'Avaliações',
-                          style:
-                              FlutterFlowTheme.of(context).titleLarge.override(
-                                    fontFamily: 'Outfit',
-                                    fontWeight: FontWeight.normal,
-                                  ),
-                        ).animateOnPageLoad(
-                            animationsMap['textOnPageLoadAnimation3']!),
-                      ),
-                      Visibility(
-                        visible: _model.showRating(),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            GestureDetector(
-                                onTap: () {
-                                  context.pushNamed('ReviewScreen',
-                                      queryParameters: {
-                                        'workoutId': serializeParam(
-                                          _model.content['workoutId'],
-                                          ParamType.String,
-                                        ),
-                                        'personalId': serializeParam(
-                                          _model.content['personalId'],
-                                          ParamType.String,
-                                        ),
-                                        'isPersonal': serializeParam(
-                                          _model.isPersonal,
-                                          ParamType.bool,
-                                        ),
-                                      });
-                                },
-                                child: Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      0.0, 0.0, 16.0, 0.0),
-                                  child: Text(
-                                    'Ver todas',
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyLarge
-                                        .override(
-                                          fontFamily: 'Readex Pro',
-                                          color: FlutterFlowTheme.of(context)
-                                              .primary,
-                                        ),
-                                  ),
-                                )),
-                          ],
+                Visibility(
+                  visible: showMoreButton,
+                  child: Padding(
+                    padding:
+                        EdgeInsetsDirectional.fromSTEB(0.0, 24.0, 0.0, 12.0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              16.0, 0.0, 0.0, 0.0),
+                          child: Text(
+                            'Avaliações',
+                            style: FlutterFlowTheme.of(context)
+                                .titleLarge
+                                .override(
+                                  fontFamily: 'Outfit',
+                                  fontWeight: FontWeight.normal,
+                                ),
+                          ).animateOnPageLoad(
+                              animationsMap['textOnPageLoadAnimation3']!),
                         ),
-                      ),
-                    ],
+                        Visibility(
+                          visible: _model.showRating() && showMoreButton,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              GestureDetector(
+                                  onTap: () {
+                                    context.pushNamed('ReviewScreen',
+                                        queryParameters: {
+                                          'workoutId': serializeParam(
+                                            _model.content['workoutId'],
+                                            ParamType.String,
+                                          ),
+                                          'personalId': serializeParam(
+                                            _model.content['personalId'],
+                                            ParamType.String,
+                                          ),
+                                          'isPersonal': serializeParam(
+                                            _model.isPersonal,
+                                            ParamType.bool,
+                                          ),
+                                        });
+                                  },
+                                  child: Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        0.0, 0.0, 16.0, 0.0),
+                                    child: Text(
+                                      'Ver todas',
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyLarge
+                                          .override(
+                                            fontFamily: 'Readex Pro',
+                                            color: FlutterFlowTheme.of(context)
+                                                .primary,
+                                          ),
+                                    ),
+                                  )),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 Container(
@@ -1103,91 +1117,98 @@ class _WorkoutDetailsWidgetState extends State<WorkoutDetailsWidget>
                   ),
                 ).animateOnPageLoad(
                     animationsMap['containerOnPageLoadAnimation3']!),
-                _model.showRating()
-                    ? Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Expanded(
-                            child: Container(
-                              width: double.infinity,
-                              height: 250.0,
-                              child: Stack(
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 0.0, 0.0, 40.0),
-                                    child: PageView(
-                                      controller: _model.pageViewController ??=
-                                          PageController(initialPage: 0),
-                                      scrollDirection: Axis.horizontal,
-                                      children: List.generate(
-                                          _model.content['feedbacks'].length,
-                                          (index) {
-                                        final feedback =
-                                            _model.content['feedbacks'][index];
-                                        return ReviewCardWidget(
-                                          name:
-                                              _model.getFeedbackName(feedback),
-                                          feedback: feedback['feedbackText'],
-                                          imageUrl: feedback['imageUrl'],
-                                          rating: feedback['rating'],
-                                        );
-                                      }),
-                                    ),
-                                  ),
-                                  Visibility(
-                                    visible: _model.content['feedbacks'] !=
-                                            null &&
-                                        _model.content['feedbacks'].length > 1,
-                                    child: Align(
-                                      alignment:
-                                          AlignmentDirectional(0.00, 1.00),
-                                      child: Padding(
+                !showMoreButton
+                    ? Container()
+                    : _model.showRating()
+                        ? Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  width: double.infinity,
+                                  height: 250.0,
+                                  child: Stack(
+                                    children: [
+                                      Padding(
                                         padding: EdgeInsetsDirectional.fromSTEB(
-                                            16.0, 0.0, 0.0, 16.0),
-                                        child: smooth_page_indicator
-                                            .SmoothPageIndicator(
+                                            0.0, 0.0, 0.0, 40.0),
+                                        child: PageView(
                                           controller: _model
                                                   .pageViewController ??=
                                               PageController(initialPage: 0),
-                                          count: _model
-                                              .content['feedbacks'].length,
-                                          axisDirection: Axis.horizontal,
-                                          onDotClicked: (i) async {
-                                            await _model.pageViewController!
-                                                .animateToPage(
-                                              i,
-                                              duration:
-                                                  Duration(milliseconds: 500),
-                                              curve: Curves.ease,
+                                          scrollDirection: Axis.horizontal,
+                                          children: List.generate(
+                                              _model.content['feedbacks']
+                                                  .length, (index) {
+                                            final feedback = _model
+                                                .content['feedbacks'][index];
+                                            return ReviewCardWidget(
+                                              name: _model
+                                                  .getFeedbackName(feedback),
+                                              feedback:
+                                                  feedback['feedbackText'],
+                                              imageUrl: feedback['imageUrl'],
+                                              rating: feedback['rating'],
                                             );
-                                          },
-                                          effect: smooth_page_indicator
-                                              .ExpandingDotsEffect(
-                                            expansionFactor: 3.0,
-                                            spacing: 8.0,
-                                            radius: 16.0,
-                                            dotWidth: 16.0,
-                                            dotHeight: 8.0,
-                                            dotColor:
-                                                FlutterFlowTheme.of(context)
-                                                    .accent2,
-                                            activeDotColor:
-                                                FlutterFlowTheme.of(context)
-                                                    .primary,
-                                            paintStyle: PaintingStyle.fill,
+                                          }),
+                                        ),
+                                      ),
+                                      Visibility(
+                                        visible: _model.content['feedbacks'] !=
+                                                null &&
+                                            _model.content['feedbacks'].length >
+                                                1,
+                                        child: Align(
+                                          alignment:
+                                              AlignmentDirectional(0.00, 1.00),
+                                          child: Padding(
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    16.0, 0.0, 0.0, 16.0),
+                                            child: smooth_page_indicator
+                                                .SmoothPageIndicator(
+                                              controller:
+                                                  _model.pageViewController ??=
+                                                      PageController(
+                                                          initialPage: 0),
+                                              count: _model
+                                                  .content['feedbacks'].length,
+                                              axisDirection: Axis.horizontal,
+                                              onDotClicked: (i) async {
+                                                await _model.pageViewController!
+                                                    .animateToPage(
+                                                  i,
+                                                  duration: Duration(
+                                                      milliseconds: 500),
+                                                  curve: Curves.ease,
+                                                );
+                                              },
+                                              effect: smooth_page_indicator
+                                                  .ExpandingDotsEffect(
+                                                expansionFactor: 3.0,
+                                                spacing: 8.0,
+                                                radius: 16.0,
+                                                dotWidth: 16.0,
+                                                dotHeight: 8.0,
+                                                dotColor:
+                                                    FlutterFlowTheme.of(context)
+                                                        .accent2,
+                                                activeDotColor:
+                                                    FlutterFlowTheme.of(context)
+                                                        .primary,
+                                                paintStyle: PaintingStyle.fill,
+                                              ),
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
+                                    ],
                                   ),
-                                ],
+                                ),
                               ),
-                            ),
-                          ),
-                        ],
-                      )
-                    : buildEmptyRatingColumn(context),
+                            ],
+                          )
+                        : buildEmptyRatingColumn(context),
                 Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(0.0, 24.0, 0.0, 0.0),
                   child: Row(
@@ -1352,7 +1373,7 @@ class _WorkoutDetailsWidgetState extends State<WorkoutDetailsWidget>
                                                               borderRadius:
                                                                   BorderRadius
                                                                       .circular(
-                                                                          30.0),
+                                                                          17.0),
                                                               border:
                                                                   Border.all(
                                                                 color: FlutterFlowTheme.of(
@@ -1377,7 +1398,8 @@ class _WorkoutDetailsWidgetState extends State<WorkoutDetailsWidget>
                                                                     Icons
                                                                         .info_outline_rounded,
                                                                     color: FlutterFlowTheme.of(
-                                                                        context).primaryText,
+                                                                            context)
+                                                                        .primaryText,
                                                                     size: 16.0,
                                                                   ),
                                                                   SizedBox(
@@ -1396,8 +1418,7 @@ class _WorkoutDetailsWidgetState extends State<WorkoutDetailsWidget>
                                                                             .bodyMedium
                                                                             .override(
                                                                               fontFamily: 'Lexend Deca',
-                                                                              color: FlutterFlowTheme.of(
-                                                                        context).primaryText,
+                                                                              color: FlutterFlowTheme.of(context).primaryText,
                                                                               fontSize: 14.0,
                                                                               fontWeight: FontWeight.normal,
                                                                             ),

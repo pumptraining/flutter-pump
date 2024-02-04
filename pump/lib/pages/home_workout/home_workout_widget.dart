@@ -200,7 +200,8 @@ class _HomeWorkoutWidgetState extends State<HomeWorkoutWidget>
           bottom: false,
           child: isLoading
               ? Center(
-                  child: CircularProgressIndicator(strokeWidth: 1.0,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 1.0,
                     color: FlutterFlowTheme.of(context).primary,
                   ),
                 )
@@ -596,7 +597,9 @@ class _HomeWorkoutWidgetState extends State<HomeWorkoutWidget>
             ),
           ),
           Visibility(
-            visible: filtered != null || (_model.textController != null && _model.textController!.text.isNotEmpty),
+            visible: filtered != null ||
+                (_model.textController != null &&
+                    _model.textController!.text.isNotEmpty),
             child: Padding(
               padding: EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 16.0),
               child: _model.filterContent?['workouts'] != null
@@ -609,7 +612,8 @@ class _HomeWorkoutWidgetState extends State<HomeWorkoutWidget>
                             child: SizedBox(
                               width: 40.0,
                               height: 40.0,
-                              child: CircularProgressIndicator(strokeWidth: 1.0,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 1.0,
                                 color: FlutterFlowTheme.of(context).primary,
                               ),
                             ),
@@ -1117,9 +1121,15 @@ class _HomeWorkoutWidgetState extends State<HomeWorkoutWidget>
                                                   .fromSTEB(6.0, 0.0, 0.0, 0.0),
                                               child: Text(
                                                 '${category['count']} treinos',
-                                                style:
-                                                    FlutterFlowTheme.of(context)
-                                                        .titleMedium,
+                                                style: FlutterFlowTheme.of(
+                                                        context)
+                                                    .titleMedium
+                                                    .override(
+                                                        fontFamily: 'Outfit',
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .info),
                                               ),
                                             ),
                                           ],
@@ -1284,15 +1294,15 @@ class _HomeWorkoutWidgetState extends State<HomeWorkoutWidget>
                                                   children: [
                                                     Text(
                                                       'min',
-                                                      style:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .titleMedium
-                                                              .override(
-                                                                fontFamily:
-                                                                    'Readex Pro',
-                                                                lineHeight: 1.0,
-                                                              ),
+                                                      style: FlutterFlowTheme
+                                                              .of(context)
+                                                          .titleMedium
+                                                          .override(
+                                                            fontFamily:
+                                                                'Readex Pro',
+                                                            lineHeight: 1.0,
+                                                            color: Colors.white,
+                                                          ),
                                                     ),
                                                   ],
                                                 ),

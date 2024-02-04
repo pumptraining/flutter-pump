@@ -474,29 +474,6 @@ class _WorkoutSheetDetailsWidgetState extends State<WorkoutSheetDetailsWidget>
                             title: Text('Editar'),
                             onTap: () async {
                               Navigator.pop(context);
-
-                              if (!UserSettings().isSubscriber() &&
-                                  !UserSettings().canAddWorkoutSheet()) {
-                                showModalBottomSheet(
-                                    isScrollControlled: true,
-                                    backgroundColor: Colors.transparent,
-                                    context: context,
-                                    builder: (context) {
-                                      return Container(
-                                        padding: EdgeInsets.only(
-                                            top: MediaQuery.of(context)
-                                                .viewInsets
-                                                .top),
-                                        height:
-                                            MediaQuery.of(context).size.height,
-                                        child: SubscribeScreenWidget(),
-                                      );
-                                    }).then((value) => {
-                                      if (value != null && value)
-                                        {context.pushNamed('Home')}
-                                    });
-                                return;
-                              }
                               await context.pushNamed(
                                 'AddWorkoutSheet',
                                 queryParameters: {

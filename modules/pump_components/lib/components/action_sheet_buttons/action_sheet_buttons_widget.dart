@@ -53,7 +53,6 @@ class _ActionSheetButtonsWidgetState extends State<ActionSheetButtonsWidget> {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 357.0,
       decoration: BoxDecoration(
         color: FlutterFlowTheme.of(context).secondaryBackground,
         boxShadow: [
@@ -73,34 +72,45 @@ class _ActionSheetButtonsWidgetState extends State<ActionSheetButtonsWidget> {
       child: Padding(
         padding: EdgeInsetsDirectional.fromSTEB(24.0, 12.0, 24.0, 24.0),
         child: Column(
-          mainAxisSize: MainAxisSize.max,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              width: 50.0,
+              width: 44.0,
               height: 4.0,
               decoration: BoxDecoration(
                 color: FlutterFlowTheme.of(context).primaryBackground,
                 borderRadius: BorderRadius.circular(8.0),
               ),
             ),
+            Row(
+              children: [
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 24.0, 0.0, 12.0),
+                  child: Text(
+                    'Opções',
+                    style: FlutterFlowTheme.of(context).titleLarge,
+                  ),
+                ),
+              ],
+            ),
             Padding(
               padding: EdgeInsetsDirectional.fromSTEB(0.0, 24.0, 0.0, 0.0),
               child: FFButtonWidget(
-                onPressed: () {
+                onPressed: () async {
                   context.pop();
                   widget.editTags!();
                 },
                 text: 'Editar Tags',
                 options: FFButtonOptions(
                   width: double.infinity,
-                  height: 60.0,
+                  height: 44.0,
                   padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                   iconPadding:
                       EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                  color: FlutterFlowTheme.of(context).secondaryBackground,
+                  color: FlutterFlowTheme.of(context).primary,
                   textStyle: FlutterFlowTheme.of(context).bodyLarge.override(
                         fontFamily: 'Poppins',
-                        color: FlutterFlowTheme.of(context).primary,
+                        color: Colors.white,
                       ),
                   elevation: 2.0,
                   borderSide: BorderSide(
@@ -120,7 +130,7 @@ class _ActionSheetButtonsWidgetState extends State<ActionSheetButtonsWidget> {
                 text: widget.secondaryButtonTitle ?? '',
                 options: FFButtonOptions(
                   width: double.infinity,
-                  height: 60.0,
+                  height: 44.0,
                   padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                   iconPadding:
                       EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
@@ -147,7 +157,7 @@ class _ActionSheetButtonsWidgetState extends State<ActionSheetButtonsWidget> {
                 text: 'Remover Aluno',
                 options: FFButtonOptions(
                   width: double.infinity,
-                  height: 60.0,
+                  height: 44.0,
                   padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                   iconPadding:
                       EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),

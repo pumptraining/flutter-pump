@@ -1,3 +1,4 @@
+import 'package:flutter_flow/flutter_flow_util.dart';
 import 'package:pump_components/components/error_component/error_component_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_flow/flutter_flow_theme.dart';
@@ -20,7 +21,7 @@ class ApiLoaderWidget extends StatefulWidget {
   final dynamic params;
   final Widget Function(
       BuildContext context, AsyncSnapshot<ApiCallResponse>? snapshot) builder;
-  final ApiLoaderController? controller; 
+  final ApiLoaderController? controller;
 
   @override
   // ignore: library_private_types_in_public_api
@@ -33,7 +34,7 @@ class _ApiLoaderWidgetState extends State<ApiLoaderWidget> {
   bool isError = false;
 
   void reload() {
-    setState(() {
+    safeSetState(() {
       response = null;
     });
 
@@ -42,19 +43,28 @@ class _ApiLoaderWidgetState extends State<ApiLoaderWidget> {
 
   Future<ApiCallResponse?>? loadApiContent(Requestable apiCall,
       {dynamic params}) async {
-    setState(() {
-      isLoading = true;
-      isError = false;
-    });
+    if (mounted) {
+      safeSetState(() {
+        isLoading = true;
+        isError = false;
+      });
+    }
 
     response ??= await apiCall.call(params: params);
 
-    setState(() {
-      isLoading = false;
-      isError = !(response?.succeeded ?? true);
-    });
+    if (mounted) {
+      safeSetState(() {
+        isLoading = false;
+        isError = !(response?.succeeded ?? true);
+      });
+    }
 
     return response;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -75,7 +85,8 @@ class _ApiLoaderWidgetState extends State<ApiLoaderWidget> {
           child: SizedBox(
             width: 40.0,
             height: 40.0,
-            child: CircularProgressIndicator(strokeWidth: 1.0,
+            child: CircularProgressIndicator(
+              strokeWidth: 1.0,
               color: FlutterFlowTheme.of(context).primary,
             ),
           ),

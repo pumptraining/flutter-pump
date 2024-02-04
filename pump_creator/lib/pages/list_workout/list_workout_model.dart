@@ -14,6 +14,7 @@ class ListWorkoutModel extends FlutterFlowModel {
   String? choiceChipsValue;
   FormFieldController<List<String>>? choiceChipsValueController;
   // State field(s) for Checkbox widget.
+  final unfocusNode = FocusNode();
 
   Map<String, List<String>?>? selectedFilter;
 

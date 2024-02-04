@@ -36,7 +36,7 @@ class _AddCustomerWidgetState extends State<AddCustomerWidget> {
   late AddCustomerModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  String _bottomButtonText = 'Enviar Convite';
+  String _bottomButtonText = 'Atualizar';
 
   @override
   void initState() {

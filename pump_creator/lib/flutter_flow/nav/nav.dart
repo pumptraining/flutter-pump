@@ -168,8 +168,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           name: 'WorkoutPicker',
           path: '/workoutPicker',
           builder: (context, params) => WorkoutPickerWidget(
-            setupExercises: params.getParam<dynamic>(
-                'setupExercises', ParamType.JSON, true),
             showBackButton: params.getParam('showBackButton', ParamType.bool),
           ),
         ),
@@ -241,6 +239,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
             workoutId: params.getParam('workoutId', ParamType.String),
             userId: params.getParam('userId', ParamType.String),
             isPersonal: params.getParam('isPersonal', ParamType.bool),
+            showMoreButton: params.getParam('showMoreButton', ParamType.bool),
           ),
         ),
         FFRoute(
