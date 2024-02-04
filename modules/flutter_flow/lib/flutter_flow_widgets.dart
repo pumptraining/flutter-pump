@@ -80,7 +80,7 @@ class _FFButtonWidgetState extends State<FFButtonWidget> {
             child: Container(
               width: 23,
               height: 23,
-              child: CircularProgressIndicator(
+              child: CircularProgressIndicator(strokeWidth: 1.0,
                 valueColor: AlwaysStoppedAnimation<Color>(
                   widget.options.textStyle!.color ?? Colors.white,
                 ),

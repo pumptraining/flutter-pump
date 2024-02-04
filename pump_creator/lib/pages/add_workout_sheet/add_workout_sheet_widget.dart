@@ -2,12 +2,14 @@ import 'dart:io';
 
 import 'package:aligned_dialog/aligned_dialog.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
+import 'package:flutter_flow/common/user_settings.dart';
 import 'package:flutter_flow/flutter_flow_model.dart';
 import 'package:api_manager/api_requests/pump_creator_api_calls.dart';
 import 'package:flutter_flow/flutter_flow_util.dart';
 import 'package:pump_components/components/bottom_button_fixed/bottom_button_fixed_widget.dart';
 import 'package:pump_components/components/empty_list/empty_list_widget.dart';
 import 'package:pump_components/components/information_dialog/information_dialog_widget.dart';
+import 'package:pump_components/components/subscribe_screen/subscribe_screen_widget.dart';
 import 'package:pump_components/components/tag_component/tag_component_widget.dart';
 import 'package:pump_creator/flutter_flow/nav/nav.dart';
 import 'package:pump_creator/pages/add_workout_sheet_plan/add_workout_sheet_plan_widget.dart';
@@ -207,6 +209,29 @@ class _AddWorkoutSheetWidgetState extends State<AddWorkoutSheetWidget> {
                                 leading: Icon(Icons.copy),
                                 title: Text('Duplicar'),
                                 onTap: () {
+                                  if (!UserSettings().isSubscriber() &&
+                                      !UserSettings().canAddWorkoutSheet()) {
+                                    showModalBottomSheet(
+                                        isScrollControlled: true,
+                                        backgroundColor: Colors.transparent,
+                                        context: context,
+                                        builder: (context) {
+                                          return Container(
+                                            padding: EdgeInsets.only(
+                                                top: MediaQuery.of(context)
+                                                    .viewInsets
+                                                    .top),
+                                            height: MediaQuery.of(context)
+                                                .size
+                                                .height,
+                                            child: SubscribeScreenWidget(),
+                                          );
+                                        }).then((value) => {
+                                          if (value != null && value)
+                                            {context.pushNamed('Home')}
+                                        });
+                                    return;
+                                  }
                                   _model.isUpdate = false;
                                   _model.setCopyName();
                                   Navigator.pop(context);
@@ -267,6 +292,7 @@ class _AddWorkoutSheetWidgetState extends State<AddWorkoutSheetWidget> {
                           width: 40.0,
                           height: 40.0,
                           child: CircularProgressIndicator(
+                            strokeWidth: 1.0,
                             color: FlutterFlowTheme.of(context).primary,
                           ),
                         ),

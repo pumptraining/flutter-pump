@@ -103,7 +103,7 @@ class _CompletedWorkoutWidgetState extends State<CompletedWorkoutWidget>
               child: SizedBox(
                 width: 40.0,
                 height: 40.0,
-                child: CircularProgressIndicator(
+                child: CircularProgressIndicator(strokeWidth: 1.0,
                   valueColor: AlwaysStoppedAnimation<Color>(
                     FlutterFlowTheme.of(context).primary,
                   ),

@@ -15,5 +15,10 @@
     <string>production</string>
     <!-- Você pode adicionar mais configurações aqui para o ambiente de produção -->
 
+    <key>com.apple.developer.associated-domains</key>
+	<array>
+		<string>applinks:pumpapp.page.link/pump</string>
+        <string>pump</string>
+	</array>
 </dict>
 </plist>

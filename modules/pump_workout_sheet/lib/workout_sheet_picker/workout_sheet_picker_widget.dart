@@ -10,6 +10,7 @@ import 'package:flutter_flow/flutter_flow_icon_button.dart';
 import 'package:flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter_flow/flutter_flow_widgets.dart';
 import 'package:pump_components/components/bottom_button_fixed/bottom_button_fixed_widget.dart';
+import 'package:pump_components/components/cell_list_workout/cell_list_workout_widget.dart';
 import 'package:pump_components/components/empty_list/empty_list_widget.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -298,457 +299,93 @@ class _WorkoutSheetPickerWidgetState extends State<WorkoutSheetPickerWidget>
                                       final workoutListItem =
                                           workoutList[workoutListIndex];
 
-                                      return Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          Expanded(
-                                            child: Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(
-                                                      16.0, 4.0, 16.0, 8.0),
-                                              child: InkWell(
-                                                splashColor: Colors.transparent,
-                                                focusColor: Colors.transparent,
-                                                hoverColor: Colors.transparent,
-                                                highlightColor:
-                                                    Colors.transparent,
-                                                onTap: () async {
-                                                  if (_model.pickerEnabled) {
-                                                    setState(() {
-                                                      _model.selectedCheckboxIndex =
-                                                          workoutListIndex;
-                                                    });
-                                                  } else {
-                                                    context.pushNamed(
-                                                      'WorkoutSheetDetails',
-                                                      queryParameters: {
-                                                        'workoutId':
-                                                            serializeParam(
-                                                          workoutListItem[
-                                                              '_id'],
-                                                          ParamType.String,
-                                                        ),
-                                                        'showStartButton':
-                                                            serializeParam(
-                                                          false,
-                                                          ParamType.bool,
-                                                        ),
-                                                        'isPersonal':
-                                                            serializeParam(
-                                                          true,
-                                                          ParamType.bool,
-                                                        ),
-                                                      },
-                                                    );
-                                                  }
-                                                },
-                                                child: Container(
-                                                  width: double.infinity,
-                                                  height: 113.0,
-                                                  decoration: BoxDecoration(
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .secondaryBackground,
-                                                    boxShadow: [
-                                                      BoxShadow(
-                                                        blurRadius: 4.0,
-                                                        color:
-                                                            Color(0x32000000),
-                                                        offset:
-                                                            Offset(0.0, 2.0),
-                                                      )
-                                                    ],
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8.0),
-                                                  ),
-                                                  child: Padding(
-                                                    padding:
-                                                        EdgeInsetsDirectional
-                                                            .fromSTEB(8.0, 0.0,
-                                                                8.0, 0.0),
-                                                    child: Row(
-                                                      mainAxisSize:
-                                                          MainAxisSize.max,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceEvenly,
-                                                      children: [
-                                                        Container(
-                                                          width: 90.0,
-                                                          height: 90.0,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .secondaryBackground,
-                                                          ),
-                                                          child: Container(
-                                                            width: 90.0,
-                                                            height: 90.0,
-                                                            child: Stack(
-                                                              children: [
-                                                                ClipRRect(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              8.0),
-                                                                  child: workoutListItem[
-                                                                              'imageUrl'] !=
-                                                                          null
-                                                                      ? CachedNetworkImage(
-                                                                          imageUrl:
-                                                                              workoutListItem['imageUrl'],
-                                                                          width:
-                                                                              90.0,
-                                                                          height:
-                                                                              90.0,
-                                                                          fit: BoxFit
-                                                                              .cover,
-                                                                        )
-                                                                      : Container(
-                                                                          width:
-                                                                              90.0,
-                                                                          height:
-                                                                              90.0,
-                                                                          color:
-                                                                              FlutterFlowTheme.of(context).primaryBackground),
-                                                                ),
-                                                                ClipRRect(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              8.0),
-                                                                  child:
-                                                                      Container(
-                                                                    width: 90.0,
-                                                                    height:
-                                                                        90.0,
-                                                                    decoration:
-                                                                        BoxDecoration(
-                                                                      color: Color(
-                                                                          0x331A1F24),
-                                                                    ),
-                                                                    child:
-                                                                        Column(
-                                                                      mainAxisSize:
-                                                                          MainAxisSize
-                                                                              .max,
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .center,
-                                                                      children: [
-                                                                        Row(
-                                                                          mainAxisSize:
-                                                                              MainAxisSize.max,
-                                                                          mainAxisAlignment:
-                                                                              MainAxisAlignment.center,
-                                                                          crossAxisAlignment:
-                                                                              CrossAxisAlignment.center,
-                                                                          children: [
-                                                                            Text(
-                                                                              _model.calculateTotalWorkoutTime(workoutListItem).toString(),
-                                                                              style: FlutterFlowTheme.of(context).headlineMedium.override(
-                                                                                    fontFamily: 'Poppins',
-                                                                                    lineHeight: 1.0,
-                                                                                    color: Colors.white,
-                                                                                  ),
-                                                                            ),
-                                                                          ],
-                                                                        ),
-                                                                        Row(
-                                                                          mainAxisSize:
-                                                                              MainAxisSize.max,
-                                                                          mainAxisAlignment:
-                                                                              MainAxisAlignment.center,
-                                                                          children: [
-                                                                            Padding(
-                                                                              padding: EdgeInsetsDirectional.fromSTEB(6, 0, 6, 0),
-                                                                              child: AutoSizeText(
-                                                                                'semanas',
-                                                                                maxLines: 1,
-                                                                                minFontSize: 8,
-                                                                                style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                      fontFamily: 'Poppins',
-                                                                                      lineHeight: 1.0,
-                                                                                      color: Colors.white,
-                                                                                    ),
-                                                                              ),
-                                                                            ),
-                                                                          ],
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        Expanded(
-                                                          child: Padding(
-                                                            padding:
-                                                                EdgeInsetsDirectional
-                                                                    .fromSTEB(
-                                                                        12.0,
-                                                                        0.0,
-                                                                        0.0,
-                                                                        0.0),
-                                                            child: Column(
-                                                              mainAxisSize:
-                                                                  MainAxisSize
-                                                                      .max,
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .center,
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                Expanded(
-                                                                  child:
-                                                                      Padding(
-                                                                    padding: EdgeInsetsDirectional
-                                                                        .fromSTEB(
-                                                                            0.0,
-                                                                            12.0,
-                                                                            0.0,
-                                                                            0.0),
-                                                                    child: Row(
-                                                                      mainAxisSize:
-                                                                          MainAxisSize
-                                                                              .max,
-                                                                      crossAxisAlignment:
-                                                                          CrossAxisAlignment
-                                                                              .center,
-                                                                      children: [
-                                                                        Expanded(
-                                                                          child:
-                                                                              AutoSizeText(
-                                                                            workoutListItem['title'],
-                                                                            style:
-                                                                                FlutterFlowTheme.of(context).bodyMedium,
-                                                                          ),
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                                Row(
-                                                                  mainAxisSize:
-                                                                      MainAxisSize
-                                                                          .max,
-                                                                  children: [
-                                                                    Expanded(
-                                                                      child:
-                                                                          Padding(
-                                                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                                                            0.0,
-                                                                            4.0,
-                                                                            0.0,
-                                                                            0.0),
-                                                                        child:
-                                                                            AutoSizeText(
-                                                                          _model
-                                                                              .objectiveTitle(workoutListItem),
-                                                                          style: FlutterFlowTheme.of(context)
-                                                                              .labelMedium
-                                                                              .override(
-                                                                                fontFamily: 'Poppins',
-                                                                                color: FlutterFlowTheme.of(context).secondaryText,
-                                                                              ),
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                                Padding(
-                                                                  padding: EdgeInsetsDirectional
-                                                                      .fromSTEB(
-                                                                          0.0,
-                                                                          0.0,
-                                                                          0.0,
-                                                                          12.0),
-                                                                  child: Row(
-                                                                    mainAxisSize:
-                                                                        MainAxisSize
-                                                                            .max,
-                                                                    children: [
-                                                                      Expanded(
-                                                                        child:
-                                                                            Padding(
-                                                                          padding: EdgeInsetsDirectional.fromSTEB(
-                                                                              0.0,
-                                                                              4.0,
-                                                                              0.0,
-                                                                              0.0),
-                                                                          child:
-                                                                              AutoSizeText(
-                                                                            _model.mapSkillLevel(workoutListItem['trainingLevel']),
-                                                                            style: FlutterFlowTheme.of(context).labelMedium.override(
-                                                                                  fontFamily: 'Poppins',
-                                                                                  color: _model.mapSkillLevelColor(workoutListItem['trainingLevel']),
-                                                                                ),
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        if (widget
-                                                            .showBackButton)
-                                                          Padding(
-                                                            padding:
-                                                                EdgeInsetsDirectional
-                                                                    .fromSTEB(
-                                                                        0.0,
-                                                                        12.0,
-                                                                        0.0,
-                                                                        12.0),
-                                                            child: Column(
-                                                              mainAxisSize:
-                                                                  MainAxisSize
-                                                                      .max,
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceBetween,
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .end,
-                                                              children: [
-                                                                Visibility(
-                                                                  visible: _model
-                                                                      .pickerEnabled,
-                                                                  child: Theme(
-                                                                    data:
-                                                                        ThemeData(
-                                                                      checkboxTheme:
-                                                                          CheckboxThemeData(
-                                                                        shape:
-                                                                            CircleBorder(),
-                                                                      ),
-                                                                      unselectedWidgetColor:
-                                                                          FlutterFlowTheme.of(context)
-                                                                              .primaryBackground,
-                                                                    ),
-                                                                    child:
-                                                                        Checkbox(
-                                                                      value: _model
-                                                                              .selectedCheckboxIndex ==
-                                                                          workoutListIndex,
-                                                                      onChanged:
-                                                                          (newValue) async {
-                                                                        setState(
-                                                                            () {
-                                                                          if (newValue != null &&
-                                                                              newValue) {
-                                                                            _model.selectedCheckboxIndex =
-                                                                                workoutListIndex;
-                                                                          } else {
-                                                                            _model.selectedCheckboxIndex =
-                                                                                null;
-                                                                          }
-                                                                        });
-                                                                      },
-                                                                      activeColor:
-                                                                          FlutterFlowTheme.of(context)
-                                                                              .primary,
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                                Visibility(
-                                                                  visible: _model
-                                                                      .pickerEnabled,
-                                                                  child:
-                                                                      Padding(
-                                                                    padding: EdgeInsetsDirectional
-                                                                        .fromSTEB(
-                                                                            0.0,
-                                                                            0.0,
-                                                                            4.0,
-                                                                            0.0),
-                                                                    child:
-                                                                        FFButtonWidget(
-                                                                      onPressed:
-                                                                          () {
-                                                                        context
-                                                                            .pushNamed(
-                                                                          'WorkoutSheetDetails',
-                                                                          queryParameters: {
-                                                                            'workoutId':
-                                                                                serializeParam(
-                                                                              workoutListItem['_id'],
-                                                                              ParamType.String,
-                                                                            ),
-                                                                            'showStartButton':
-                                                                                serializeParam(
-                                                                              false,
-                                                                              ParamType.bool,
-                                                                            ),
-                                                                            'isPersonal':
-                                                                                serializeParam(
-                                                                              true,
-                                                                              ParamType.bool,
-                                                                            ),
-                                                                          },
-                                                                        );
-                                                                      },
-                                                                      text:
-                                                                          'visualizar',
-                                                                      options:
-                                                                          FFButtonOptions(
-                                                                        width:
-                                                                            70.0,
-                                                                        height:
-                                                                            34.0,
-                                                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                                                            0.0,
-                                                                            0.0,
-                                                                            0.0,
-                                                                            0.0),
-                                                                        iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                                                            0.0,
-                                                                            0.0,
-                                                                            0.0,
-                                                                            0.0),
-                                                                        color: FlutterFlowTheme.of(context)
-                                                                            .secondaryBackground,
-                                                                        textStyle: FlutterFlowTheme.of(context)
-                                                                            .bodyMedium
-                                                                            .override(
-                                                                              fontFamily: 'Poppins',
-                                                                              fontSize: 12,
-                                                                              color: FlutterFlowTheme.of(context).primary,
-                                                                            ),
-                                                                        borderSide:
-                                                                            BorderSide(
-                                                                          color:
-                                                                              FlutterFlowTheme.of(context).primary,
-                                                                          width:
-                                                                              1.0,
-                                                                        ),
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(8.0),
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                      ],
-                                                    ),
-                                                  ),
+                                      List<Widget> rowAndDivider = [];
+
+                                      CellListWorkoutWidget cell =
+                                          CellListWorkoutWidget(
+                                        imageUrl: workoutListItem['imageUrl'],
+                                        title: workoutListItem['title'],
+                                        subtitle: _model
+                                            .objectiveTitle(workoutListItem),
+                                        level: _model.mapSkillLevel(
+                                            workoutListItem['trainingLevel']),
+                                        levelColor: _model.mapSkillLevelColor(
+                                            workoutListItem['trainingLevel']),
+                                        workoutId: workoutListItem['_id'],
+                                        time: _model
+                                            .calculateTotalWorkoutTime(
+                                                workoutListItem)
+                                            .toString(),
+                                        isPicker: _model.pickerEnabled,
+                                        isSelected:
+                                            _model.selectedCheckboxIndex ==
+                                                workoutListIndex,
+                                        titleImage: 'semanas',
+                                        onTap: (p0) {
+                                          if (_model.pickerEnabled) {
+                                            setState(() {
+                                              _model.selectedCheckboxIndex =
+                                                  workoutListIndex;
+                                            });
+                                          } else {
+                                            context.pushNamed(
+                                              'WorkoutSheetDetails',
+                                              queryParameters: {
+                                                'workoutId': serializeParam(
+                                                  workoutListItem['_id'],
+                                                  ParamType.String,
                                                 ),
-                                              ).animateOnPageLoad(animationsMap[
-                                                  'containerOnPageLoadAnimation1']!),
-                                            ),
+                                                'showStartButton':
+                                                    serializeParam(
+                                                  false,
+                                                  ParamType.bool,
+                                                ),
+                                                'isPersonal': serializeParam(
+                                                  true,
+                                                  ParamType.bool,
+                                                ),
+                                              },
+                                            );
+                                          }
+                                        },
+                                        onDetailTap: (p0) {
+                                          context.pushNamed(
+                                            'WorkoutSheetDetails',
+                                            queryParameters: {
+                                              'workoutId': serializeParam(
+                                                workoutListItem['_id'],
+                                                ParamType.String,
+                                              ),
+                                              'showStartButton': serializeParam(
+                                                false,
+                                                ParamType.bool,
+                                              ),
+                                              'isPersonal': serializeParam(
+                                                true,
+                                                ParamType.bool,
+                                              ),
+                                            },
+                                          );
+                                        },
+                                      );
+
+                                      rowAndDivider.add(cell);
+
+                                      if (workoutListIndex <
+                                          workoutList.length - 1) {
+                                        rowAndDivider.add(
+                                          Divider(
+                                            indent: 106,
+                                            color: FlutterFlowTheme.of(context)
+                                                .secondaryBackground,
+                                            thickness:
+                                                1.0, // Espessura do divisor
                                           ),
-                                        ],
+                                        );
+                                      }
+
+                                      return Column(
+                                        children: rowAndDivider,
                                       );
                                     },
                                   );

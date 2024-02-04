@@ -293,7 +293,7 @@ class _CategoryListWidgetState extends State<CategoryListWidget>
                                           child: SizedBox(
                                             width: 40.0,
                                             height: 40.0,
-                                            child: CircularProgressIndicator(
+                                            child: CircularProgressIndicator(strokeWidth: 1.0,
                                               color:
                                                   FlutterFlowTheme.of(context)
                                                       .primary,

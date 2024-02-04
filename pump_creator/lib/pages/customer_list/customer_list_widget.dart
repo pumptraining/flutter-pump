@@ -1,8 +1,11 @@
+import 'package:api_manager/auth/firebase_auth/auth_util.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter_flow/common/user_settings.dart';
 import 'package:flutter_flow/flutter_flow_icon_button.dart';
 import 'package:flutter_flow/flutter_flow_model.dart';
 import 'package:flutter_flow/nav/serialization_util.dart';
 import 'package:pump_components/components/subscribe_screen/subscribe_screen_widget.dart';
+import 'package:pump_creator/common/invite_link.dart';
 import 'package:pump_creator/flutter_flow/nav/nav.dart';
 import 'package:pump_creator/models/tag_model.dart';
 import 'package:pump_components/components/empty_list/empty_list_widget.dart';
@@ -17,6 +20,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:share_plus/share_plus.dart';
 import '../../backend/firebase_analytics/analytics.dart';
 import 'customer_list_model.dart';
 export 'customer_list_model.dart';
@@ -91,35 +95,8 @@ class _CustomerListWidgetState extends State<CustomerListWidget>
     super.dispose();
   }
 
-  void showAddCustomer(BuildContext context) {
-    if (_model.content == null) return;
-
-    if (!UserSettings().isSubscriber() &&
-        _model.content['customers'].length >= 1) {
-      showModalBottomSheet(
-          isScrollControlled: true,
-          backgroundColor: Colors.transparent,
-          context: context,
-          builder: (context) {
-            return Container(
-              padding:
-                  EdgeInsets.only(top: MediaQuery.of(context).viewInsets.top),
-              height: MediaQuery.of(context).size.height,
-              child: SubscribeScreenWidget(),
-            );
-          }).then((value) => {
-            if (value != null && value) {context.pushNamed('Home')}
-          });
-      return;
-    }
-    context.pushNamed('AddCustomer').then((value) => {
-          if (value != null && value is bool && value)
-            {
-              safeSetState(() {
-                apiLoaderController.reload?.call();
-              })
-            }
-        });
+  Future<void> showAddCustomer(BuildContext context) async {
+    await InviteLink.shareDynamicLink();
   }
 
   @override
@@ -179,7 +156,7 @@ class _CustomerListWidgetState extends State<CustomerListWidget>
                   ),
                   onPressed: () async {
                     HapticFeedback.mediumImpact();
-                    showAddCustomer(context);
+                    await showAddCustomer(context);
                   },
                 ),
               ),
@@ -199,12 +176,14 @@ class _CustomerListWidgetState extends State<CustomerListWidget>
 
               if (_model.showEmptyState()) {
                 return EmptyListWidget(
-                  buttonTitle: "Adicionar",
+                  buttonTitle: "Compartilhar Link",
                   title: "Sem alunos",
-                  message: "Nenhum aluno encontrado.\nAdicione um novo aluno.",
-                  onButtonPressed: () {
-                    showAddCustomer(context);
+                  message:
+                      "Nenhum aluno encontrado.\n\nEnvie o link de cadastro para os seus alunos. Os alunos aparecerão na lista após se cadastrarem e aceitarem o seu convite.",
+                  onButtonPressed: () async {
+                    await showAddCustomer(context);
                   },
+                  iconData: Icons.people_outlined,
                 );
               }
 
@@ -340,25 +319,6 @@ class _CustomerListWidgetState extends State<CustomerListWidget>
                     hoverColor: Colors.transparent,
                     highlightColor: Colors.transparent,
                     onTap: () {
-                      if (!UserSettings().isSubscriber() &&
-                          _model.content['customers'].length > 1) {
-                        showModalBottomSheet(
-                            isScrollControlled: true,
-                            backgroundColor: Colors.transparent,
-                            context: context,
-                            builder: (context) {
-                              return Container(
-                                padding: EdgeInsets.only(
-                                    top: MediaQuery.of(context).viewInsets.top),
-                                height: MediaQuery.of(context).size.height,
-                                child: SubscribeScreenWidget(),
-                              );
-                            }).then((value) => {
-                              if (value != null && value)
-                                {context.pushNamed('Home')}
-                            });
-                        return;
-                      }
                       context.pushNamed('CustomerDetails', queryParameters: {
                         'customerId': serializeParam(
                           customerItem['userId'],

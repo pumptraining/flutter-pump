@@ -227,7 +227,7 @@ void showSnackbar(
               child: Container(
                 height: 20,
                 width: 20,
-                child: const CircularProgressIndicator(
+                child: const CircularProgressIndicator(strokeWidth: 1.0,
                   color: Colors.white,
                 ),
               ),

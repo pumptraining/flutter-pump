@@ -207,7 +207,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                 child: SizedBox(
                   width: 40,
                   height: 40,
-                  child: CircularProgressIndicator(
+                  child: CircularProgressIndicator(strokeWidth: 1.0,
                     color: FlutterFlowTheme.of(context).primary,
                   ),
                 ),
@@ -765,7 +765,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                             logFirebaseEvent('Container_navigate_to');
 
                             launchURL(
-                                'https://pumpapp.com.br/pol%C3%ADtica-de-privacidade');
+                                'https://pumpapp.com.br/politica-de-privacidade');
                           },
                           child: Container(
                             width: double.infinity,

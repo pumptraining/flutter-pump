@@ -5,6 +5,7 @@ import 'package:flutter_flow/transition_info.dart';
 import 'package:go_router/go_router.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:pump_activity/activity/activity_widget.dart';
+import 'package:pump_components/components/faq/faq_screen.dart';
 import 'package:pump_components/components/subscribe_screen/subscribe_screen_widget.dart';
 import 'package:pump_creator/pages/add_customer/add_customer_widget.dart';
 import 'package:pump_creator/pages/customer_details/customer_details_widget.dart';
@@ -20,6 +21,8 @@ import 'package:pump_workout_sheet/workout_sheet_picker/workout_sheet_picker_wid
 import '../../index.dart';
 import '../../main.dart';
 import 'package:flutter_flow/nav/serialization_util.dart';
+
+import '../../pages/customer_payments/customer_payments_widget.dart';
 export 'package:go_router/go_router.dart';
 
 class AppStateNotifier extends ChangeNotifier {
@@ -165,8 +168,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           name: 'WorkoutPicker',
           path: '/workoutPicker',
           builder: (context, params) => WorkoutPickerWidget(
-            setupExercises: params.getParam<dynamic>(
-                'setupExercises', ParamType.JSON, true),
             showBackButton: params.getParam('showBackButton', ParamType.bool),
           ),
         ),
@@ -238,6 +239,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
             workoutId: params.getParam('workoutId', ParamType.String),
             userId: params.getParam('userId', ParamType.String),
             isPersonal: params.getParam('isPersonal', ParamType.bool),
+            showMoreButton: params.getParam('showMoreButton', ParamType.bool),
           ),
         ),
         FFRoute(
@@ -285,9 +287,23 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           ),
         ),
         FFRoute(
+          name: 'CustomerPaymentsWidget',
+          path: '/customerPaymentsWidget',
+          builder: (context, params) => CustomerPaymentsWidget(
+            customerId: params.getParam('customerId', ParamType.String),
+          ),
+        ),
+        FFRoute(
           name: 'SubscribeScreenWidget',
           path: '/subscribeScreenWidget',
           builder: (context, params) => SubscribeScreenWidget(),
+        ),
+        FFRoute(
+          name: 'FaqScreenWidget',
+          path: '/FaqScreenWidget',
+          builder: (context, params) => FaqScreenWidget(
+            questions: params.getParam('questions', ParamType.JSON, true),
+          ),
         ),
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );

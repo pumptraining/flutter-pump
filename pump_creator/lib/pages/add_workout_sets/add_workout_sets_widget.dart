@@ -117,7 +117,7 @@ class _AddWorkoutSetsWidgetState extends State<AddWorkoutSetsWidget> {
               color: FlutterFlowTheme.of(context).primaryText,
             ),
             onPressed: () async {
-              Navigator.of(context).pop();
+              Navigator.pop(context, _model.sets);
             },
           ),
           backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
@@ -657,7 +657,8 @@ class _AddWorkoutSetsWidgetState extends State<AddWorkoutSetsWidget> {
                       ),
                     ),
                   ),
-                  BottomButtonFixedWidget(
+                  Visibility(
+                    child: BottomButtonFixedWidget(
                     buttonTitle: _bottomButtonText,
                     onPressed: () async {
                       if (_editWidgetFocusNode.hasFocus) {
@@ -674,6 +675,7 @@ class _AddWorkoutSetsWidgetState extends State<AddWorkoutSetsWidget> {
                       }
                       Navigator.pop(context, _model.sets);
                     },
+                  ),
                   ),
                 ],
               ),

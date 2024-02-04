@@ -181,7 +181,7 @@ class _FlutterFlowVideoPlayerState extends State<FlutterFlowVideoPlayer>
                   : Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: const [
-                        CircularProgressIndicator(),
+                        CircularProgressIndicator(strokeWidth: 1.0,),
                         SizedBox(height: 20),
                         Text('Loading'),
                       ],

@@ -447,11 +447,13 @@ class PaymentSheetCall {
   }
 }
 
-class UserHomeCall {
-  Future<ApiCallResponse> call() {
+class UserHomeCall extends Requestable {
+  @override
+  Future<ApiCallResponse> call({dynamic params}) {
+    final invite = params['invite'];
     return ApiManager.instance.makeApiCall(
       callName: 'UserHome',
-      apiUrl: '${PumpGroup.baseUrl}/home-pump/home',
+      apiUrl: '${PumpGroup.baseUrl}/home-pump/home?invite=$invite',
       callType: ApiCallType.GET,
       headers: {
         ...PumpGroup.headers,

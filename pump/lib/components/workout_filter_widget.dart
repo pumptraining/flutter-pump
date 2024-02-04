@@ -1,4 +1,3 @@
-import 'package:api_manager/api_manager/api_manager.dart';
 import 'package:api_manager/api_requests/pump_api_calls.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_flow/flutter_flow_choice_chips.dart';
@@ -276,7 +275,7 @@ class _WorkoutFilterWidgetState extends State<WorkoutFilterWidget> {
                                 child: SizedBox(
                                   width: 40.0,
                                   height: 40.0,
-                                  child: CircularProgressIndicator(
+                                  child: CircularProgressIndicator(strokeWidth: 1.0,
                                     valueColor: AlwaysStoppedAnimation<Color>(
                                       FlutterFlowTheme.of(context).primary,
                                     ),

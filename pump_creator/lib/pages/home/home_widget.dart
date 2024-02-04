@@ -14,6 +14,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_flow/common/user_settings.dart';
 import 'package:pump_components/components/subscribe_screen/subscribe_screen_widget.dart';
+import 'package:pump_creator/common/invite_link.dart';
 import 'package:pump_creator/flutter_flow/nav/nav.dart';
 import '../../backend/firebase_analytics/analytics.dart';
 import 'home_model.dart';
@@ -488,6 +489,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                       width: 40.0,
                       height: 40.0,
                       child: CircularProgressIndicator(
+                        strokeWidth: 1.0,
                         color: FlutterFlowTheme.of(context).primary,
                       ),
                     ),
@@ -733,17 +735,12 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
 
                                   return InkWell(
                                     onTap: () {
+                                      if (option.routeName == 'AddCustomer') {
+                                        InviteLink.shareDynamicLink();
+                                        return;
+                                      }
                                       if (!UserSettings().isSubscriber()) {
                                         if (option.routeName == 'AddExercise') {
-                                          showSubscribeScreen(context);
-                                          return;
-                                        }
-
-                                        if (option.routeName == 'AddCustomer' &&
-                                            (int.tryParse(_model
-                                                        .getCustomerCount()) ??
-                                                    0) >=
-                                                1) {
                                           showSubscribeScreen(context);
                                           return;
                                         }

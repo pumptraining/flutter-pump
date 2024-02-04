@@ -78,7 +78,7 @@ class FirebaseAuthManager extends AuthManager
     required BuildContext context,
   }) async {
     try {
-      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email.trim());
     } on FirebaseAuthException catch (e) {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
@@ -99,7 +99,7 @@ class FirebaseAuthManager extends AuthManager
   ) =>
       _signInOrCreateAccount(
         context,
-        () => emailSignInFunc(email, password),
+        () => emailSignInFunc(email.trim(), password),
         'EMAIL',
       );
 
@@ -111,7 +111,7 @@ class FirebaseAuthManager extends AuthManager
   ) =>
       _signInOrCreateAccount(
         context,
-        () => emailCreateAccountFunc(email, password),
+        () => emailCreateAccountFunc(email.trim(), password),
         'EMAIL',
       );
 

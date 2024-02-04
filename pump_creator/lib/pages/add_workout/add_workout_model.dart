@@ -86,9 +86,9 @@ class AddWorkoutModel extends FlutterFlowModel {
 
   void setValues() {
     if (workout != null) {
-      yourNameController1.text = workout['namePortuguese'];
+      yourNameController1.text = workout['namePortuguese'] ?? "";
       yourNameController2.text = workout['description'] ?? "";
-      isUpdate = true;
+      // isUpdate = true;
     } else {
       workout = {};
       workout['trainingImageUrl'] = 'https://res.cloudinary.com/hssoaq6x7/image/upload/v1704734551/IconAppPump-removebg-preview-4_sxmknd.png';

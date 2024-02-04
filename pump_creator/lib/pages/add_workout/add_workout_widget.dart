@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:aligned_dialog/aligned_dialog.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter_flow/common/utils.dart';
 import 'package:flutter_flow/flutter_flow_model.dart';
 import 'package:flutter_flow/flutter_flow_util.dart';
 import 'package:pump_components/components/bottom_button_fixed/bottom_button_fixed_widget.dart';
@@ -264,7 +265,7 @@ class _AddWorkoutWidgetState extends State<AddWorkoutWidget> {
                                 child: SizedBox(
                                   width: 40.0,
                                   height: 40.0,
-                                  child: CircularProgressIndicator(
+                                  child: CircularProgressIndicator(strokeWidth: 1.0,
                                     color: FlutterFlowTheme.of(context).primary,
                                   ),
                                 ),
@@ -949,7 +950,11 @@ class _AddWorkoutWidgetState extends State<AddWorkoutWidget> {
                                                 final isLast =
                                                     exerciseList.length ==
                                                         (exerciseListIndex + 1);
-                                                return Padding(
+                                                return InkWell(
+                                                  onTap: () {
+                                                    // Utils.showExerciseVideo(context, exerciseListItem['exercise']['videoUrl']);
+                                                  },
+                                                  child: Padding(
                                                   padding: EdgeInsetsDirectional
                                                       .fromSTEB(
                                                           0.0,
@@ -1099,6 +1104,7 @@ class _AddWorkoutWidgetState extends State<AddWorkoutWidget> {
                                                       ],
                                                     ),
                                                   ),
+                                                ),
                                                 );
                                               },
                                             );

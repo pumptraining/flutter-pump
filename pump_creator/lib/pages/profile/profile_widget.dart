@@ -14,6 +14,8 @@ import 'package:flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter_flow/nav/serialization_util.dart';
 import 'package:pump_components/components/cancel_subscribe/cancel_subscribe_widget.dart';
 import 'package:pump_components/components/subscribe_screen/subscribe_screen_widget.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import '../../flutter_flow/nav/nav.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -215,6 +217,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                   width: 40,
                   height: 40,
                   child: CircularProgressIndicator(
+                    strokeWidth: 1.0,
                     color: FlutterFlowTheme.of(context).primary,
                   ),
                 ),
@@ -309,8 +312,10 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                                         children: [
                                           Expanded(
                                             child: Text(
-                                              _model.content['firstName'] !=
-                                                      null
+                                              (_model.content != null &&
+                                                      _model.content[
+                                                              'firstName'] !=
+                                                          null)
                                                   ? _model.content['firstName']
                                                   : currentUserDisplayName,
                                               style:
@@ -328,8 +333,10 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                                               padding: EdgeInsetsDirectional
                                                   .fromSTEB(0, 4, 0, 0),
                                               child: AutoSizeText(
-                                                _model.content['email'] ??
-                                                    currentUserEmail,
+                                                _model.content != null
+                                                    ? _model.content['email'] ??
+                                                        currentUserEmail
+                                                    : '',
                                                 maxLines: 1,
                                                 style:
                                                     FlutterFlowTheme.of(context)
@@ -731,6 +738,127 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                           hoverColor: Colors.transparent,
                           highlightColor: Colors.transparent,
                           onTap: () async {
+                            await launchUrlString(
+                                'https://pumpapp.page.link/pump',
+                                mode: LaunchMode.externalApplication);
+                          },
+                          child: Container(
+                            width: double.infinity,
+                            height: 60,
+                            decoration: BoxDecoration(
+                              color: FlutterFlowTheme.of(context)
+                                  .secondaryBackground,
+                              boxShadow: [
+                                BoxShadow(
+                                  blurRadius: 5,
+                                  color: Color(0x3416202A),
+                                  offset: Offset(0, 2),
+                                )
+                              ],
+                              borderRadius: BorderRadius.circular(12),
+                              shape: BoxShape.rectangle,
+                            ),
+                            child: Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        12, 0, 0, 0),
+                                    child: Text(
+                                      'Conheça o App do Aluno',
+                                      style: FlutterFlowTheme.of(context)
+                                          .labelMedium,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Align(
+                                      alignment: AlignmentDirectional(0.9, 0),
+                                      child: Icon(
+                                        Icons.arrow_forward_ios,
+                                        color: FlutterFlowTheme.of(context)
+                                            .secondaryText,
+                                        size: 18,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(20, 12, 20, 0),
+                        child: InkWell(
+                          splashColor: Colors.transparent,
+                          focusColor: Colors.transparent,
+                          hoverColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          onTap: () async {
+                            context.pushNamed('FaqScreenWidget', queryParameters: {
+                              'questions':
+                                  serializeParam(_model.getFAQOptions(), ParamType.JSON, true)
+                            });
+                          },
+                          child: Container(
+                            width: double.infinity,
+                            height: 60,
+                            decoration: BoxDecoration(
+                              color: FlutterFlowTheme.of(context)
+                                  .secondaryBackground,
+                              boxShadow: [
+                                BoxShadow(
+                                  blurRadius: 5,
+                                  color: Color(0x3416202A),
+                                  offset: Offset(0, 2),
+                                )
+                              ],
+                              borderRadius: BorderRadius.circular(12),
+                              shape: BoxShape.rectangle,
+                            ),
+                            child: Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        12, 0, 0, 0),
+                                    child: Text(
+                                      'Perguntas Frequentes',
+                                      style: FlutterFlowTheme.of(context)
+                                          .labelMedium,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Align(
+                                      alignment: AlignmentDirectional(0.9, 0),
+                                      child: Icon(
+                                        Icons.arrow_forward_ios,
+                                        color: FlutterFlowTheme.of(context)
+                                            .secondaryText,
+                                        size: 18,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(20, 12, 20, 0),
+                        child: InkWell(
+                          splashColor: Colors.transparent,
+                          focusColor: Colors.transparent,
+                          hoverColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          onTap: () async {
                             logFirebaseEvent('PROFILE_PAGE_SHARE_ON_TAP');
                             logFirebaseEvent('Container_navigate_to');
 
@@ -855,9 +983,8 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                           onTap: () async {
                             logFirebaseEvent('PROFILE_PAGE_TERMS_ON_TAP');
                             logFirebaseEvent('Container_navigate_to');
-
                             launchURL(
-                                'https://pumpapp.com.br/pol%C3%ADtica-de-privacidade');
+                                'https://pumpapp.com.br/politica-de-privacidade');
                           },
                           child: Container(
                             width: double.infinity,
@@ -918,8 +1045,9 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                             logFirebaseEvent('PROFILE_PAGE_TERMS_ON_TAP');
                             logFirebaseEvent('Container_navigate_to');
 
-                            var name = _model.content['firstName'].toString().trim();
-                            var contact = "+5511987194717";
+                            var name =
+                                _model.content['firstName'].toString().trim();
+                            var contact = "+5511993792387";
                             var androidUrl =
                                 "whatsapp://send?phone=$contact&text=Olá, sou $name, Personal Trainer, preciso de ajuda com o Pump App.";
                             var iosUrl =
@@ -1123,7 +1251,9 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                         ),
                       ),
                       Visibility(
-                        visible: UserSettings().isSubscriber() && FirebaseRemoteConfig.instance.getBool('show_subscribe_view'),
+                        visible: UserSettings().isSubscriber() &&
+                            FirebaseRemoteConfig.instance
+                                .getBool('show_subscribe_view'),
                         child: Padding(
                           padding:
                               EdgeInsetsDirectional.fromSTEB(20, 12, 20, 0),
