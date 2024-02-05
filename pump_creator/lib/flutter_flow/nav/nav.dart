@@ -12,6 +12,7 @@ import 'package:pump_creator/pages/customer_details/customer_details_widget.dart
 import 'package:pump_creator/pages/customer_list/customer_list_widget.dart';
 import 'package:pump_creator/pages/home/home_widget.dart';
 import 'package:pump_creator/pages/reset_password/reset_password_widget.dart';
+import 'package:pump_workout/pages/edit_workout_series/edit_workout_series_widget.dart';
 import 'package:pump_workout/pages/review_screen/review_screen_widget.dart';
 import 'package:pump_workout/pages/workout_completed_list/workout_completed_list_widget.dart';
 import 'package:pump_workout/pages/workout_details/workout_details_widget.dart';
@@ -303,6 +304,13 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           path: '/FaqScreenWidget',
           builder: (context, params) => FaqScreenWidget(
             questions: params.getParam('questions', ParamType.JSON, true),
+          ),
+        ),
+        FFRoute(
+          name: 'EditWorkoutSeriesWidget',
+          path: '/EditWorkoutSeriesWidget',
+          builder: (context, params) => EditWorkoutSeriesWidget(
+            workout: params.getParam('workout', ParamType.JSON),
           ),
         ),
       ].map((r) => r.toRoute(appStateNotifier)).toList(),

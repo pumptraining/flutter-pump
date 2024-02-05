@@ -4,6 +4,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_flow/common/utils.dart';
 import 'package:flutter_flow/flutter_flow_model.dart';
 import 'package:flutter_flow/flutter_flow_util.dart';
+import 'package:flutter_flow/nav/serialization_util.dart';
 import 'package:pump_components/components/bottom_button_fixed/bottom_button_fixed_widget.dart';
 import 'package:pump_components/components/information_dialog/information_dialog_widget.dart';
 import 'package:pump_components/components/tag_component/tag_component_widget.dart';
@@ -670,6 +671,13 @@ class _AddWorkoutWidgetState extends State<AddWorkoutWidget> {
                               'Nenhuma série adicionada ainda. Adicione as séries para criar o treino.',
                           buttonTitle: 'Adicionar',
                           onButtonPressed: () async {
+                            
+                            context.pushNamed('EditWorkoutSeriesWidget', queryParameters: {
+                              'workout': serializeParam(_model.workout, ParamType.JSON),
+                            });
+                            return;
+
+
                             final result = await Navigator.push(
                               context,
                               MaterialPageRoute(

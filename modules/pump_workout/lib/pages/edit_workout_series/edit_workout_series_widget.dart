@@ -5,14 +5,13 @@ import 'package:pump_components/components/edit_workout_series/edit_workout_seri
 import 'edit_workout_series_model.dart';
 
 class EditWorkoutSeriesWidget extends StatefulWidget {
-  const EditWorkoutSeriesWidget(
-      {Key? key, this.workout})
-      : super(key: key);
+  const EditWorkoutSeriesWidget({Key? key, this.workout}) : super(key: key);
 
   final dynamic workout;
 
   @override
-  _EditWorkoutSeriesWidgetState createState() => _EditWorkoutSeriesWidgetState();
+  _EditWorkoutSeriesWidgetState createState() =>
+      _EditWorkoutSeriesWidgetState();
 }
 
 class _EditWorkoutSeriesWidgetState extends State<EditWorkoutSeriesWidget> {
