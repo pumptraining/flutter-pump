@@ -78,13 +78,17 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
       debugLogDiagnostics: true,
       refreshListenable: appStateNotifier,
       errorBuilder: (context, state) =>
-          appStateNotifier.loggedIn ? NavBarPage() : LoginWidget(),
+          (appStateNotifier.loggedIn && currentUser != null)
+              ? NavBarPage()
+              : LoginWidget(),
       routes: [
         FFRoute(
           name: '_initialize',
           path: '/',
           builder: (context, _) =>
-              appStateNotifier.loggedIn ? NavBarPage() : LoginWidget(),
+              (appStateNotifier.loggedIn && currentUser != null)
+                  ? NavBarPage()
+                  : LoginWidget(),
         ),
         FFRoute(
           name: 'PersonalProfile',
@@ -111,19 +115,24 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           path: '/workoutList',
           builder: (context, params) => WorkoutListWidget(
             workout: params.getParam<dynamic>('workout', ParamType.JSON, true),
-            personalImageUrl: params.getParam('personalImageUrl', ParamType.String),
-            changedWorkout: params.getParam<dynamic>('changedWorkout', ParamType.JSON, true),
+            personalImageUrl:
+                params.getParam('personalImageUrl', ParamType.String),
+            changedWorkout: params.getParam<dynamic>(
+                'changedWorkout', ParamType.JSON, true),
           ),
         ),
         FFRoute(
           name: 'RestScreen',
           path: '/restScreen',
           builder: (context, params) => RestScreenWidget(
-            nextExercise: params.getParam<dynamic>('nextExercise', ParamType.JSON),
-            personalImageUrl: params.getParam('personalImageUrl', ParamType.String),
+            nextExercise:
+                params.getParam<dynamic>('nextExercise', ParamType.JSON),
+            personalImageUrl:
+                params.getParam('personalImageUrl', ParamType.String),
             workout: params.getParam<dynamic>('workout', ParamType.JSON, true),
             restTime: params.getParam('restTime', ParamType.int),
-            changedWorkout: params.getParam<dynamic>('changedWorkout', ParamType.JSON, true),
+            changedWorkout: params.getParam<dynamic>(
+                'changedWorkout', ParamType.JSON, true),
             currentSetIndex: params.getParam('currentSetIndex', ParamType.int),
           ),
         ),
@@ -143,11 +152,13 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, params) => CompletedWorkoutWidget(
             workoutId: params.getParam('workoutId', ParamType.String),
             userId: params.getParam('userId', ParamType.String),
-            totalSecondsTime: params.getParam('totalSecondsTime', ParamType.int),
+            totalSecondsTime:
+                params.getParam('totalSecondsTime', ParamType.int),
             timeString: params.getParam('timeString', ParamType.String),
             imageUrl: params.getParam('imageUrl', ParamType.String),
             personalId: params.getParam('personalId', ParamType.String),
-            personalImageUrl: params.getParam('personalImageUrl', ParamType.String),
+            personalImageUrl:
+                params.getParam('personalImageUrl', ParamType.String),
           ),
         ),
         FFRoute(
@@ -182,9 +193,8 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: 'Home',
           path: '/home',
-          builder: (context, params) => params.isEmpty
-              ? NavBarPage(initialPage: 'Home')
-              : HomeWidget(),
+          builder: (context, params) =>
+              params.isEmpty ? NavBarPage(initialPage: 'Home') : HomeWidget(),
         ),
         FFRoute(
           name: 'Profile',
@@ -212,7 +222,8 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           name: 'CategoryList',
           path: '/categoryList',
           builder: (context, params) => CategoryListWidget(
-            forwardUri: params.getParam<dynamic>('forwardUri', ParamType.String),
+            forwardUri:
+                params.getParam<dynamic>('forwardUri', ParamType.String),
             imageUrl: params.getParam('imageUrl', ParamType.String),
             categoryName: params.getParam('categoryName', ParamType.String),
             userId: params.getParam('userId', ParamType.String),
@@ -238,7 +249,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
             personalId: params.getParam('personalId', ParamType.String),
           ),
         ),
-         FFRoute(
+        FFRoute(
           name: 'UserPurchaseWorkoutSheet',
           path: '/userPurchaseWorkoutSheet',
           builder: (context, params) => UserPurchaseWorkoutSheetWidget(),
@@ -428,7 +439,8 @@ class FFRoute {
                   child: SizedBox(
                     width: 40.0,
                     height: 40.0,
-                    child: CircularProgressIndicator(strokeWidth: 1.0,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 1.0,
                       valueColor: AlwaysStoppedAnimation<Color>(
                         FlutterFlowTheme.of(context).primary,
                       ),

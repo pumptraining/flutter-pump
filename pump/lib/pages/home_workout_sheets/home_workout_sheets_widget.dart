@@ -325,7 +325,7 @@ class _HomeWorkoutSheetsWidgetState extends State<HomeWorkoutSheetsWidget>
               children: [
                 Expanded(
                   child: Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
+                    padding: EdgeInsetsDirectional.fromSTEB(16, 0, 16, 16),
                     child: Text(
                       'Treinadores ',
                       style: FlutterFlowTheme.of(context).headlineMedium,
@@ -338,6 +338,7 @@ class _HomeWorkoutSheetsWidgetState extends State<HomeWorkoutSheetsWidget>
           Container(
             width: double.infinity,
             height: 130,
+            alignment: AlignmentDirectional.topCenter,
             decoration: BoxDecoration(
               color: FlutterFlowTheme.of(context).primaryBackground,
             ),
@@ -365,6 +366,7 @@ class _HomeWorkoutSheetsWidgetState extends State<HomeWorkoutSheetsWidget>
                   child: Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
                     child: Container(
+                      alignment: AlignmentDirectional.topCenter,
                       width: 110,
                       decoration: BoxDecoration(
                         color: FlutterFlowTheme.of(context).primaryBackground,
@@ -374,7 +376,7 @@ class _HomeWorkoutSheetsWidgetState extends State<HomeWorkoutSheetsWidget>
                         padding: EdgeInsetsDirectional.fromSTEB(12, 0, 12, 0),
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start, 
                           children: [
                             Align(
                               alignment: AlignmentDirectional(0, 0),

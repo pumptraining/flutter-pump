@@ -18,6 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:pump/flutter_flow/nav/nav.dart';
 import 'package:pump/pages/home/home_animation_map.dart';
+import 'package:pump/pages/login/login_widget.dart';
 import 'package:pump_components/components/information_dialog/information_dialog_widget.dart';
 import '../../backend/firebase_analytics/analytics.dart';
 import 'home_model.dart';
