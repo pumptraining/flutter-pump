@@ -13,6 +13,7 @@ import 'package:flutter_flow/common/user_settings.dart';
 import 'package:flutter_flow/common/utils.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
+import 'package:pump/pages/login/login_widget.dart';
 import 'backend/firebase/firebase_config.dart';
 import 'package:flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter_flow/internationalization.dart';
@@ -29,14 +30,12 @@ void main() async {
   await initFirebase();
 
   await FlutterFlowTheme.initialize();
-
   Stripe.publishableKey =
       'pk_live_51MS4dVEC5sXZsfQl4DQ5sfy5gvMfTdunTRv2mAJOygVrLTRXi91LottjOIMJeS0tZsZuMz6ftq5Gzyv10wCicCeX00LIgq3ot0';
 
   if (!kIsWeb) {
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 
-    await _setupRemoteConfig();
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
     FirebaseMessaging messaging = FirebaseMessaging.instance;
@@ -85,19 +84,11 @@ void main() async {
     }
   });
 
-  FirebaseAuth.instance.userChanges().listen((User? user) {
-    if (user == null) {
-      authManager.signOut();
-    } else {
-      ApiManager.setFirebaseUser(user);
-      debugPrint('User is signed in!');
-    }
-  });
-
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
 
+  _setupRemoteConfig();
   runApp(MyApp());
 }
 
@@ -108,10 +99,7 @@ Future<void> _setupRemoteConfig() async {
     minimumFetchInterval: const Duration(hours: 1),
   ));
 
-  final toggle = FirebaseRemoteConfig.instance.getBool('apple_signin_button_enabled');
-
-  await remoteConfig.setDefaults(const {"apple_signin_button_enabled": false});
-  await remoteConfig.setDefaults(const {"google_signin_button_enabled": false});
+  await remoteConfig.setDefaults(const {"show_subscribe_view": true});
   await remoteConfig.fetchAndActivate();
 
   remoteConfig.onConfigUpdated.listen((event) async {
@@ -151,13 +139,25 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+    FirebaseAuth.instance.currentUser?.reload();
+
+    FirebaseAuth.instance.userChanges().listen((User? user) {
+      if (user == null) {
+        authManager.signOut();
+      } else {
+        ApiManager.setFirebaseUser(user);
+        debugPrint('User is signed in!');
+      }
+    });
+
     _appStateNotifier = AppStateNotifier.instance;
     _router = createRouter(_appStateNotifier);
     userStream = pumpCreatorFirebaseUserStream()
       ..listen((user) => _appStateNotifier.update(user));
     jwtTokenStream.listen((_) {});
+    setThemeMode(_themeMode);
     Future.delayed(
-      Duration(milliseconds: 1000),
+      Duration(seconds: 1),
       () => _appStateNotifier.stopShowingSplashImage(),
     );
   }
@@ -182,20 +182,9 @@ class _MyAppState extends State<MyApp> {
         GlobalCupertinoLocalizations.delegate,
       ],
       locale: _locale,
-      supportedLocales: const [
-        // Locale('en', ''),
-        Locale('pt', 'BR')
-      ],
-      theme: ThemeData(
-        brightness: Brightness.light,
-        scrollbarTheme: ScrollbarThemeData(),
-        useMaterial3: false,
-      ),
-      darkTheme: ThemeData(
-        brightness: Brightness.dark,
-        scrollbarTheme: ScrollbarThemeData(),
-        useMaterial3: false,
-      ),
+      supportedLocales: const [Locale('en', '')],
+      theme: ThemeData(brightness: Brightness.light, useMaterial3: false),
+      darkTheme: ThemeData(brightness: Brightness.dark, useMaterial3: false),
       themeMode: _themeMode,
       routerConfig: _router,
     );
