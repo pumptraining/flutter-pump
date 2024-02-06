@@ -196,9 +196,7 @@ class _FlutterFlowDataTableState<T> extends State<FlutterFlowDataTable<T>> {
   FlutterFlowDataTableController<T> get controller => widget.controller;
   int get rowCount => controller.rowCount;
 
-  int get initialRowsPerPage => !widget.paginated || rowCount > _kMinRowsPerPage
-      ? defaultRowsPerPage
-      : _kMinRowsPerPage;
+  int get initialRowsPerPage => _kMinRowsPerPage;
 
   @override
   void initState() {
@@ -296,6 +294,21 @@ class _FlutterFlowDataTableState<T> extends State<FlutterFlowDataTable<T>> {
             wrapInCard: false,
             renderEmptyRowsInTheEnd: false,
             border: TableBorder(
+              left: BorderSide(
+                      color:
+                          widget.horizontalDividerColor ?? Colors.transparent,
+                      width: widget.horizontalDividerThickness ?? 1.0,
+                    ),
+                    right: BorderSide(
+                      color:
+                          widget.horizontalDividerColor ?? Colors.transparent,
+                      width: widget.horizontalDividerThickness ?? 1.0,
+                    ),
+              bottom: BorderSide(
+                      color:
+                          widget.horizontalDividerColor ?? Colors.transparent,
+                      width: widget.horizontalDividerThickness ?? 1.0,
+                    ),
               horizontalInside: widget.addHorizontalDivider
                   ? BorderSide(
                       color:

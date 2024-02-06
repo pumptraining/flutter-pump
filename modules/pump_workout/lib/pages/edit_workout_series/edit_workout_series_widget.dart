@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_flow/flutter_flow_model.dart';
 import 'package:flutter_flow/flutter_flow_theme.dart';
+import 'package:flutter_flow/nav/serialization_util.dart';
+import 'package:go_router/go_router.dart';
 import 'package:pump_components/components/edit_workout_series/edit_workout_series_component_widget.dart';
 import 'edit_workout_series_model.dart';
 
@@ -23,7 +25,28 @@ class _EditWorkoutSeriesWidgetState extends State<EditWorkoutSeriesWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => EditWorkoutSeriesModel());
-    _model.workout = widget.workout;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (widget.workout['sets'] != null) {
+        _model.workoutSets = widget.workout['sets'];
+      } else {
+        _goToAddExercises(context);
+      }
+    });
+  }
+
+  void _goToAddExercises(BuildContext context) async {
+    final dynamic result =
+        await context.pushNamed('ListExercises', queryParameters: {
+      'showBackButton': serializeParam(true, ParamType.bool),
+      'isPicker': serializeParam(true, ParamType.bool)
+    });
+
+    if (result != null) {
+      setState(() {
+        _model.addSeriesWithExercises(result);
+      });
+    }
   }
 
   @override
@@ -63,7 +86,7 @@ class _EditWorkoutSeriesWidgetState extends State<EditWorkoutSeriesWidget> {
         elevation: 2.0,
       ),
       body: SingleChildScrollView(
-        child: EditWorkoutSeriesComponentWidget(workout: _model.workout),
+        child: EditWorkoutSeriesComponentWidget(workoutSets: _model.workoutSets),
       ),
     );
   }
