@@ -22,14 +22,25 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>pumpapp</string>
+	</array>
 	<key>CFBundleURLTypes</key>
 	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>pumpapp</string>
+			</array>
+		</dict>
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>com.googleusercontent.apps.784151565290-o7a2uaus7g7kkv8ej2ign38k6le4tpkp</string>
+				<string>pumpapp</string>
 			</array>
 		</dict>
 		<dict>
@@ -40,6 +51,7 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>pump</string>
+				<string>pumpapp</string>
 			</array>
 		</dict>
 	</array>

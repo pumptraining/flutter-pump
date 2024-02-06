@@ -33,6 +33,8 @@ void main() async {
   Stripe.publishableKey =
       'pk_live_51MS4dVEC5sXZsfQl4DQ5sfy5gvMfTdunTRv2mAJOygVrLTRXi91LottjOIMJeS0tZsZuMz6ftq5Gzyv10wCicCeX00LIgq3ot0';
 
+  FirebaseAuth.instance.currentUser?.reload();
+
   if (!kIsWeb) {
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 
@@ -135,20 +137,11 @@ class _MyAppState extends State<MyApp> {
 
   late AppStateNotifier _appStateNotifier;
   late GoRouter _router;
+  bool logoutCalled = false;
 
   @override
   void initState() {
     super.initState();
-    FirebaseAuth.instance.currentUser?.reload();
-
-    FirebaseAuth.instance.userChanges().listen((User? user) {
-      if (user == null) {
-        authManager.signOut();
-      } else {
-        ApiManager.setFirebaseUser(user);
-        debugPrint('User is signed in!');
-      }
-    });
 
     _appStateNotifier = AppStateNotifier.instance;
     _router = createRouter(_appStateNotifier);
@@ -160,6 +153,17 @@ class _MyAppState extends State<MyApp> {
       Duration(seconds: 1),
       () => _appStateNotifier.stopShowingSplashImage(),
     );
+
+    FirebaseAuth.instance.userChanges().listen((User? user) {
+      if (user == null && _router.appState.loggedIn && !logoutCalled) {
+        logoutCalled = true;
+        authManager.signOut();
+      } else if (user != null) {
+        logoutCalled = false;
+        ApiManager.setFirebaseUser(user);
+        debugPrint('User is signed in!');
+      }
+    });
   }
 
   void setLocale(String language) {
