@@ -10,7 +10,9 @@
 	<key>com.apple.developer.associated-domains</key>
 	<array>
 		<string>applinks:pumpapp.page.link/pump</string>
-		<string>pump</string>
+        <string>pumpapp.page.link/pump</string>
+        <string>pump</string>
+        <string>pumpapp</string>
 	</array>
 	
     <key>aps-environment</key>
