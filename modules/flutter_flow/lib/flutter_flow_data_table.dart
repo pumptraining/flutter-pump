@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_flow/flutter_flow_util.dart';
 
 export 'package:data_table_2/data_table_2.dart' show DataColumn2;
 
@@ -111,7 +112,7 @@ class FlutterFlowDataTableController<T> extends DataTableSource {
 }
 
 class FlutterFlowDataTable<T> extends StatefulWidget {
-  const FlutterFlowDataTable({
+  FlutterFlowDataTable({
     super.key,
     required this.controller,
     required this.data,
@@ -149,7 +150,7 @@ class FlutterFlowDataTable<T> extends StatefulWidget {
   });
 
   final FlutterFlowDataTableController<T> controller;
-  final List<T> data;
+  List<T> data;
   final int? numRows;
   final ColumnsBuilder columnsBuilder;
   final DataRowBuilder<T> dataRowBuilder;
@@ -209,7 +210,11 @@ class _FlutterFlowDataTableState<T> extends State<FlutterFlowDataTable<T>> {
       initialNumRows: widget.numRows,
     );
     // ignore: cascade_invocations
-    controller.addListener(() => setState(() {}));
+    controller.addListener(() {
+      if (mounted) {
+        safeSetState(() {});
+      }
+    });
   }
 
   @override
@@ -272,7 +277,7 @@ class _FlutterFlowDataTableState<T> extends State<FlutterFlowDataTable<T>> {
             controller:
                 widget.paginated ? controller.paginatorController : null,
             rowsPerPage: initialRowsPerPage,
-            availableRowsPerPage: const [5, 10, 25, 50, 100],
+            availableRowsPerPage: const [5],
             onPageChanged: widget.onPageChanged != null
                 ? (index) => widget.onPageChanged!(index)
                 : null,

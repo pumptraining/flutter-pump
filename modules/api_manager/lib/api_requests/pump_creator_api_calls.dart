@@ -14,7 +14,7 @@ export '../common/requestable.dart';
 
 class Environment {
   static String get baseUrl {
-    return 'https://pump-api.herokuapp.com/api/v1';
+    // return 'https://pump-api.herokuapp.com/api/v1';
     return kReleaseMode
         ? 'https://pump-api.herokuapp.com/api/v1'
         : 'http://localhost:4242/api/v1';

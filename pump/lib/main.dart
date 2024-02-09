@@ -161,6 +161,7 @@ class _MyAppState extends State<MyApp> {
       } else if (user != null) {
         logoutCalled = false;
         ApiManager.setFirebaseUser(user);
+        FirebaseCrashlytics.instance.setUserIdentifier(currentUserUid);
         debugPrint('User is signed in!');
       }
     });

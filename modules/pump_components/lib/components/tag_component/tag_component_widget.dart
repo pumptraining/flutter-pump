@@ -74,7 +74,7 @@ class _TagComponentWidgetState extends State<TagComponentWidget> {
               width: 1,
               color: widget.selected
                   ? widget.tagColor.withOpacity(0.7)
-                  : widget.tagColor.withOpacity(0.0),
+                  : widget.unselectedColor ?? FlutterFlowTheme.of(context).secondaryBackground,
             ),
           ),
           child: Padding(

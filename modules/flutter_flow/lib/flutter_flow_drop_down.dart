@@ -4,7 +4,7 @@ import 'form_field_controller.dart';
 import 'package:flutter/material.dart';
 
 class FlutterFlowDropDown<T> extends StatefulWidget {
-  const FlutterFlowDropDown({
+  FlutterFlowDropDown({
     required this.controller,
     this.hintText,
     this.searchHintText,
@@ -29,7 +29,7 @@ class FlutterFlowDropDown<T> extends StatefulWidget {
   });
 
   final FormFieldController<T> controller;
-  final String? hintText;
+  String? hintText;
   final String? searchHintText;
   final List<T> options;
   final List<String>? optionLabels;

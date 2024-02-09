@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_flow/flutter_flow_data_table.dart';
 import 'package:flutter_flow/flutter_flow_model.dart';
+import 'package:pump_components/components/edit_workout_series/edit_workout_series_component_model.dart';
 
 class EditWorkoutSeriesModel extends FlutterFlowModel {
+  final paginatedDataTableController =
+      FlutterFlowDataTableController<dynamic>();
   List<dynamic> workoutSets = [];
+  List<DropdownData> dataArray = [];
+  int setIndexToAddExercise = 0;
 
   @override
   void initState(BuildContext context) {}
@@ -21,15 +27,42 @@ class EditWorkoutSeriesModel extends FlutterFlowModel {
       newExercise['personalId'] = null;
       newItem['exercise'] = newExercise;
       newItem['tempRepDescription'] = 'Repetições';
-      newItem['cadence'] = '3020';
-      newItem['pause'] = '60';
-      newItem['tempRep'] = '10';
+      newItem['pauseArray'] = [60, 60, 60];
+      newItem['tempRepArray'] = [10, 10, 10];
+      newItem['intensityArray'] = ['Média', 'Média', 'Média'];
 
       final set = {
+        'quantity': 3,
         'exercises': [newItem]
-       };
+      };
 
-       workoutSets.add(set);
+      workoutSets.add(set);
+    }
+  }
+
+  void addExercisesInSet(dynamic exercises) {
+    if (exercises is bool) {
+      return;
+    }
+    for (var newExercise in exercises) {
+      dynamic newItem = {};
+      newExercise['videoUrl'] = null;
+      newExercise['streamingURL'] = null;
+      newExercise['personalId'] = null;
+      newItem['exercise'] = newExercise;
+      newItem['tempRepDescription'] = 'Repetições';
+
+      newItem['pauseArray'] = [60];
+      newItem['tempRepArray'] = [10];
+      newItem['intensityArray'] = ['Média'];
+
+      for (int i = 1; workoutSets[setIndexToAddExercise]['quantity'] > i; i++) {
+        newItem['pauseArray'].add(60);
+        newItem['tempRepArray'].add(10);
+        newItem['intensityArray'].add('Média');
+      }
+
+      workoutSets[setIndexToAddExercise]['exercises'].add(newItem);
     }
   }
 }
