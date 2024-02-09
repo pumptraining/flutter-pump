@@ -17,6 +17,7 @@ class ListExercisesModel extends FlutterFlowModel {
   late bool isPicker;
 
   dynamic selected;
+  dynamic filteredList = [];
 
   ApiCallResponse? resposeData;
 

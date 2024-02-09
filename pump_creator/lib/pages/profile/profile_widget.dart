@@ -738,6 +738,12 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                           hoverColor: Colors.transparent,
                           highlightColor: Colors.transparent,
                           onTap: () async {
+                            if (isiOS) {
+                              launchUrlString(
+                                'https://apps.apple.com/br/app/pump-personal-trainer/id6445901855',
+                                mode: LaunchMode.externalApplication);
+                              return;
+                            }
                             await launchUrlString(
                                 'https://pumpapp.page.link/pump',
                                 mode: LaunchMode.externalApplication);

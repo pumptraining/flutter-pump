@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:api_manager/common/loader_state.dart';
 import 'package:flutter_flow/flutter_flow_model.dart';
 import 'package:flutter_flow/nav/serialization_util.dart';
@@ -109,6 +111,67 @@ class _ListExercisesWidgetState extends State<ListExercisesWidget>
     ),
   };
 
+  // Lista de itens
+  List<dynamic> items = [];
+
+  // Número de itens por página
+  final int itemsPerPage = 10;
+
+  // Índice do último item carregado
+  int lastLoadedIndex = 0;
+
+  // Flag para indicar se a próxima página está sendo carregada
+  bool isLoading = true;
+  bool canReload = false;
+
+  void _fetchNextPage() {
+    dynamic exercises = _model.filteredList;
+    // Calcular o índice final da próxima página
+    int endIndex = lastLoadedIndex + itemsPerPage;
+    // Verificar se o índice final ultrapassa o tamanho da lista
+    if (endIndex > exercises.length) {
+      endIndex = exercises.length;
+    }
+
+    isLoading = endIndex < exercises.length;
+
+    // Simular a busca da próxima página de itens
+    List<dynamic> nextPageItems = [];
+    for (int i = lastLoadedIndex; i < endIndex; i++) {
+      nextPageItems.add(exercises[i]);
+    }
+
+    // Adicionar os itens da próxima página à lista de itens
+
+    if (items.length > 0 || canReload) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() {
+          items.addAll(nextPageItems);
+          lastLoadedIndex += itemsPerPage;
+        });
+      });
+    } else {
+      items.addAll(nextPageItems);
+      lastLoadedIndex += itemsPerPage;
+    }
+  }
+
+  // Função para carregar mais itens quando o usuário chegar ao final da lista
+  // Função para carregar mais itens quando o usuário chega ao final da lista
+  void _loadMoreItems() {
+    if (items.isEmpty) {
+      _fetchNextPage();
+      return;
+    }
+
+    // Verifica se o usuário chegou ao final da lista
+    if (_scrollController.position.maxScrollExtent ==
+        _scrollController.position.pixels) {
+      _fetchNextPage();
+    }
+  }
+
+  final ScrollController _scrollController = ScrollController();
   final ApiLoaderController _apiLoaderController = ApiLoaderController();
 
   @override
@@ -126,6 +189,9 @@ class _ListExercisesWidgetState extends State<ListExercisesWidget>
     );
 
     _model.isPicker = widget.isPicker ?? false;
+    _scrollController.addListener(() {
+      _loadMoreItems();
+    });
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
@@ -140,6 +206,22 @@ class _ListExercisesWidgetState extends State<ListExercisesWidget>
 
     _unfocusNode.dispose();
     super.dispose();
+  }
+
+  Widget _buildLoadingIndicator() {
+    return Padding(
+      padding: EdgeInsetsDirectional.only(top: 8, bottom: 32),
+      child: Center(
+        child: SizedBox(
+          width: 24.0,
+          height: 24.0,
+          child: CircularProgressIndicator(
+            strokeWidth: 1.0,
+            color: FlutterFlowTheme.of(context).primary,
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -236,14 +318,22 @@ class _ListExercisesWidgetState extends State<ListExercisesWidget>
                   builder: (context, snapshot) {
                     final columnPersonalExercisesResponse = snapshot?.data;
                     _model.resposeData = columnPersonalExercisesResponse;
+                    List<dynamic> personalList = _model
+                            .resposeData?.jsonBody['personalExercises']
+                            ?.toList() ??
+                        [];
+                    if (_model.filteredList.isEmpty) {
+                      _model.filteredList = personalList;
+                    }
                     return RefreshIndicator(
                       onRefresh: () async {
                         _apiLoaderController.reload?.call();
                       },
                       child: SingleChildScrollView(
+                        controller: _scrollController,
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
-                          crossAxisAlignment: CrossAxisAlignment.start, 
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
                               padding: EdgeInsetsDirectional.fromSTEB(
@@ -255,11 +345,26 @@ class _ListExercisesWidgetState extends State<ListExercisesWidget>
                                     child: TextFormField(
                                       focusNode: _unfocusNode,
                                       controller: _model.textController,
-                                      onChanged: (_) => EasyDebounce.debounce(
-                                        '_model.textController',
-                                        Duration(milliseconds: 1000),
-                                        () => setState(() {}),
-                                      ),
+                                      onChanged: (_) {
+                                        if (_model
+                                            .textController.text.isNotEmpty) {
+                                          personalList.retainWhere((exercise) {
+                                            lastLoadedIndex = 0;
+                                            return (exercise['name'] as String)
+                                                .toLowerCase()
+                                                .contains(
+                                                    _model.textController.text);
+                                          });
+                                          items = [];
+                                          lastLoadedIndex = 0;
+                                          _model.filteredList = personalList;
+                                        }
+                                        EasyDebounce.debounce(
+                                          '_model.textController',
+                                          Duration(milliseconds: 1000),
+                                          () => safeSetState(() {}),
+                                        );
+                                      },
                                       obscureText: false,
                                       decoration: InputDecoration(
                                         labelText: 'Buscar exercício...',
@@ -310,7 +415,17 @@ class _ListExercisesWidgetState extends State<ListExercisesWidget>
                                                 onTap: () async {
                                                   _model.textController
                                                       ?.clear();
-                                                  setState(() {});
+                                                  items = [];
+                                                  lastLoadedIndex = 0;
+                                                  personalList = _model
+                                                          .resposeData
+                                                          ?.jsonBody[
+                                                              'personalExercises']
+                                                          ?.toList() ??
+                                                      [];
+                                                  _model.filteredList =
+                                                      personalList;
+                                                  safeSetState(() {});
                                                 },
                                                 child: Icon(
                                                   Icons.clear,
@@ -364,9 +479,33 @@ class _ListExercisesWidgetState extends State<ListExercisesWidget>
                                             );
                                           },
                                         ).then((value) {
-                                          setState(() {
-                                            _model.selectedCategories = value;
-                                          });
+                                          _model.selectedCategories = value;
+
+                                          items = [];
+                                          lastLoadedIndex = 0;
+
+                                          if (_model.selectedCategories
+                                                  ?.isNotEmpty ??
+                                              false) {
+                                            personalList
+                                                .retainWhere((exercise) {
+                                              return _model.selectedCategories
+                                                      ?.contains(
+                                                          exercise['category']
+                                                                  ['name']
+                                                              as String) ??
+                                                  false;
+                                            });
+                                          } else {
+                                            personalList = _model
+                                                    .resposeData
+                                                    ?.jsonBody[
+                                                        'personalExercises']
+                                                    ?.toList() ??
+                                                [];
+                                          }
+                                          _model.filteredList = personalList;
+                                          safeSetState(() {});
                                         });
                                       },
                                     ),
@@ -379,32 +518,6 @@ class _ListExercisesWidgetState extends State<ListExercisesWidget>
                                   0.0, 12.0, 0.0, _model.isPicker ? 100 : 16.0),
                               child: Builder(
                                 builder: (context) {
-                                  final personalList = BaseGroup
-                                          .personalExercisesCall
-                                          .personalExercises(
-                                              columnPersonalExercisesResponse
-                                                  ?.jsonBody)
-                                          ?.toList() ??
-                                      [];
-
-                                  if (_model.selectedCategories?.isNotEmpty ??
-                                      false) {
-                                    personalList.retainWhere((exercise) {
-                                      return _model.selectedCategories
-                                              ?.contains(exercise['category']
-                                                  ['name'] as String) ??
-                                          false;
-                                    });
-                                  }
-
-                                  if (_model.textController.text.isNotEmpty) {
-                                    personalList.retainWhere((exercise) {
-                                      return (exercise['name'] as String)
-                                          .toLowerCase()
-                                          .contains(_model.textController.text);
-                                    });
-                                  }
-
                                   if (personalList.isEmpty) {
                                     if (_model.selectedCategories?.isNotEmpty ??
                                         false) {
@@ -455,15 +568,26 @@ class _ListExercisesWidgetState extends State<ListExercisesWidget>
                                       );
                                     }
                                   }
+
+                                  if (items.length == 0) {
+                                    _loadMoreItems();
+                                  }
+
                                   return ListView.builder(
                                     padding: EdgeInsets.zero,
                                     primary: false,
                                     shrinkWrap: true,
                                     scrollDirection: Axis.vertical,
-                                    itemCount: personalList.length,
+                                    itemCount: items.length,
                                     itemBuilder: (context, personalListIndex) {
+                                      canReload = true;
+                                      if (personalListIndex ==
+                                              items.length - 1 &&
+                                          isLoading) {
+                                        return _buildLoadingIndicator();
+                                      }
                                       final personalListItem =
-                                          personalList[personalListIndex];
+                                          items[personalListIndex];
                                       return Padding(
                                         padding: EdgeInsetsDirectional.fromSTEB(
                                             16.0, 4.0, 16.0, 8.0),
