@@ -90,6 +90,7 @@ void main() async {
       authManager.signOut();
     } else {
       ApiManager.setFirebaseUser(user);
+      FirebaseCrashlytics.instance.setUserIdentifier(currentUserUid);
       debugPrint('User is signed in!');
     }
   });
