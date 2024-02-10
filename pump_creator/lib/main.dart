@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:api_manager/api_manager/api_manager.dart';
-import 'package:api_manager/api_requests/pump_creator_api_calls.dart';
+import 'package:api_manager/api_requests/pump_api_calls.dart';
 import 'package:api_manager/auth/firebase_auth/auth_util.dart';
 import 'package:api_manager/auth/firebase_auth/firebase_user_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,19 +11,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_flow/common/user_settings.dart';
 import 'package:flutter_flow/common/utils.dart';
-import 'package:flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
-import 'package:pump_creator/pages/customer_list/customer_list_widget.dart';
-import 'package:pump_creator/pages/home/home_widget.dart';
 import 'backend/firebase/firebase_config.dart';
+import 'package:flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter_flow/internationalization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'flutter_flow/nav/nav.dart';
 import 'index.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
+
+import 'pages/customer_list/customer_list_widget.dart';
+import 'pages/home/home_widget.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,6 +34,8 @@ void main() async {
   await FlutterFlowTheme.initialize();
   Stripe.publishableKey =
       'pk_live_51MS4dVEC5sXZsfQl4DQ5sfy5gvMfTdunTRv2mAJOygVrLTRXi91LottjOIMJeS0tZsZuMz6ftq5Gzyv10wCicCeX00LIgq3ot0';
+
+  FirebaseAuth.instance.currentUser?.reload();
 
   if (!kIsWeb) {
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
@@ -63,6 +66,8 @@ void main() async {
 
       if (token != null && currentUser != null) {
         unawaited(_updateFCMToken(token));
+        FirebaseCrashlytics.instance.setUserIdentifier(currentUserUid);
+        FirebaseCrashlytics.instance.setCustomKey('email', currentUserEmail);
       }
     });
 
@@ -82,16 +87,6 @@ void main() async {
 
     if (currentUser != null) {
       unawaited(_updateFCMToken(fcmToken));
-    }
-  });
-
-  FirebaseAuth.instance.userChanges().listen((User? user) {
-    if (user == null) {
-      authManager.signOut();
-    } else {
-      ApiManager.setFirebaseUser(user);
-      FirebaseCrashlytics.instance.setUserIdentifier(currentUserUid);
-      debugPrint('User is signed in!');
     }
   });
 
@@ -120,7 +115,7 @@ Future<void> _setupRemoteConfig() async {
 
 Future<void> _updateFCMToken(String token) async {
   final result =
-      await BaseGroup.updateUserFCMTokenCall.call(params: {'fcmToken': token});
+      await PumpGroup.updateUserFCMTokenCall.call(params: {'fcmToken': token});
   debugPrint("Result update: ${result.succeeded}");
 }
 
@@ -146,10 +141,12 @@ class _MyAppState extends State<MyApp> {
 
   late AppStateNotifier _appStateNotifier;
   late GoRouter _router;
+  bool logoutCalled = false;
 
   @override
   void initState() {
     super.initState();
+
     _appStateNotifier = AppStateNotifier.instance;
     _router = createRouter(_appStateNotifier);
     userStream = pumpCreatorFirebaseUserStream()
@@ -160,6 +157,17 @@ class _MyAppState extends State<MyApp> {
       Duration(seconds: 1),
       () => _appStateNotifier.stopShowingSplashImage(),
     );
+
+    FirebaseAuth.instance.userChanges().listen((User? user) {
+      if (user == null && _router.appState.loggedIn && !logoutCalled) {
+        logoutCalled = true;
+        authManager.signOut();
+      } else if (user != null) {
+        logoutCalled = false;
+        ApiManager.setFirebaseUser(user);
+        debugPrint('User is signed in!');
+      }
+    });
   }
 
   void setLocale(String language) {
@@ -182,7 +190,10 @@ class _MyAppState extends State<MyApp> {
         GlobalCupertinoLocalizations.delegate,
       ],
       locale: _locale,
-      supportedLocales: const [Locale('en', '')],
+      supportedLocales: const [
+        Locale('en', ''),
+        Locale('pt', 'BR'),
+      ],
       theme: ThemeData(brightness: Brightness.light, useMaterial3: false),
       darkTheme: ThemeData(brightness: Brightness.dark, useMaterial3: false),
       themeMode: _themeMode,

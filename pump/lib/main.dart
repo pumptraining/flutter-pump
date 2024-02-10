@@ -13,7 +13,6 @@ import 'package:flutter_flow/common/user_settings.dart';
 import 'package:flutter_flow/common/utils.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
-import 'package:pump/pages/login/login_widget.dart';
 import 'backend/firebase/firebase_config.dart';
 import 'package:flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter_flow/internationalization.dart';
@@ -64,6 +63,8 @@ void main() async {
 
       if (token != null && currentUser != null) {
         unawaited(_updateFCMToken(token));
+        FirebaseCrashlytics.instance.setUserIdentifier(currentUserUid);
+        FirebaseCrashlytics.instance.setCustomKey('email', currentUserEmail);
       }
     });
 
@@ -187,7 +188,7 @@ class _MyAppState extends State<MyApp> {
         GlobalCupertinoLocalizations.delegate,
       ],
       locale: _locale,
-      supportedLocales: const [Locale('en', '')],
+      supportedLocales: const [Locale('en', ''), Locale('pt', 'BR'),],
       theme: ThemeData(brightness: Brightness.light, useMaterial3: false),
       darkTheme: ThemeData(brightness: Brightness.dark, useMaterial3: false),
       themeMode: _themeMode,

@@ -503,7 +503,12 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
 
               _model.content = snapshot.data?.jsonBody['response'];
 
-              final invoiceStatus = _model.content['invoiceStatus'] ?? '';
+              String invoiceStatus = '';
+              
+              if (_model.content['invoiceStatus'] != null) {
+                invoiceStatus = _model.content['invoiceStatus'];
+              }
+
               UserSettings().setSubscribe(invoiceStatus == 'paid');
 
               if (!UserSettings().isSubscriber() &&
