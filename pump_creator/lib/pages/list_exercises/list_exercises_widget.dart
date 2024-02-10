@@ -656,6 +656,8 @@ class _ListExercisesWidgetState extends State<ListExercisesWidget>
                                                       width: 70.0,
                                                       height: 70.0,
                                                       fit: BoxFit.cover,
+                                                      maxHeightDiskCache: 200,
+                                                      memCacheHeight: 150,
                                                     ),
                                                   ),
                                                   Expanded(
