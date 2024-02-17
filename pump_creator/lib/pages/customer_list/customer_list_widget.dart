@@ -111,9 +111,7 @@ class _CustomerListWidgetState extends State<CustomerListWidget>
     }
 
     return GestureDetector(
-      onTap: () => _model.unfocusNode.canRequestFocus
-          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-          : FocusScope.of(context).unfocus(),
+      onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
@@ -148,11 +146,11 @@ class _CustomerListWidgetState extends State<CustomerListWidget>
                   borderRadius: 20.0,
                   borderWidth: 1.0,
                   buttonSize: 40.0,
-                  fillColor: FlutterFlowTheme.of(context).primary,
+                  fillColor: Colors.transparent,
                   icon: Icon(
                     Icons.add_outlined,
-                    color: Colors.white,
-                    size: 20.0,
+                    color: FlutterFlowTheme.of(context).primary,
+                    size: 24.0,
                   ),
                   onPressed: () async {
                     HapticFeedback.mediumImpact();

@@ -27,7 +27,8 @@ class EditWorkoutSeriesComponentWidget extends StatefulWidget {
       required this.dataArray,
       required this.paginatedDataTableController,
       this.onButtonAddExerciseSet,
-      this.onEmptyList})
+      this.onEmptyList,
+      this.canEdit = true})
       : super(key: key);
 
   final dynamic workoutSets;
@@ -35,6 +36,7 @@ class EditWorkoutSeriesComponentWidget extends StatefulWidget {
   final FlutterFlowDataTableController<dynamic> paginatedDataTableController;
   final AddExerciseSetCallback? onButtonAddExerciseSet;
   final VoidCallback? onEmptyList;
+  final bool canEdit;
 
   @override
   _EditWorkoutSeriesComponentWidgetState createState() =>
@@ -56,7 +58,6 @@ class _EditWorkoutSeriesComponentWidgetState
     super.initState();
     _model = createModel(context, () => EditWorkoutSeriesComponentModel());
 
-    _model.workoutSets = widget.workoutSets;
     _model.paginatedDataTableController = widget.paginatedDataTableController;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -80,15 +81,16 @@ class _EditWorkoutSeriesComponentWidgetState
   }
 
   List<Widget>? _listOfSets(BuildContext context) {
-    return List.generate(_model.workoutSets.length, (index) {
-      final set = _model.workoutSets[index];
+    return List.generate(widget.workoutSets.length, (index) {
+      final set = widget.workoutSets[index];
 
       return GestureDetector(
         onTap: () {
           FocusScope.of(context).unfocus();
         },
         child: Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(12, 16, 12, 0),
+          padding: EdgeInsetsDirectional.fromSTEB(
+              12, 16, 12, (widget.workoutSets.length == index + 1) ? 32 : 0),
           child: Container(
             decoration: BoxDecoration(
               color: FlutterFlowTheme.of(context).secondaryBackground,
@@ -123,27 +125,31 @@ class _EditWorkoutSeriesComponentWidgetState
                                       ),
                                     ),
                                   ),
-                                  Align(
-                                    alignment: AlignmentDirectional(-1, 0),
-                                    child: Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          12, 0, 0, 12),
-                                      child: FlutterFlowIconButton(
-                                        borderColor: Colors.transparent,
-                                        borderRadius: 20,
-                                        borderWidth: 1,
-                                        buttonSize: 34,
-                                        fillColor: FlutterFlowTheme.of(context)
-                                            .primaryBackground,
-                                        icon: Icon(
-                                          Icons.comment_outlined,
-                                          color: FlutterFlowTheme.of(context)
-                                              .secondaryText,
-                                          size: 16,
+                                  Visibility(
+                                    visible: widget.canEdit,
+                                    child: Align(
+                                      alignment: AlignmentDirectional(-1, 0),
+                                      child: Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            12, 0, 0, 12),
+                                        child: FlutterFlowIconButton(
+                                          borderColor: Colors.transparent,
+                                          borderRadius: 20,
+                                          borderWidth: 1,
+                                          buttonSize: 34,
+                                          fillColor:
+                                              FlutterFlowTheme.of(context)
+                                                  .primaryBackground,
+                                          icon: Icon(
+                                            Icons.comment_outlined,
+                                            color: FlutterFlowTheme.of(context)
+                                                .secondaryText,
+                                            size: 16,
+                                          ),
+                                          onPressed: () {
+                                            _addPersonalNote(set);
+                                          },
                                         ),
-                                        onPressed: () {
-                                          _addPersonalNote(set);
-                                        },
                                       ),
                                     ),
                                   ),
@@ -159,86 +165,93 @@ class _EditWorkoutSeriesComponentWidgetState
                             children: _exercisesForSet(context, index),
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                child: Stack(
-                                  children: [
-                                    Align(
-                                      alignment: AlignmentDirectional(0, 0),
-                                      child: FFButtonWidget(
-                                        onPressed: () {
-                                          widget.onButtonAddExerciseSet
-                                              ?.call(index);
-                                        },
-                                        text: _model.getTitleAddExerciseInSet(set),
-                                        icon: Icon(
-                                          Icons.add_link,
-                                          size: 20,
-                                        ),
-                                        options: FFButtonOptions(
-                                          height: 34,
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  16, 0, 16, 0),
-                                          iconPadding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  0, 0, 0, 0),
-                                          color: FlutterFlowTheme.of(context)
-                                              .secondaryBackground,
-                                          textStyle:
-                                              FlutterFlowTheme.of(context)
-                                                  .labelMedium
-                                                  .override(
-                                                      fontFamily: 'Poppins',
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .primaryText),
-                                          elevation: 0,
-                                          borderSide: BorderSide(
+                        Visibility(
+                          visible: widget.canEdit,
+                          child: Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  child: Stack(
+                                    children: [
+                                      Align(
+                                        alignment: AlignmentDirectional(0, 0),
+                                        child: FFButtonWidget(
+                                          onPressed: () {
+                                            widget.onButtonAddExerciseSet
+                                                ?.call(index);
+                                          },
+                                          text: _model
+                                              .getTitleAddExerciseInSet(set),
+                                          icon: Icon(
+                                            Icons.add_link,
+                                            size: 20,
+                                          ),
+                                          options: FFButtonOptions(
+                                            height: 34,
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    16, 0, 16, 0),
+                                            iconPadding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    0, 0, 0, 0),
                                             color: FlutterFlowTheme.of(context)
                                                 .secondaryBackground,
+                                            textStyle:
+                                                FlutterFlowTheme.of(context)
+                                                    .labelMedium
+                                                    .override(
+                                                        fontFamily: 'Poppins',
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .primaryText),
+                                            elevation: 0,
+                                            borderSide: BorderSide(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .secondaryBackground,
+                                            ),
                                           ),
-                                        ),
-                                        showLoadingIndicator: false,
-                                      ),
-                                    ),
-                                    Align(
-                                      alignment: AlignmentDirectional(1, 0),
-                                      child: Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            0, 0, 6, 0),
-                                        child: FlutterFlowIconButton(
-                                          borderColor:
-                                              FlutterFlowTheme.of(context)
-                                                  .secondaryBackground,
-                                          borderRadius: 20,
-                                          borderWidth: 1,
-                                          buttonSize: 34,
-                                          fillColor:
-                                              FlutterFlowTheme.of(context)
-                                                  .secondaryBackground,
-                                          icon: Icon(
-                                            Icons.info_outlined,
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryText,
-                                            size: 18,
-                                          ),
-                                          onPressed: () {
-                                            _showInformationSet(set);
-                                          },
+                                          showLoadingIndicator: false,
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                      Align(
+                                        alignment: AlignmentDirectional(1, 0),
+                                        child: Padding(
+                                          padding:
+                                              EdgeInsetsDirectional.fromSTEB(
+                                                  0, 0, 6, 0),
+                                          child: FlutterFlowIconButton(
+                                            borderColor:
+                                                FlutterFlowTheme.of(context)
+                                                    .secondaryBackground,
+                                            borderRadius: 20,
+                                            borderWidth: 1,
+                                            buttonSize: 34,
+                                            fillColor:
+                                                FlutterFlowTheme.of(context)
+                                                    .secondaryBackground,
+                                            icon: Icon(
+                                              Icons.info_outlined,
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primaryText,
+                                              size: 18,
+                                            ),
+                                            onPressed: () {
+                                              _showInformationSet(set);
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ],
@@ -294,10 +307,10 @@ class _EditWorkoutSeriesComponentWidgetState
   }
 
   List<Widget> _exercisesForSet(BuildContext context, int setIndex) {
-    return List.generate(_model.workoutSets[setIndex]['exercises'].length,
+    return List.generate(widget.workoutSets[setIndex]['exercises'].length,
         (index) {
-      final exercise = _model.workoutSets[setIndex]['exercises'][index];
-      final setsCount = _model.workoutSets[setIndex]['quantity'];
+      final exercise = widget.workoutSets[setIndex]['exercises'][index];
+      final setsCount = widget.workoutSets[setIndex]['quantity'];
 
       return Padding(
         padding: EdgeInsetsDirectional.fromSTEB(4, 0, 4, 0),
@@ -314,7 +327,9 @@ class _EditWorkoutSeriesComponentWidgetState
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Visibility(
-                      visible: _model.hasPersonalNote(setIndex),
+                      visible: _model.hasPersonalNote(
+                              widget.workoutSets, setIndex) &&
+                          index == 0,
                       child: Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(12, 0, 12, 6),
                         child: Row(
@@ -331,7 +346,9 @@ class _EditWorkoutSeriesComponentWidgetState
                       ),
                     ),
                     Visibility(
-                      visible: _model.hasPersonalNote(setIndex),
+                      visible: _model.hasPersonalNote(
+                              widget.workoutSets, setIndex) &&
+                          index == 0,
                       child: Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(12, 0, 12, 16),
                         child: Row(
@@ -339,7 +356,7 @@ class _EditWorkoutSeriesComponentWidgetState
                           children: [
                             Expanded(
                               child: AutoSizeText(
-                                _model.workoutSets[setIndex]['personalNote'] ??
+                                widget.workoutSets[setIndex]['personalNote'] ??
                                     '',
                                 style: FlutterFlowTheme.of(context)
                                     .bodySmall
@@ -372,140 +389,152 @@ class _EditWorkoutSeriesComponentWidgetState
                         ),
                       ),
                     ),
-                    Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(12, 0, 12, 0),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(5),
-                            child: exercise['exercise']['imageUrl'] != null
-                                ? CachedNetworkImage(
-                                    fadeInDuration: Duration(milliseconds: 500),
-                                    fadeOutDuration:
-                                        Duration(milliseconds: 500),
-                                    imageUrl: exercise['exercise']['imageUrl'],
-                                    width: 38,
-                                    height: 38,
-                                    fit: BoxFit.cover,
-                                  )
-                                : Container(),
+                    GestureDetector(
+                      onTap: () {
+                        Utils.showExerciseVideo(
+                            context, exercise['exercise']['videoUrl']);
+                      },
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Padding(
+                            padding:
+                                EdgeInsetsDirectional.fromSTEB(12, 0, 12, 0),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(5),
+                              child: exercise['exercise']['imageUrl'] != null
+                                  ? CachedNetworkImage(
+                                      fadeInDuration:
+                                          Duration(milliseconds: 500),
+                                      fadeOutDuration:
+                                          Duration(milliseconds: 500),
+                                      imageUrl: exercise['exercise']
+                                          ['imageUrl'],
+                                      width: 38,
+                                      height: 38,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : Container(),
+                            ),
                           ),
-                        ),
-                        Expanded(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Expanded(
-                                    child: AutoSizeText(
-                                      _model.getExerciseTitle(exercise),
-                                      maxLines: 2,
-                                      style: FlutterFlowTheme.of(context)
-                                          .titleSmall
-                                          .override(
+                          Expanded(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    Expanded(
+                                      child: AutoSizeText(
+                                        _model.getExerciseTitle(exercise),
+                                        maxLines: 2,
+                                        style: FlutterFlowTheme.of(context)
+                                            .titleSmall
+                                            .override(
+                                                fontFamily: 'Poppins',
+                                                fontSize: 12),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    Expanded(
+                                      child: AutoSizeText(
+                                        _model.generateSubtitle(exercise),
+                                        maxLines: 2,
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodySmall
+                                            .override(
                                               fontFamily: 'Poppins',
-                                              fontSize: 12),
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .secondaryText,
+                                            ),
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Expanded(
-                                    child: AutoSizeText(
-                                      '${exercise['exercise']['equipament']['name']}',
-                                      maxLines: 2,
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodySmall
-                                          .override(
-                                            fontFamily: 'Poppins',
-                                            color: FlutterFlowTheme.of(context)
-                                                .secondaryText,
-                                          ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        Visibility(
-                          visible: _model.setIsEditing(setIndex, index),
-                          child: Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(0, 0, 8, 0),
-                            child: FlutterFlowIconButton(
-                              borderColor: Colors.transparent,
-                              borderRadius: 20,
-                              borderWidth: 1,
-                              buttonSize: 34,
-                              fillColor: FlutterFlowTheme.of(context)
-                                  .primaryBackground,
-                              icon: Icon(
-                                Icons.delete_outlined,
-                                color: FlutterFlowTheme.of(context).error,
-                                size: 16,
-                              ),
-                              onPressed: () {
-                                _model.isEditingSet = {};
-                                widget.dataArray.removeWhere((element) =>
-                                    element.setIndexCurrent == setIndex &&
-                                    element.exercisesIndex == index);
-                                _model.workoutSets[setIndex]['exercises']
-                                    .removeAt(index);
-
-                                if (_model.workoutSets[setIndex]['exercises']
-                                        .length ==
-                                    0) {
-                                  _model.workoutSets.removeAt(setIndex);
-                                  updateSetsIndexes();
-                                }
-
-                                updateExercisesInSetIndexes();
-                                if (_model.workoutSets.length == 0) {
-                                  widget.onEmptyList?.call();
-                                }
-                                safeSetState(() {});
-                              },
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(0, 0, 8, 0),
-                          child: FlutterFlowIconButton(
-                            borderColor: Colors.transparent,
-                            borderRadius: 20,
-                            borderWidth: 1,
-                            buttonSize: 34,
-                            fillColor:
-                                FlutterFlowTheme.of(context).primaryBackground,
-                            icon: Icon(
-                              _model.setIsEditing(setIndex, index)
-                                  ? Icons.save_alt
-                                  : Icons.edit,
-                              color: FlutterFlowTheme.of(context).secondaryText,
-                              size: 16,
+                          Visibility(
+                            visible: _model.setIsEditing(setIndex, index),
+                            child: Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(0, 0, 8, 0),
+                              child: FlutterFlowIconButton(
+                                borderColor: Colors.transparent,
+                                borderRadius: 20,
+                                borderWidth: 1,
+                                buttonSize: 34,
+                                fillColor: FlutterFlowTheme.of(context)
+                                    .primaryBackground,
+                                icon: Icon(
+                                  Icons.delete_outlined,
+                                  color: FlutterFlowTheme.of(context).error,
+                                  size: 16,
+                                ),
+                                onPressed: () {
+                                  _model.isEditingSet = {};
+                                  widget.workoutSets[setIndex]['exercises']
+                                      .removeAt(index);
+
+                                  if (widget.workoutSets[setIndex]['exercises']
+                                          .length ==
+                                      0) {
+                                    widget.workoutSets.removeAt(setIndex);
+                                  }
+
+                                  reloadContent();
+                                  if (widget.workoutSets.length == 0) {
+                                    widget.onEmptyList?.call();
+                                  }
+                                  safeSetState(() {});
+                                },
+                              ),
                             ),
-                            onPressed: () {
-                              if (_model.setIsEditing(setIndex, index)) {
-                                _model.isEditingSet['editing'] = false;
-                              } else {
-                                _model.isEditingSet = {
-                                  'setIndex': setIndex,
-                                  'exerciseIndex': index,
-                                  'editing': true
-                                };
-                              }
-                              safeSetState(() {});
-                            },
                           ),
-                        ),
-                      ],
+                          Visibility(
+                            visible: widget.canEdit,
+                            child: Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(0, 0, 8, 0),
+                              child: FlutterFlowIconButton(
+                                borderColor: Colors.transparent,
+                                borderRadius: 20,
+                                borderWidth: 1,
+                                buttonSize: 34,
+                                fillColor: FlutterFlowTheme.of(context)
+                                    .primaryBackground,
+                                icon: Icon(
+                                  _model.setIsEditing(setIndex, index)
+                                      ? Icons.save_alt
+                                      : Icons.edit,
+                                  color: FlutterFlowTheme.of(context)
+                                      .secondaryText,
+                                  size: 16,
+                                ),
+                                onPressed: () {
+                                  if (_model.setIsEditing(setIndex, index)) {
+                                    _model.isEditingSet['editing'] = false;
+                                  } else {
+                                    _model.isEditingSet = {
+                                      'setIndex': setIndex,
+                                      'exerciseIndex': index,
+                                      'editing': true
+                                    };
+                                  }
+                                  safeSetState(() {});
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                     Visibility(
                       visible: _model.setIsEditing(setIndex, index),
@@ -522,9 +551,12 @@ class _EditWorkoutSeriesComponentWidgetState
                               children: _model.secOrRepsTags.map((element) {
                                 return TagComponentWidget(
                                   title: element,
-                                  tagColor:
-                                      FlutterFlowTheme.of(context).primary,
-                                  selected: _model.workoutSets[setIndex]
+                                  borderWidth: 0.0,
+                                  borderRadius: 12,
+                                  alpha: 1,
+                                  selectedTextColor: Colors.black,
+                                  tagColor: FlutterFlowTheme.of(context).info,
+                                  selected: widget.workoutSets[setIndex]
                                               ['exercises'][index]
                                           ['tempRepDescription'] ==
                                       element,
@@ -535,7 +567,7 @@ class _EditWorkoutSeriesComponentWidgetState
                                     HapticFeedback.mediumImpact();
                                     safeSetState(() {
                                       _model.choiceChipsValue = element;
-                                      _model.workoutSets[setIndex]['exercises']
+                                      widget.workoutSets[setIndex]['exercises']
                                               [index]['tempRepDescription'] =
                                           element;
                                     });
@@ -549,8 +581,7 @@ class _EditWorkoutSeriesComponentWidgetState
                     ),
                     Visibility(
                       child: _createTableExerciseInfo(context, setIndex, index)
-                          .animateOnPageLoad(
-                              Utils.defaultaAnimation),
+                          .animateOnPageLoad(Utils.defaultaAnimation),
                       visible: _model.setIsEditing(setIndex, index),
                     ),
                     Visibility(
@@ -562,47 +593,22 @@ class _EditWorkoutSeriesComponentWidgetState
                           children: [
                             FFButtonWidget(
                               onPressed: () {
-                                int forIndex = 0;
-                                _model.workoutSets[setIndex]['exercises']
+                                widget.workoutSets[setIndex]['exercises']
                                     .forEach((element) {
-                                  int lastPause = exercise['pauseArray'].last;
-                                  String lastIntensity =
-                                      exercise['intensityArray'].last;
-                                  int lastReps = exercise['tempRepArray'].last;
+                                  final int lastPause =
+                                      element['pauseArray'].last;
+                                  final String lastIntensity =
+                                      element['intensityArray'].last;
+                                  final int lastReps =
+                                      element['tempRepArray'].last;
 
                                   element['pauseArray'].add(lastPause);
                                   element['intensityArray'].add(lastIntensity);
                                   element['tempRepArray'].add(lastReps);
-
-                                  final FormFieldController<String>
-                                      dropPauseController =
-                                      FormFieldController<String>('');
-                                  final FormFieldController<String>
-                                      dropIntensityController =
-                                      FormFieldController<String>('');
-                                  final textRepsController =
-                                      TextEditingController();
-                                  textRepsController.text = '$lastReps';
-
-                                  int currentIndex =
-                                      element['tempRepArray'].length - 1;
-                                  final data = DropdownData(
-                                      setIndex,
-                                      forIndex,
-                                      currentIndex,
-                                      lastReps,
-                                      lastPause,
-                                      lastIntensity,
-                                      dropPauseController,
-                                      dropIntensityController,
-                                      textRepsController);
-
-                                  widget.dataArray.add(data);
-                                  forIndex++;
                                 });
 
-                                _model.workoutSets[setIndex]['quantity'] += 1;
-
+                                widget.workoutSets[setIndex]['quantity'] += 1;
+                                reloadContent();
                                 safeSetState(() {});
                               },
                               text: 'Série',
@@ -636,7 +642,7 @@ class _EditWorkoutSeriesComponentWidgetState
                         ),
                       ),
                     ),
-                    _model.workoutSets[setIndex]['exercises'].length !=
+                    widget.workoutSets[setIndex]['exercises'].length !=
                             (index + 1)
                         ? Padding(
                             padding:
@@ -665,14 +671,16 @@ class _EditWorkoutSeriesComponentWidgetState
                               ],
                             ),
                           )
-                        : Padding(
-                            padding:
-                                EdgeInsetsDirectional.fromSTEB(12, 12, 12, 6),
-                            child: Divider(
-                              color: FlutterFlowTheme.of(context)
-                                  .primaryBackground,
-                              thickness: 0.7,
-                            )),
+                        : widget.canEdit
+                            ? Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    12, 12, 12, 6),
+                                child: Divider(
+                                  color: FlutterFlowTheme.of(context)
+                                      .primaryBackground,
+                                  thickness: 0.7,
+                                ))
+                            : Container(),
                   ],
                 ),
               ),
@@ -693,94 +701,89 @@ class _EditWorkoutSeriesComponentWidgetState
 
   void updateRemoveSetData(int itemIndex, int setIndex, int index) {
     safeSetState(() {
-      widget.dataArray.removeWhere((element) =>
-          element.setIndexCurrent == setIndex && element.index == itemIndex);
-
-      _model.workoutSets[setIndex]['exercises'].forEach((element) {
+      widget.workoutSets[setIndex]['exercises'].forEach((element) {
         element['pauseArray'].removeAt(itemIndex);
         element['intensityArray'].removeAt(itemIndex);
         element['tempRepArray'].removeAt(itemIndex);
       });
 
-      _model.workoutSets[setIndex]['quantity'] -= 1;
+      widget.workoutSets[setIndex]['quantity'] -= 1;
 
-      if (_model.workoutSets[setIndex]['quantity'] == 0) {
-        _model.workoutSets.removeAt(setIndex);
+      if (widget.workoutSets[setIndex]['quantity'] == 0) {
+        widget.workoutSets.removeAt(setIndex);
 
-        if (_model.workoutSets.length == 0) {
+        if (widget.workoutSets.length == 0) {
           widget.onEmptyList?.call();
         }
 
-        updateSetsIndexes();
         _model.isEditingSet = {};
       }
-      updateIndexes();
+      reloadContent();
     });
   }
 
-  void updateIndexes() {
-    Map<int, List<DropdownData>> mapByExercisesIndex = {};
+  void reloadContent() {
+    List<DropdownData> dataArray = [];
 
-    for (var element in widget.dataArray) {
-      int exercisesIndex = element.exercisesIndex;
-      if (!mapByExercisesIndex.containsKey(exercisesIndex)) {
-        mapByExercisesIndex[exercisesIndex] = [];
-      }
-      mapByExercisesIndex[exercisesIndex]!.add(element);
-    }
+    int setIndex = 0;
+    widget.workoutSets.toList().forEach((set) {
+      int exerciseIndex = 0;
+      set['exercises'].toList().forEach((exercise) {
+        int index = 0;
 
-    for (var elementsList in mapByExercisesIndex.values) {
-      for (int i = 0; i < elementsList.length; i++) {
-        elementsList[i].updateIndex(i);
-      }
-    }
+        exercise['tempRepArray'].forEach((reps) {
+          final indexCurrent = index;
+          final exerciseIndexCurrent = exerciseIndex;
+          final setIndexCurrent = setIndex;
+
+          final FormFieldController<String> dropIntensityController =
+              FormFieldController<String>('');
+          final textRepsController = TextEditingController();
+          textRepsController.text = '$reps';
+          final textPauseController = TextEditingController();
+          textPauseController.text = '${exercise['pauseArray'][indexCurrent]}';
+
+          final data = DropdownData(
+              setIndexCurrent,
+              exerciseIndexCurrent,
+              indexCurrent,
+              reps,
+              exercise['pauseArray'][indexCurrent],
+              exercise['intensityArray'][indexCurrent],
+              textPauseController,
+              dropIntensityController,
+              textRepsController);
+
+          dataArray.add(data);
+
+          index++;
+        });
+
+        exerciseIndex++;
+      });
+
+      setIndex++;
+    });
 
     widget.dataArray.clear();
-    for (var elementsList in mapByExercisesIndex.values) {
-      widget.dataArray.addAll(elementsList);
-    }
-  }
-
-  void updateExercisesInSetIndexes() {
-    Map<int, List<DropdownData>> mapByExercisesIndex = {};
-
-    for (var element in widget.dataArray) {
-      int exercisesIndex = element.exercisesIndex;
-      if (!mapByExercisesIndex.containsKey(exercisesIndex)) {
-        mapByExercisesIndex[exercisesIndex] = [];
-      }
-      mapByExercisesIndex[exercisesIndex]!.add(element);
-    }
-
-    int newIndex = 0;
-    for (var elementsList in mapByExercisesIndex.values) {
-      for (var element in elementsList) {
-        element.exercisesIndex = newIndex;
-      }
-      newIndex++;
-    }
-  }
-
-  void updateSetsIndexes() {
-    int currentIndex = 0;
-    widget.dataArray.forEach((element) {
-      element.setIndexCurrent = currentIndex;
-    });
+    widget.dataArray.addAll(dataArray);
   }
 
   FlutterFlowDataTable _buildDataTable(
       BuildContext context, int setIndex, int index) {
-    final currentExercise = _model.workoutSets[setIndex]['exercises'][index];
+    final currentExercise = widget.workoutSets[setIndex]['exercises'][index];
 
     List<dynamic> data = [];
     int currentIndex = 0;
     widget.dataArray.forEach((element) {
       if (element.setIndexCurrent == setIndex &&
           element.exercisesIndex == index) {
-        element.pauseDropdownController.value =
+        element.textPauseController.text =
             '${currentExercise['pauseArray'][currentIndex]}';
+
         element.intensityDropdownController.value =
             currentExercise['intensityArray'][currentIndex];
+
         element.textRepsController.text =
             '${currentExercise['tempRepArray'][currentIndex]}';
 
@@ -840,7 +843,7 @@ class _EditWorkoutSeriesComponentWidgetState
                 label: DefaultTextStyle.merge(
                   softWrap: true,
                   child: Text(
-                    'Pausa',
+                    'Pausa (seg)',
                     style: FlutterFlowTheme.of(context).bodySmall.override(
                           fontFamily: 'Poppins',
                           fontSize: 10,
@@ -875,10 +878,14 @@ class _EditWorkoutSeriesComponentWidgetState
             (Item, paginatedDataTableIndex, selected, onSelectChanged) {
           void updatePause(String? val) {
             safeSetState(() {
-              final pause = int.parse(val ?? '0');
+              String? value = val;
+              Item.textPauseController.text = value;
+              if (val?.isEmpty == true) {
+                value = '0';
+              }
+              final pause = int.parse(value ?? '0');
               currentExercise['pauseArray'][Item.index] = pause;
               Item.updatePause(pause);
-              Item.pauseDropdownController.value = val;
             });
           }
 
@@ -973,36 +980,68 @@ class _EditWorkoutSeriesComponentWidgetState
               ),
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 8),
-                child: FlutterFlowDropDown<String>(
-                  controller: Item.pauseDropdownController,
-                  options: ['30', '60', '90'],
-                  onChanged: (val) => updatePause(val),
-                  height: 40,
-                  textStyle: FlutterFlowTheme.of(context).bodySmall.override(
+                child: TextFormField(
+                  onChanged: (value) {
+                    updatePause(value);
+                  },
+                  controller: Item.textPauseController,
+                  textAlignVertical: TextAlignVertical.top,
+                  obscureText: false,
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 8),
+                    filled: true,
+                    fillColor: FlutterFlowTheme.of(context).primaryBackground,
+                    labelStyle: FlutterFlowTheme.of(context).labelMedium,
+                    hintStyle: FlutterFlowTheme.of(context).labelMedium,
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: FlutterFlowTheme.of(context).primaryBackground,
+                        width: 1,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: FlutterFlowTheme.of(context).primary,
+                        width: 2,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    errorBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: FlutterFlowTheme.of(context).error,
+                        width: 1,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    focusedErrorBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: FlutterFlowTheme.of(context).error,
+                        width: 1,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  style: FlutterFlowTheme.of(context).bodySmall.override(
                         fontFamily: 'Poppins',
                         fontSize: 10,
                       ),
-                  hintText: 'Pausa',
-                  icon: Icon(
-                    Icons.keyboard_arrow_down_rounded,
-                    color: FlutterFlowTheme.of(context).secondaryText,
-                    size: 12,
-                  ),
-                  fillColor: FlutterFlowTheme.of(context).primaryBackground,
-                  elevation: 2,
-                  borderColor: FlutterFlowTheme.of(context).primaryBackground,
-                  borderWidth: 2,
-                  borderRadius: 8,
-                  margin: EdgeInsetsDirectional.fromSTEB(16, 4, 16, 4),
-                  hidesUnderline: true,
-                  isSearchable: false,
+                  textAlign: TextAlign.center,
+                  maxLength: 3,
+                  maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                  buildCounter: (context,
+                          {required currentLength,
+                          required isFocused,
+                          maxLength}) =>
+                      null,
+                  keyboardType: TextInputType.number,
                 ),
               ),
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 8),
                 child: FlutterFlowDropDown<String>(
                   controller: Item.intensityDropdownController,
-                  options: ['Alta', 'Média', 'Baixa'],
+                  options: ['-', 'Baixa', 'Média', 'Alta'],
                   onChanged: (val) => updateIntensity(val),
                   height: 40,
                   textStyle: FlutterFlowTheme.of(context).bodySmall.override(

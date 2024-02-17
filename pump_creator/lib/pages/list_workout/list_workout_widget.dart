@@ -141,11 +141,11 @@ class _ListWorkoutWidgetState extends State<ListWorkoutWidget>
                   borderRadius: 20.0,
                   borderWidth: 1.0,
                   buttonSize: 40.0,
-                  fillColor: FlutterFlowTheme.of(context).primary,
+                  fillColor: Colors.transparent,
                   icon: Icon(
                     Icons.add_outlined,
-                    color: Colors.white,
-                    size: 20.0,
+                    color: FlutterFlowTheme.of(context).primary,
+                    size: 24.0,
                   ),
                   onPressed: () async {
                     logFirebaseEvent('LIST_WORKOUT_add_outlined_ICN_ON_TAP');
@@ -447,7 +447,7 @@ class _ListWorkoutWidgetState extends State<ListWorkoutWidget>
                       }
                     });
                   },
-                  firstActionTitle: 'Em Branco',
+                  firstActionTitle: 'Em branco',
                   secondAction: () async {
                     final result = await Navigator.push(
                       context,
@@ -462,8 +462,6 @@ class _ListWorkoutWidgetState extends State<ListWorkoutWidget>
                     if (result != null && result.length > 0) {
                       dynamic selected = result[0];
                       selected['_id'] = null;
-                      selected['trainingImageUrl'] =
-                          'https://res.cloudinary.com/hssoaq6x7/image/upload/v1704734551/IconAppPump-removebg-preview-4_sxmknd.png';
                       selected['namePortuguese'] = "";
                       selected['nameEnglish'] = null;
                       selected['personalId'] = null;
@@ -476,7 +474,7 @@ class _ListWorkoutWidgetState extends State<ListWorkoutWidget>
                       });
                     }
                   },
-                  secondActionTitle: 'Usar Modelo',
+                  secondActionTitle: 'Usar modelo',
                   title: 'Novo Treino',
                 )),
           );

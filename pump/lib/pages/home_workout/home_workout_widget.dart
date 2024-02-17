@@ -1,4 +1,3 @@
-import 'package:api_manager/api_manager/api_manager.dart';
 import 'package:api_manager/api_requests/pump_api_calls.dart';
 import 'package:api_manager/auth/firebase_auth/auth_util.dart';
 import 'package:flutter/services.dart';

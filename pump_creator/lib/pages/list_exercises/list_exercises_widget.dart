@@ -264,11 +264,11 @@ class _ListExercisesWidgetState extends State<ListExercisesWidget>
                   borderRadius: 20.0,
                   borderWidth: 1.0,
                   buttonSize: 40.0,
-                  fillColor: FlutterFlowTheme.of(context).primary,
+                  fillColor: Colors.transparent,
                   icon: Icon(
                     Icons.add_outlined,
-                    color: Colors.white,
-                    size: 20.0,
+                    color: FlutterFlowTheme.of(context).primary,
+                    size: 24.0,
                   ),
                   onPressed: () async {
                     logFirebaseEvent('LIST_EXERCISES_add_outlined_ICN_ON_TAP');

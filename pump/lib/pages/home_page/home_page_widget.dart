@@ -154,6 +154,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
   }
 
   Future<void> speakText(String text) async {
+    await flutterTts.stop();
     await flutterTts.setLanguage('pt-BR');
     await flutterTts.setSpeechRate(0.5);
     await flutterTts.setIosAudioCategory(IosTextToSpeechAudioCategory.ambient,
@@ -166,6 +167,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
     _model.dispose();
     _model.timerController.dispose();
     super.dispose();
+    flutterTts.stop();
   }
 
   @override
@@ -706,7 +708,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                           ),
                                           Visibility(
                                             visible:
-                                                _model.getCadence() != null,
+                                                _model.getIntensity() != null,
                                             child: Align(
                                               alignment:
                                                   AlignmentDirectional(-1, 1),
@@ -724,37 +726,6 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                                   highlightColor:
                                                       Colors.transparent,
                                                   onTap: () async {
-                                                    HapticFeedback
-                                                        .mediumImpact();
-                                                    await showModalBottomSheet(
-                                                      isScrollControlled: true,
-                                                      backgroundColor:
-                                                          Colors.transparent,
-                                                      enableDrag: false,
-                                                      context: context,
-                                                      builder: (context) {
-                                                        return GestureDetector(
-                                                          onTap: () => FocusScope
-                                                                  .of(context)
-                                                              .requestFocus(_model
-                                                                  .unfocusNode),
-                                                          child: Padding(
-                                                            padding:
-                                                                MediaQuery.of(
-                                                                        context)
-                                                                    .viewInsets,
-                                                            child:
-                                                                InformationBottomSheetTextWidget(
-                                                              personalNote: _model
-                                                                  .getCadenceDescription(),
-                                                              title: _model
-                                                                  .getCadence(),
-                                                            ),
-                                                          ),
-                                                        );
-                                                      },
-                                                    ).then((value) =>
-                                                        setState(() {}));
                                                   },
                                                   child: IntrinsicWidth(
                                                     child: Container(
@@ -797,7 +768,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                                           children: [
                                                             Icon(
                                                               Icons
-                                                                  .info_outline_rounded,
+                                                                  .bar_chart,
                                                               color:
                                                                   Colors.white,
                                                               size: 16.0,
@@ -809,7 +780,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                                                 fit: BoxFit
                                                                     .scaleDown,
                                                                 child: Text(
-                                                                  _model.getCadence() ??
+                                                                  _model.getIntensity() ??
                                                                       '',
                                                                   style: FlutterFlowTheme.of(
                                                                           context)

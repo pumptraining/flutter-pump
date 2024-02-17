@@ -29,7 +29,7 @@ class EditWorkoutSeriesModel extends FlutterFlowModel {
       newItem['tempRepDescription'] = 'Repetições';
       newItem['pauseArray'] = [60, 60, 60];
       newItem['tempRepArray'] = [10, 10, 10];
-      newItem['intensityArray'] = ['Média', 'Média', 'Média'];
+      newItem['intensityArray'] = ['-', '-', '-'];
 
       final set = {
         'quantity': 3,
@@ -54,12 +54,12 @@ class EditWorkoutSeriesModel extends FlutterFlowModel {
 
       newItem['pauseArray'] = [60];
       newItem['tempRepArray'] = [10];
-      newItem['intensityArray'] = ['Média'];
+      newItem['intensityArray'] = ['-'];
 
       for (int i = 1; workoutSets[setIndexToAddExercise]['quantity'] > i; i++) {
         newItem['pauseArray'].add(60);
         newItem['tempRepArray'].add(10);
-        newItem['intensityArray'].add('Média');
+        newItem['intensityArray'].add('-');
       }
 
       workoutSets[setIndexToAddExercise]['exercises'].add(newItem);

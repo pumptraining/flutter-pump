@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_flow/flutter_flow_data_table.dart';
 import 'package:flutter_flow/flutter_flow_model.dart';
+import 'package:pump_components/components/edit_workout_series/edit_workout_series_component_model.dart';
 import 'package:pump_components/components/review_card/review_card_model.dart';
 
 class WorkoutDetailsModel extends FlutterFlowModel {
@@ -9,6 +11,10 @@ class WorkoutDetailsModel extends FlutterFlowModel {
   dynamic content;
   PageController? pageViewController;
   late bool isPersonal;
+  List<dynamic> workoutSets = [];
+  List<DropdownData> dataArray = [];
+  final paginatedDataTableController =
+      FlutterFlowDataTableController<dynamic>();
 
   int get pageViewCurrentIndex => pageViewController != null &&
           pageViewController!.hasClients &&

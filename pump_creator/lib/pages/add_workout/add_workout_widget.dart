@@ -1,15 +1,15 @@
 import 'dart:io';
 import 'package:aligned_dialog/aligned_dialog.dart';
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter_flow/common/utils.dart';
 import 'package:flutter_flow/flutter_flow_model.dart';
 import 'package:flutter_flow/flutter_flow_util.dart';
+import 'package:flutter_flow/form_field_controller.dart';
 import 'package:flutter_flow/nav/serialization_util.dart';
 import 'package:pump_components/components/bottom_button_fixed/bottom_button_fixed_widget.dart';
+import 'package:pump_components/components/edit_workout_series/edit_workout_series_component_model.dart';
+import 'package:pump_components/components/edit_workout_series/edit_workout_series_component_widget.dart';
 import 'package:pump_components/components/information_dialog/information_dialog_widget.dart';
 import 'package:pump_components/components/tag_component/tag_component_widget.dart';
 import 'package:pump_creator/flutter_flow/nav/nav.dart';
-import 'package:pump_creator/index.dart';
 import 'package:pump_components/components/empty_list/empty_list_widget.dart';
 import 'package:api_manager/api_requests/pump_creator_api_calls.dart';
 import 'package:flutter_flow/flutter_flow_icon_button.dart';
@@ -17,7 +17,6 @@ import 'package:flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter_flow/upload_data.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../backend/firebase_analytics/analytics.dart';
@@ -47,6 +46,7 @@ class _AddWorkoutWidgetState extends State<AddWorkoutWidget> {
   final ScrollController _scrollController = ScrollController();
   String _bottomButtonText = 'Salvar';
   bool _wasEdited = false;
+  bool addNewSet = false;
 
   @override
   void initState() {
@@ -56,13 +56,27 @@ class _AddWorkoutWidgetState extends State<AddWorkoutWidget> {
     logFirebaseEvent('screen_view', parameters: {'screen_name': 'AddWorkout'});
     _model.yourNameController1 ??= TextEditingController();
     _model.yourNameController2 ??= TextEditingController();
-    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
 
     _model.workout = widget.workout;
     _model.setValues();
+    reloadContent(context);
 
     if (widget.workoutId != null) {
       _model.isUpdate = true;
+    } else {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        context.pushNamed('EditWorkoutSeriesWidget', queryParameters: {
+          'workout': serializeParam(_model.workout, ParamType.JSON),
+          'showBottomButton': serializeParam(true, ParamType.bool),
+        }).then((value) {
+          if (value != null) {
+            safeSetState(() {
+              _model.workout = value;
+              reloadContent(context);
+            });
+          }
+        });
+      });
     }
 
     _unfocusNode.addListener(() {
@@ -266,7 +280,8 @@ class _AddWorkoutWidgetState extends State<AddWorkoutWidget> {
                                 child: SizedBox(
                                   width: 40.0,
                                   height: 40.0,
-                                  child: CircularProgressIndicator(strokeWidth: 1.0,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 1.0,
                                     color: FlutterFlowTheme.of(context).primary,
                                   ),
                                 ),
@@ -279,6 +294,7 @@ class _AddWorkoutWidgetState extends State<AddWorkoutWidget> {
                               _model.workout =
                                   _model.contentResponse['workout'];
                               _model.setValues();
+                              reloadContent(context);
                             }
 
                             _model.prepareObjectives();
@@ -291,6 +307,105 @@ class _AddWorkoutWidgetState extends State<AddWorkoutWidget> {
             ),
           ),
         ));
+  }
+
+  void _goToAddExercises(BuildContext context) async {
+    final dynamic result =
+        await context.pushNamed('ListExercises', queryParameters: {
+      'showBackButton': serializeParam(true, ParamType.bool),
+      'isPicker': serializeParam(true, ParamType.bool)
+    });
+
+    if (result != null) {
+      safeSetState(() {
+        if (_model.workout['series'].isEmpty || addNewSet) {
+          _model.addSeriesWithExercises(result);
+          addNewSet = false;
+        } else {
+          _model.addExercisesInSet(result);
+        }
+        reloadContent(context);
+      });
+    }
+  }
+
+  void reloadContent(BuildContext context) {
+    if (_model.workout['series'] == null) {
+      return;
+    }
+    _model.dataArray = [];
+
+    int setIndex = 0;
+    _model.workout['series'].toList().forEach((set) {
+      int exerciseIndex = 0;
+      set['exercises'].toList().forEach((exercise) {
+        int index = 0;
+        int quantity = 0;
+
+        if (exercise['tempRepArray'] == null) {
+          if (set.containsKey('quantity')) {
+            dynamic value = set['quantity'];
+            if (value is String) {
+              quantity = int.tryParse(value) ?? 0;
+              set.remove('quantity');
+              set['quantity'] = quantity;
+            } else {
+              quantity = value;
+            }
+          }
+
+          int tempRep = int.tryParse(exercise['tempRep']) ?? 0;
+          int pause = int.tryParse(exercise['pause']) ?? 0;
+
+          String intensity = 'Média';
+          if (exercise['intensity'] != null &&
+              exercise['intensity'] != 'Moderada') {
+            intensity = exercise['intensity'];
+          }
+
+          exercise['tempRepArray'] = [tempRep];
+          exercise['pauseArray'] = [pause];
+          exercise['intensityArray'] = [intensity];
+          for (int i = 1; i < quantity; i++) {
+            exercise['tempRepArray'].add(tempRep);
+            exercise['pauseArray'].add(pause);
+            exercise['intensityArray'].add(intensity);
+          }
+        }
+
+        exercise['tempRepArray'].forEach((reps) {
+          final indexCurrent = index;
+          final exerciseIndexCurrent = exerciseIndex;
+          final setIndexCurrent = setIndex;
+
+          final FormFieldController<String> dropIntensityController =
+              FormFieldController<String>('');
+          final textRepsController = TextEditingController();
+          textRepsController.text = '$reps';
+          final textPauseController = TextEditingController();
+          textPauseController.text = '${exercise['pauseArray'][indexCurrent]}';
+
+          final data = DropdownData(
+              setIndexCurrent,
+              exerciseIndexCurrent,
+              indexCurrent,
+              reps,
+              exercise['pauseArray'][indexCurrent],
+              exercise['intensityArray'][indexCurrent],
+              textPauseController,
+              dropIntensityController,
+              textRepsController);
+
+          _model.dataArray.add(data);
+
+          index++;
+        });
+
+        exerciseIndex++;
+      });
+
+      setIndex++;
+    });
   }
 
   Stack buildContent(BuildContext context) {
@@ -564,9 +679,13 @@ class _AddWorkoutWidgetState extends State<AddWorkoutWidget> {
                       children: _model.objectiveTags.map((element) {
                         return TagComponentWidget(
                           title: element['title'],
-                          tagColor: FlutterFlowTheme.of(context).primary,
+                          tagColor: Colors.white,
                           selected: _model.objectiveIsSelected(element),
                           maxHeight: 32,
+                          alpha: 1,
+                          selectedTextColor:
+                              FlutterFlowTheme.of(context).primaryBackground,
+                          borderRadius: 16,
                           onTagPressed: () {
                             _wasEdited = true;
                             HapticFeedback.mediumImpact();
@@ -617,9 +736,13 @@ class _AddWorkoutWidgetState extends State<AddWorkoutWidget> {
                       children: _model.levelTags.map((element) {
                         return TagComponentWidget(
                           title: element['title'],
-                          tagColor: FlutterFlowTheme.of(context).primary,
+                          tagColor: Colors.white,
                           selected: _model.levelIsSelected(element),
                           maxHeight: 32,
+                          alpha: 1,
+                          selectedTextColor:
+                              FlutterFlowTheme.of(context).primaryBackground,
+                          borderRadius: 16,
                           onTagPressed: () {
                             _wasEdited = true;
                             HapticFeedback.mediumImpact();
@@ -662,7 +785,7 @@ class _AddWorkoutWidgetState extends State<AddWorkoutWidget> {
                 padding: EdgeInsetsDirectional.fromSTEB(0.0, 12.0, 0.0, 0.0),
                 child: Builder(
                   builder: (context) {
-                    final setsList = _model.workout?['series'] ?? [];
+                    dynamic setsList = _model.workout?['series'] ?? [];
 
                     if (setsList.isEmpty) {
                       return EmptyListWidget(
@@ -671,40 +794,34 @@ class _AddWorkoutWidgetState extends State<AddWorkoutWidget> {
                               'Nenhuma série adicionada ainda. Adicione as séries para criar o treino.',
                           buttonTitle: 'Adicionar',
                           onButtonPressed: () async {
-                            
-                            context.pushNamed('EditWorkoutSeriesWidget', queryParameters: {
-                              'workout': serializeParam(_model.workout, ParamType.JSON),
+                            context.pushNamed('EditWorkoutSeriesWidget',
+                                queryParameters: {
+                                  'workout': serializeParam(
+                                      _model.workout, ParamType.JSON),
+                                });
+
+                            final result = await context.pushNamed(
+                                'EditWorkoutSeriesWidget',
+                                queryParameters: {
+                                  'workout': serializeParam(
+                                      _model.workout, ParamType.JSON),
+                                  'showBottomButton':
+                                      serializeParam(true, ParamType.bool),
+                                }).then((value) {
+                              if (value != null) {
+                                _model.workout = value;
+                              }
                             });
-                            return;
-
-
-                            final result = await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => AddWorkoutSetsWidget(
-                                  sets: null,
-                                  techniques:
-                                      _model.contentResponse['techniques'],
-                                ),
-                              ),
-                            );
-                            if (result != null && result['exercises'] != null) {
+                            if (result != null) {
                               _wasEdited = true;
                               setState(() {
-                                if ((result['exercises'] as List).length > 0) {
-                                  if (_model.workout?['series'] == null) {
-                                    if (_model.workout == null) {
-                                      _model.workout = {};
-                                    }
-                                    _model.workout?['series'] = [];
-                                  }
-                                  _model.workout?['series'].add(result);
-                                }
+                                (_model.workout?['series'] as List).add(result);
+                                reloadContent(context);
                               });
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(
-                                    'Série atualizada.',
+                                    'Exercícios atualizados.',
                                     style: TextStyle(
                                       color: FlutterFlowTheme.of(context)
                                           .primaryText,
@@ -718,522 +835,17 @@ class _AddWorkoutWidgetState extends State<AddWorkoutWidget> {
                             }
                           });
                     }
-
-                    return ReorderableListView.builder(
-                      padding: EdgeInsets.zero,
-                      primary: false,
-                      shrinkWrap: true,
-                      scrollDirection: Axis.vertical,
-                      itemCount: setsList.length,
-                      onReorder: (int oldIndex, int newIndex) {
-                        _wasEdited = true;
-                        setState(() {
-                          if (oldIndex < newIndex) {
-                            newIndex -= 1;
-                          }
-                          final item =
-                              _model.workout?['series']?.removeAt(oldIndex);
-                          _model.workout?['series']?.insert(newIndex, item);
-                        });
+                    return EditWorkoutSeriesComponentWidget(
+                      workoutSets: setsList,
+                      dataArray: _model.dataArray,
+                      paginatedDataTableController:
+                          _model.paginatedDataTableController,
+                      onButtonAddExerciseSet: (index) {
+                        _model.setIndexToAddExercise = index;
+                        _goToAddExercises(context);
                       },
-                      itemBuilder: (context, setsListIndex) {
-                        final setsListItem = setsList[setsListIndex];
-                        return Row(
-                          mainAxisSize: MainAxisSize.max,
-                          key: Key('Key2zh_$setsListIndex'),
-                          children: [
-                            Expanded(
-                              child: Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    16.0, 8.0, 16.0, 8.0),
-                                child: Container(
-                                  constraints: BoxConstraints(
-                                    maxWidth: 750.0,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: FlutterFlowTheme.of(context)
-                                        .secondaryBackground,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        blurRadius: 4.0,
-                                        color: Color(0x33000000),
-                                        offset: Offset(0.0, 2.0),
-                                      )
-                                    ],
-                                    borderRadius: BorderRadius.circular(12.0),
-                                  ),
-                                  child: Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        16.0, 16.0, 16.0, 16.0),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Padding(
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  0, 0, 0, 12),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Container(
-                                                width: 70,
-                                                height: 2,
-                                                decoration: BoxDecoration(
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .primaryBackground,
-                                                  borderRadius:
-                                                      BorderRadius.circular(1),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Row(
-                                          mainAxisSize: MainAxisSize.max,
-                                          children: [
-                                            Expanded(
-                                              child: Text(
-                                                '${(setsListItem["quantity"])} Séries',
-                                                style:
-                                                    FlutterFlowTheme.of(context)
-                                                        .titleLarge,
-                                              ),
-                                            ),
-                                            FFButtonWidget(
-                                              onPressed: () async {
-                                                logFirebaseEvent(
-                                                    'ADD_WORKOUT_PAGE_EDITAR_BTN_ON_TAP');
-                                                logFirebaseEvent(
-                                                    'Button_navigate_to');
-
-                                                final result =
-                                                    await Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        AddWorkoutSetsWidget(
-                                                      sets: setsListItem,
-                                                      techniques: _model
-                                                              .contentResponse[
-                                                          'techniques'],
-                                                    ),
-                                                  ),
-                                                );
-                                                if (result != null) {
-                                                  _wasEdited = true;
-                                                  setState(() {
-                                                    if ((result['exercises']
-                                                                as List)
-                                                            .length ==
-                                                        0) {
-                                                      (_model.workout?['series']
-                                                              as List)
-                                                          .removeAt(
-                                                              setsListIndex);
-                                                    } else {
-                                                      (_model.workout?['series']
-                                                                  as List)[
-                                                              setsListIndex] =
-                                                          result;
-                                                    }
-                                                  });
-                                                  ScaffoldMessenger.of(context)
-                                                      .showSnackBar(
-                                                    SnackBar(
-                                                      content: Text(
-                                                        'Série atualizada.',
-                                                        style: TextStyle(
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .primaryText,
-                                                        ),
-                                                      ),
-                                                      duration: Duration(
-                                                          milliseconds: 1000),
-                                                      backgroundColor:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .secondary,
-                                                    ),
-                                                  );
-                                                }
-                                              },
-                                              text: 'Editar',
-                                              options: FFButtonOptions(
-                                                width: 90.0,
-                                                height: 34.0,
-                                                padding: EdgeInsetsDirectional
-                                                    .fromSTEB(
-                                                        0.0, 0.0, 0.0, 0.0),
-                                                iconPadding:
-                                                    EdgeInsetsDirectional
-                                                        .fromSTEB(
-                                                            0.0, 0.0, 0.0, 4.0),
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .secondaryBackground,
-                                                textStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .titleSmall
-                                                        .override(
-                                                          fontFamily: 'Poppins',
-                                                          fontSize: 14,
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .primary,
-                                                        ),
-                                                borderSide: BorderSide(
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .primary,
-                                                  width: 1.0,
-                                                ),
-                                                borderRadius:
-                                                    BorderRadius.circular(8.0),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Visibility(
-                                          visible:
-                                              setsListItem["techniqueId"] !=
-                                                      null &&
-                                                  setsListItem["techniqueId"]
-                                                      .isNotEmpty,
-                                          child: Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    0.0, 0.0, 0.0, 12.0),
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.max,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Expanded(
-                                                  child: Text(
-                                                    setsListItem[
-                                                                "techniqueId"] !=
-                                                            null
-                                                        ? _model
-                                                            .getTechniqueNameBy(
-                                                                setsListItem[
-                                                                    "techniqueId"])
-                                                        : "",
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .titleMedium
-                                                        .override(
-                                                          fontFamily: 'Poppins',
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .secondary,
-                                                        ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        Builder(
-                                          builder: (context) {
-                                            final exerciseList =
-                                                setsListItem['exercises'] ?? [];
-                                            return ListView.builder(
-                                              padding: EdgeInsets.zero,
-                                              primary: false,
-                                              shrinkWrap: true,
-                                              scrollDirection: Axis.vertical,
-                                              itemCount: exerciseList.length,
-                                              itemBuilder:
-                                                  (context, exerciseListIndex) {
-                                                final exerciseListItem =
-                                                    exerciseList[
-                                                        exerciseListIndex];
-                                                final isLast =
-                                                    exerciseList.length ==
-                                                        (exerciseListIndex + 1);
-                                                return InkWell(
-                                                  onTap: () {
-                                                    // Utils.showExerciseVideo(context, exerciseListItem['exercise']['videoUrl']);
-                                                  },
-                                                  child: Padding(
-                                                  padding: EdgeInsetsDirectional
-                                                      .fromSTEB(
-                                                          0.0,
-                                                          exerciseListIndex == 0
-                                                              ? 24
-                                                              : 0,
-                                                          0.0,
-                                                          isLast ? 0 : 12.0),
-                                                  child: Container(
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width *
-                                                            1.0,
-                                                    decoration: BoxDecoration(
-                                                      color: FlutterFlowTheme
-                                                              .of(context)
-                                                          .secondaryBackground,
-                                                      boxShadow: [],
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              0.0),
-                                                    ),
-                                                    child: Column(
-                                                      mainAxisSize:
-                                                          MainAxisSize.max,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Padding(
-                                                          padding:
-                                                              EdgeInsetsDirectional
-                                                                  .fromSTEB(
-                                                                      0.0,
-                                                                      4.0,
-                                                                      0.0,
-                                                                      12.0),
-                                                          child: Row(
-                                                            mainAxisSize:
-                                                                MainAxisSize
-                                                                    .max,
-                                                            children: [
-                                                              Padding(
-                                                                padding:
-                                                                    EdgeInsetsDirectional
-                                                                        .fromSTEB(
-                                                                            0.0,
-                                                                            1.0,
-                                                                            1.0,
-                                                                            1.0),
-                                                                child:
-                                                                    ClipRRect(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              8.0),
-                                                                  child: (exerciseListItem['exercise']['imageUrl'] as String)
-                                                                              .isNotEmpty ==
-                                                                          true
-                                                                      ? CachedNetworkImage(
-                                                                          imageUrl:
-                                                                              exerciseListItem['exercise']['imageUrl'],
-                                                                          width:
-                                                                              70.0,
-                                                                          height:
-                                                                              70.0,
-                                                                          fit: BoxFit
-                                                                              .cover,
-                                                                        )
-                                                                      : Container(),
-                                                                ),
-                                                              ),
-                                                              Expanded(
-                                                                flex: 3,
-                                                                child: Padding(
-                                                                  padding: EdgeInsetsDirectional
-                                                                      .fromSTEB(
-                                                                          8.0,
-                                                                          0.0,
-                                                                          4.0,
-                                                                          0.0),
-                                                                  child: Column(
-                                                                    mainAxisSize:
-                                                                        MainAxisSize
-                                                                            .max,
-                                                                    mainAxisAlignment:
-                                                                        MainAxisAlignment
-                                                                            .center,
-                                                                    crossAxisAlignment:
-                                                                        CrossAxisAlignment
-                                                                            .start,
-                                                                    children: [
-                                                                      Row(
-                                                                        mainAxisSize:
-                                                                            MainAxisSize.max,
-                                                                        children: [
-                                                                          Expanded(
-                                                                            child:
-                                                                                AutoSizeText(
-                                                                              exerciseListItem['exercise']['name'],
-                                                                              maxLines: 2,
-                                                                              style: FlutterFlowTheme.of(context).titleMedium,
-                                                                            ),
-                                                                          ),
-                                                                        ],
-                                                                      ),
-                                                                      Row(
-                                                                        mainAxisSize:
-                                                                            MainAxisSize.max,
-                                                                        children: [
-                                                                          Expanded(
-                                                                            child:
-                                                                                AutoSizeText(
-                                                                              '${_model.getExerciseSubtitle(exerciseListItem)}',
-                                                                              maxLines: 2,
-                                                                              style: FlutterFlowTheme.of(context).bodyMedium.override(
-                                                                                    fontFamily: 'Poppins',
-                                                                                    color: FlutterFlowTheme.of(context).secondaryText,
-                                                                                  ),
-                                                                            ),
-                                                                          ),
-                                                                        ],
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                        isLast
-                                                            ? Container()
-                                                            : Padding(
-                                                                padding:
-                                                                    EdgeInsetsDirectional
-                                                                        .fromSTEB(
-                                                                            80,
-                                                                            0,
-                                                                            0,
-                                                                            0),
-                                                                child: Divider(
-                                                                  color: FlutterFlowTheme.of(
-                                                                          context)
-                                                                      .primaryBackground,
-                                                                )),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                                );
-                                              },
-                                            );
-                                          },
-                                        ),
-                                        Visibility(
-                                          visible:
-                                              setsListItem["personalNote"] !=
-                                                      null &&
-                                                  setsListItem["personalNote"]
-                                                      .isNotEmpty,
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            children: [
-                                              Expanded(
-                                                child: Padding(
-                                                  padding: EdgeInsetsDirectional
-                                                      .fromSTEB(
-                                                          0.0, 6.0, 0.0, 0.0),
-                                                  child: Container(
-                                                    width: double.infinity,
-                                                    color: FlutterFlowTheme.of(
-                                                            context)
-                                                        .secondaryBackground,
-                                                    child: ExpandableNotifier(
-                                                      initialExpanded: false,
-                                                      child: ExpandablePanel(
-                                                        header: Text(
-                                                          'Comentário',
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .titleSmall,
-                                                        ),
-                                                        collapsed: Container(
-                                                          width: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .width *
-                                                              1.0,
-                                                          height: 54.0,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .secondaryBackground,
-                                                          ),
-                                                          child: Padding(
-                                                            padding:
-                                                                EdgeInsetsDirectional
-                                                                    .fromSTEB(
-                                                                        0.0,
-                                                                        8.0,
-                                                                        0.0,
-                                                                        0.0),
-                                                            child: Text(
-                                                              _model.textLimit(
-                                                                  setsListItem?[
-                                                                      'personalNote'],
-                                                                  50),
-                                                              style: FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .bodyMedium
-                                                                  .override(
-                                                                    fontFamily:
-                                                                        'Poppins',
-                                                                    color: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .secondaryText,
-                                                                  ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        expanded: Column(
-                                                          mainAxisSize:
-                                                              MainAxisSize.max,
-                                                          children: [
-                                                            Text(
-                                                              setsListItem?[
-                                                                      'personalNote'] ??
-                                                                  "",
-                                                              style: FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .bodyMedium
-                                                                  .override(
-                                                                    fontFamily:
-                                                                        'Poppins',
-                                                                    color: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .secondaryText,
-                                                                  ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        theme:
-                                                            ExpandableThemeData(
-                                                          tapHeaderToExpand:
-                                                              false,
-                                                          tapBodyToExpand: true,
-                                                          tapBodyToCollapse:
-                                                              true,
-                                                          headerAlignment:
-                                                              ExpandablePanelHeaderAlignment
-                                                                  .center,
-                                                          hasIcon: true,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        );
+                      onEmptyList: () {
+                        safeSetState(() {});
                       },
                     );
                   },
@@ -1244,7 +856,7 @@ class _AddWorkoutWidgetState extends State<AddWorkoutWidget> {
                     _model.workout?['series'] != null &&
                     _model.workout?['series'].isNotEmpty,
                 child: Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 24.0, 0.0, 0.0),
+                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                   child: FFButtonWidget(
                     onPressed: () async {
                       logFirebaseEvent('ADD_WORKOUT_PAGE_ADICIONAR_BTN_ON_TAP');
@@ -1252,24 +864,28 @@ class _AddWorkoutWidgetState extends State<AddWorkoutWidget> {
                       HapticFeedback.lightImpact();
                       logFirebaseEvent('Button_navigate_to');
 
-                      final result = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AddWorkoutSetsWidget(
-                            sets: null,
-                            techniques: _model.contentResponse['techniques'],
-                          ),
-                        ),
-                      );
+                      final result = await context.pushNamed(
+                          'EditWorkoutSeriesWidget',
+                          queryParameters: {
+                            'workout':
+                                serializeParam(_model.workout, ParamType.JSON),
+                            'showBottomButton':
+                                serializeParam(false, ParamType.bool),
+                          }).then((value) {
+                        if (value != null) {
+                          _model.workout = value;
+                        }
+                      });
                       if (result != null) {
                         _wasEdited = true;
                         setState(() {
                           (_model.workout?['series'] as List).add(result);
+                          reloadContent(context);
                         });
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
-                              'Série atualizada.',
+                              'Exercícios atualizados.',
                               style: TextStyle(
                                 color: FlutterFlowTheme.of(context).primaryText,
                               ),
@@ -1281,26 +897,30 @@ class _AddWorkoutWidgetState extends State<AddWorkoutWidget> {
                         );
                       }
                     },
-                    text: 'Adicionar',
-                    options: FFButtonOptions(
-                      width: 130.0,
-                      height: 40.0,
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                      iconPadding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                      color: FlutterFlowTheme.of(context).primaryBackground,
-                      textStyle:
-                          FlutterFlowTheme.of(context).titleSmall.override(
-                                fontFamily: 'Poppins',
-                                color: FlutterFlowTheme.of(context).primary,
-                              ),
-                      borderSide: BorderSide(
-                        color: FlutterFlowTheme.of(context).primary,
-                        width: 1.0,
-                      ),
-                      borderRadius: BorderRadius.circular(8.0),
+                    text: 'Exercícios',
+                    icon: Icon(
+                      Icons.edit,
+                      size: 20,
                     ),
+                    options: FFButtonOptions(
+                      height: 34,
+                      padding: EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
+                      iconPadding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                      color: FlutterFlowTheme.of(context).info,
+                      textStyle: FlutterFlowTheme.of(context)
+                          .labelMedium
+                          .override(
+                              fontFamily: 'Poppins',
+                              color: FlutterFlowTheme.of(context)
+                                  .primaryBackground),
+                      elevation: 3,
+                      borderSide: BorderSide(
+                        color: FlutterFlowTheme.of(context).info,
+                        width: 1,
+                      ),
+                      borderRadius: BorderRadius.circular(17),
+                    ),
+                    showLoadingIndicator: false,
                   ),
                 ),
               ),

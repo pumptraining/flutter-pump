@@ -1,10 +1,9 @@
 import 'dart:io';
-
 import 'package:api_manager/api_requests/pump_api_calls.dart';
 import 'package:api_manager/auth/firebase_auth/auth_util.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_flow/common/user_settings.dart';
+import 'package:flutter_flow/common/utils.dart';
 import 'package:flutter_flow/flutter_flow_animations.dart';
 import 'package:flutter_flow/flutter_flow_icon_button.dart';
 import 'package:flutter_flow/flutter_flow_model.dart';
@@ -14,10 +13,9 @@ import 'package:flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter_flow/nav/serialization_util.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pump_components/components/bottom_button_fixed/bottom_button_fixed_widget.dart';
-import 'package:pump_components/components/subscribe_screen/subscribe_screen_widget.dart';
+import 'package:pump_components/components/cell_list_workout/cell_list_workout_widget.dart';
 import 'workout_sheet_details_model.dart';
 export 'workout_sheet_details_model.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
@@ -53,134 +51,6 @@ class _WorkoutSheetDetailsWidgetState extends State<WorkoutSheetDetailsWidget>
   late ApiCallResponse responseContent;
   bool showStartButton = true;
 
-  final animationsMap = {
-    'containerOnPageLoadAnimation1': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        FadeEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 600.ms,
-          begin: 0.0,
-          end: 1.0,
-        ),
-        MoveEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 600.ms,
-          begin: Offset(0.0, -250.0),
-          end: Offset(0.0, 0.0),
-        ),
-      ],
-    ),
-    'textOnPageLoadAnimation1': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        FadeEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 600.ms,
-          begin: 0.0,
-          end: 1.0,
-        ),
-        MoveEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 600.ms,
-          begin: Offset(-10.0, 0.0),
-          end: Offset(0.0, 0.0),
-        ),
-      ],
-    ),
-    'textOnPageLoadAnimation2': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        VisibilityEffect(duration: 50.ms),
-        FadeEffect(
-          curve: Curves.easeInOut,
-          delay: 50.ms,
-          duration: 600.ms,
-          begin: 0.0,
-          end: 1.0,
-        ),
-        MoveEffect(
-          curve: Curves.easeInOut,
-          delay: 50.ms,
-          duration: 600.ms,
-          begin: Offset(-20.0, 0.0),
-          end: Offset(0.0, 0.0),
-        ),
-      ],
-    ),
-    'containerOnPageLoadAnimation2': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        MoveEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 600.ms,
-          begin: Offset(0.0, 30.0),
-          end: Offset(0.0, 0.0),
-        ),
-      ],
-    ),
-    'containerOnPageLoadAnimation3': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        MoveEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 600.ms,
-          begin: Offset(0.0, 30.0),
-          end: Offset(0.0, 0.0),
-        ),
-      ],
-    ),
-    'textOnPageLoadAnimation3': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        FadeEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 600.ms,
-          begin: 0.0,
-          end: 1.0,
-        ),
-      ],
-    ),
-    'containerOnPageLoadAnimation4': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        FadeEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 600.ms,
-          begin: 0.0,
-          end: 1.0,
-        ),
-      ],
-    ),
-    'containerOnPageLoadAnimation5': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        FadeEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 600.ms,
-          begin: 0.0,
-          end: 1.0,
-        ),
-        MoveEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 600.ms,
-          begin: Offset(0.0, 90.0),
-          end: Offset(0.0, 0.0),
-        ),
-      ],
-    ),
-  };
-
   final ScrollController _scrollController = ScrollController();
   double leftPadding = 16.0;
   Color _appBarBackgroundColor = Colors.black;
@@ -213,13 +83,6 @@ class _WorkoutSheetDetailsWidgetState extends State<WorkoutSheetDetailsWidget>
         }
       });
     }
-
-    setupAnimations(
-      animationsMap.values.where((anim) =>
-          anim.trigger == AnimationTrigger.onActionTrigger ||
-          !anim.applyInitialState),
-      this,
-    );
   }
 
   @override
@@ -358,7 +221,8 @@ class _WorkoutSheetDetailsWidgetState extends State<WorkoutSheetDetailsWidget>
                         child: SizedBox(
                           width: 40.0,
                           height: 40.0,
-                          child: CircularProgressIndicator(strokeWidth: 1.0,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 1.0,
                             color: FlutterFlowTheme.of(context).primary,
                           ),
                         ),
@@ -558,7 +422,7 @@ class _WorkoutSheetDetailsWidgetState extends State<WorkoutSheetDetailsWidget>
                         fontFamily: 'Outfit',
                         fontWeight: FontWeight.normal,
                       ),
-                ).animateOnPageLoad(animationsMap['textOnPageLoadAnimation1']!),
+                ),
               ),
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(
@@ -577,8 +441,7 @@ class _WorkoutSheetDetailsWidgetState extends State<WorkoutSheetDetailsWidget>
                         child: Text(
                           _model.content['sections'][0]['description'] ?? '',
                           style: FlutterFlowTheme.of(context).labelMedium,
-                        ).animateOnPageLoad(
-                            animationsMap['textOnPageLoadAnimation2']!),
+                        ),
                       ),
                     ),
                     Visibility(
@@ -814,8 +677,7 @@ class _WorkoutSheetDetailsWidgetState extends State<WorkoutSheetDetailsWidget>
                                 // ),
                               ],
                             ),
-                          ).animateOnPageLoad(
-                              animationsMap['containerOnPageLoadAnimation2']!),
+                          ),
                         ),
                       ),
                     ),
@@ -1096,8 +958,7 @@ class _WorkoutSheetDetailsWidgetState extends State<WorkoutSheetDetailsWidget>
                           ],
                         ),
                       ),
-                    ).animateOnPageLoad(
-                        animationsMap['containerOnPageLoadAnimation3']!),
+                    ),
                     Padding(
                       padding:
                           EdgeInsetsDirectional.fromSTEB(0.0, 24.0, 0.0, 0.0),
@@ -1115,8 +976,7 @@ class _WorkoutSheetDetailsWidgetState extends State<WorkoutSheetDetailsWidget>
                                     fontFamily: 'Outfit',
                                     fontWeight: FontWeight.normal,
                                   ),
-                            ).animateOnPageLoad(
-                                animationsMap['textOnPageLoadAnimation3']!),
+                            ),
                           ),
                         ],
                       ),
@@ -1131,13 +991,36 @@ class _WorkoutSheetDetailsWidgetState extends State<WorkoutSheetDetailsWidget>
                               builder: (context) {
                                 final workoutList =
                                     _model.content['sections'][2]['array'];
-                                return Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: List.generate(workoutList.length,
-                                      (workoutIndex) {
-                                    final workout = workoutList[workoutIndex];
-                                    return GestureDetector(
-                                      onTap: () async {
+
+                                return ListView.builder(
+                                  padding: EdgeInsets.zero,
+                                  primary: false,
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.vertical,
+                                  itemCount: workoutList.length,
+                                  itemBuilder: (context, workoutListIndex) {
+                                    final workoutListItem =
+                                        workoutList[workoutListIndex];
+
+                                    List<Widget> rowAndDivider = [];
+
+                                    CellListWorkoutWidget cell =
+                                        CellListWorkoutWidget(
+                                      imageUrl:
+                                          workoutListItem['imageUrl'],
+                                      title: workoutListItem['workoutName'],
+                                      subtitle: _model.formatArrayToString(
+                                          workoutListItem['muscleImpact']),
+                                      level: _model.mapSkillLevel(
+                                          workoutListItem['level']),
+                                      levelColor:
+                                          _model.mapSkillLevelBorderColor(
+                                              workoutListItem['level']),
+                                      workoutId: workoutListItem['workoutId'],
+                                      time: workoutListItem['workoutTime']
+                                          .toString(),
+                                      titleImage: 'min',
+                                      onTap: (p0) async {
                                         final amount =
                                             _model.content?['amount'];
 
@@ -1147,7 +1030,7 @@ class _WorkoutSheetDetailsWidgetState extends State<WorkoutSheetDetailsWidget>
                                             'WorkoutDetails',
                                             queryParameters: {
                                               'workoutId': serializeParam(
-                                                workout['workoutId'],
+                                                workoutListItem['workoutId'],
                                                 ParamType.String,
                                               ),
                                               'userId': serializeParam(
@@ -1162,280 +1045,28 @@ class _WorkoutSheetDetailsWidgetState extends State<WorkoutSheetDetailsWidget>
                                           );
                                         }
                                       },
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          Expanded(
-                                            child: Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(
-                                                      16.0, 0.0, 16.0, 12.0),
-                                              child: Container(
-                                                width: double.infinity,
-                                                height: 113.0,
-                                                decoration: BoxDecoration(
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .secondaryBackground,
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      blurRadius: 4.0,
-                                                      color: Color(0x32000000),
-                                                      offset: Offset(0.0, 2.0),
-                                                    )
-                                                  ],
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          8.0),
-                                                ),
-                                                child: Row(
-                                                  mainAxisSize:
-                                                      MainAxisSize.max,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceEvenly,
-                                                  children: [
-                                                    Padding(
-                                                      padding:
-                                                          EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  12.0,
-                                                                  0.0,
-                                                                  0.0,
-                                                                  0.0),
-                                                      child: Container(
-                                                        width: 90.0,
-                                                        height: 90.0,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .secondaryBackground,
-                                                        ),
-                                                        child: Container(
-                                                          width: 90.0,
-                                                          height: 90.0,
-                                                          child: Stack(
-                                                            children: [
-                                                              ClipRRect(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            8.0),
-                                                                child:
-                                                                    CachedNetworkImage(
-                                                                  fadeInDuration:
-                                                                      Duration(
-                                                                          milliseconds:
-                                                                              500),
-                                                                  fadeOutDuration:
-                                                                      Duration(
-                                                                          milliseconds:
-                                                                              500),
-                                                                  imageUrl:
-                                                                      workout['imageUrl'] ??
-                                                                          '',
-                                                                  width: 90.0,
-                                                                  height: 90.0,
-                                                                  fit: BoxFit
-                                                                      .cover,
-                                                                ),
-                                                              ),
-                                                              Container(
-                                                                width: 90.0,
-                                                                height: 90.0,
-                                                                decoration:
-                                                                    BoxDecoration(
-                                                                  color: Color(
-                                                                      0x331A1F24),
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              8.0),
-                                                                ),
-                                                                child: Column(
-                                                                  mainAxisSize:
-                                                                      MainAxisSize
-                                                                          .max,
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .center,
-                                                                  children: [
-                                                                    Row(
-                                                                      mainAxisSize:
-                                                                          MainAxisSize
-                                                                              .max,
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .center,
-                                                                      crossAxisAlignment:
-                                                                          CrossAxisAlignment
-                                                                              .center,
-                                                                      children: [
-                                                                        Text(
-                                                                          '${workout['workoutTime']}',
-                                                                          style: FlutterFlowTheme.of(context)
-                                                                              .headlineMedium
-                                                                              .override(
-                                                                                fontFamily: 'Outfit',
-                                                                                color: FlutterFlowTheme.of(context).info,
-                                                                                lineHeight: 1.0,
-                                                                              ),
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                    Row(
-                                                                      mainAxisSize:
-                                                                          MainAxisSize
-                                                                              .max,
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .center,
-                                                                      children: [
-                                                                        Text(
-                                                                          'min',
-                                                                          style: FlutterFlowTheme.of(context).titleMedium.override(
-                                                                              fontFamily: 'Readex Pro',
-                                                                              lineHeight: 1.0,
-                                                                              color: Colors.white),
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Expanded(
-                                                      child: Padding(
-                                                        padding:
-                                                            EdgeInsetsDirectional
-                                                                .fromSTEB(
-                                                                    12.0,
-                                                                    12.0,
-                                                                    12.0,
-                                                                    12.0),
-                                                        child: Column(
-                                                          mainAxisSize:
-                                                              MainAxisSize.max,
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            Expanded(
-                                                              child: Row(
-                                                                mainAxisSize:
-                                                                    MainAxisSize
-                                                                        .max,
-                                                                crossAxisAlignment:
-                                                                    CrossAxisAlignment
-                                                                        .center,
-                                                                children: [
-                                                                  Expanded(
-                                                                    child:
-                                                                        AutoSizeText(
-                                                                      workout[
-                                                                          'workoutName'],
-                                                                      style: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .bodyMedium,
-                                                                    ),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                            Row(
-                                                              mainAxisSize:
-                                                                  MainAxisSize
-                                                                      .max,
-                                                              children: [
-                                                                Expanded(
-                                                                  child:
-                                                                      Padding(
-                                                                    padding: EdgeInsetsDirectional
-                                                                        .fromSTEB(
-                                                                            0.0,
-                                                                            4.0,
-                                                                            0.0,
-                                                                            0.0),
-                                                                    child:
-                                                                        AutoSizeText(
-                                                                      _model.mapSkillLevel(
-                                                                          workout[
-                                                                              'level']),
-                                                                      style: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .labelMedium
-                                                                          .override(
-                                                                            fontFamily:
-                                                                                'Readex Pro',
-                                                                            color:
-                                                                                _model.mapSkillLevelBorderColor(workout['level']),
-                                                                          ),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            Padding(
-                                                              padding:
-                                                                  EdgeInsetsDirectional
-                                                                      .fromSTEB(
-                                                                          0.0,
-                                                                          4.0,
-                                                                          0.0,
-                                                                          6.0),
-                                                              child: Row(
-                                                                mainAxisSize:
-                                                                    MainAxisSize
-                                                                        .max,
-                                                                children: [
-                                                                  Expanded(
-                                                                    child:
-                                                                        Padding(
-                                                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                                                          0.0,
-                                                                          4.0,
-                                                                          0.0,
-                                                                          0.0),
-                                                                      child:
-                                                                          AutoSizeText(
-                                                                        _model.formatArrayToString(
-                                                                            workout['muscleImpact']),
-                                                                        maxLines:
-                                                                            2,
-                                                                        style: FlutterFlowTheme.of(context)
-                                                                            .labelMedium
-                                                                            .override(
-                                                                              fontFamily: 'Readex Pro',
-                                                                              color: FlutterFlowTheme.of(context).secondaryText,
-                                                                            ),
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ).animateOnPageLoad(animationsMap[
-                                                  'containerOnPageLoadAnimation2']!),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                                      onDetailTap: (p0) {},
                                     );
-                                  }),
+
+                                    rowAndDivider.add(cell);
+
+                                    if (workoutListIndex <
+                                        workoutList.length - 1) {
+                                      rowAndDivider.add(
+                                        Divider(
+                                          indent: 106,
+                                          color: FlutterFlowTheme.of(context)
+                                              .secondaryBackground,
+                                          thickness:
+                                              1.0,
+                                        ),
+                                      );
+                                    }
+
+                                    return Column(
+                                      children: rowAndDivider,
+                                    );
+                                  },
                                 );
                               },
                             ),
@@ -1444,7 +1075,7 @@ class _WorkoutSheetDetailsWidgetState extends State<WorkoutSheetDetailsWidget>
                       ],
                     ),
                   ],
-                ),
+                ).animateOnPageLoad(Utils.defaultaAnimation),
               ),
             ],
           ),

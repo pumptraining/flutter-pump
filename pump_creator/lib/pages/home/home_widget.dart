@@ -13,10 +13,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_flow/common/user_settings.dart';
+import 'package:pump_components/components/action_sheet_buttons_new/action_sheet_buttons_new_widget.dart';
 import 'package:pump_components/components/subscribe_screen/subscribe_screen_widget.dart';
 import 'package:pump_creator/common/invite_link.dart';
 import 'package:pump_creator/flutter_flow/nav/nav.dart';
 import '../../backend/firebase_analytics/analytics.dart';
+import '../workout_picker/workout_picker_widget.dart';
 import 'home_model.dart';
 export 'home_model.dart';
 import 'dart:ui' as ui;
@@ -504,7 +506,7 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
               _model.content = snapshot.data?.jsonBody['response'];
 
               String invoiceStatus = '';
-              
+
               if (_model.content['invoiceStatus'] != null) {
                 invoiceStatus = _model.content['invoiceStatus'];
               }
@@ -760,6 +762,12 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                           return;
                                         }
                                       }
+
+                                      if (option.routeName == 'AddWorkout') {
+                                        _addNewWorkout(context);
+                                        return;
+                                      }
+
                                       context
                                           .pushNamed(
                                             option.routeName,
@@ -1549,6 +1557,47 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
         ),
       ),
     );
+  }
+
+  void _addNewWorkout(BuildContext context) {
+    showModalBottomSheet(
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        context: context,
+        builder: (bottomSheetContext) {
+          return Padding(
+              padding: MediaQuery.of(bottomSheetContext).viewInsets,
+              child: ActionSheetButtonsNewWidget(
+                firstAction: () async {
+                  context.pushNamed('AddWorkout');
+                },
+                firstActionTitle: 'Em branco',
+                secondAction: () async {
+                  final result = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => WorkoutPickerWidget(
+                        showBackButton: true,
+                        isPumpList: true,
+                      ),
+                    ),
+                  );
+
+                  if (result != null && result.length > 0) {
+                    dynamic selected = result[0];
+                    selected['_id'] = null;
+                    selected['namePortuguese'] = "";
+                    selected['nameEnglish'] = null;
+                    selected['personalId'] = null;
+                    context.pushNamed('AddWorkout', queryParameters: {
+                      'workout': serializeParam(selected, ParamType.JSON),
+                    });
+                  }
+                },
+                secondActionTitle: 'Usar modelo',
+                title: 'Novo Treino',
+              ));
+        });
   }
 }
 

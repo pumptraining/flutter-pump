@@ -4,7 +4,7 @@ import 'package:flutter_flow/flutter_flow_model.dart';
 import 'package:flutter_flow/form_field_controller.dart';
 
 class DropdownData {
-  FormFieldController<String>? pauseDropdownController;
+  TextEditingController? textPauseController;
   FormFieldController<String>? intensityDropdownController;
   TextEditingController? textRepsController;
   int setIndexCurrent;
@@ -21,7 +21,7 @@ class DropdownData {
       this.reps,
       this.pause,
       this.intensity,
-      this.pauseDropdownController,
+      this.textPauseController,
       this.intensityDropdownController,
       this.textRepsController);
 
@@ -44,7 +44,6 @@ class DropdownData {
 
 class EditWorkoutSeriesComponentModel extends FlutterFlowModel {
   late FlutterFlowDataTableController<dynamic> paginatedDataTableController;
-  dynamic workoutSets;
 
   FormFieldController<String>? dropDownIntensityController;
   FormFieldController<String>? dropDownIntervalController;
@@ -97,10 +96,53 @@ class EditWorkoutSeriesComponentModel extends FlutterFlowModel {
     final reps = exercise['tempRepArray'];
     final name = exercise['exercise']['name'];
     final type = exercise['tempRepDescription'] == 'Segundos' ? 's' : 'x';
-    return '${_findSmallestAndLargest(reps)}$type $name';
+    if (reps != null) {
+      return '${_findSmallestAndLargest(reps)}$type $name';
+    }
+    return '';
   }
 
-  String _findSmallestAndLargest(List<int> numbers) {
+  String generateSubtitle(dynamic exercise) {
+    List<dynamic> pauseSeconds = exercise['pauseArray'] ?? [];
+    List<dynamic> loads = exercise['intensityArray'] ?? [];
+
+    List<int> pauseSecondsList = pauseSeconds.cast<int>();
+    List<String> loadsList = loads.cast<String>();
+
+    if (pauseSeconds.length != loads.length ||
+        pauseSeconds.isEmpty ||
+        loads.isEmpty) {
+      return exercise['exercise']['equipament']['name'];
+    }
+
+    Set<int> uniquePauseSeconds = pauseSecondsList.toSet();
+    Set<String> uniqueLoads = loadsList.toSet();
+
+    bool singlePauseSecond = uniquePauseSeconds.length == 1;
+    bool singleLoad = uniqueLoads.length == 1;
+
+    if (singlePauseSecond && singleLoad) {
+      if (loadsList.first != '-') {
+        return 'Pausa ${pauseSecondsList.first}s | Carga ${loadsList.first}';
+      } else {
+        return 'Pausa ${pauseSecondsList.first}s';
+      }
+    } else {
+      List<String> formattedPairs = [];
+      for (int i = 0; i < pauseSecondsList.length; i++) {
+        String pause = '${pauseSecondsList[i]}s';
+        String load = loadsList[i];
+        if (load != '-') {
+          formattedPairs.add('$pause-$load');
+        } else {
+          formattedPairs.add(pause);
+        }
+      }
+      return formattedPairs.join(' | ');
+    }
+  }
+
+  String _findSmallestAndLargest(List<dynamic> numbers) {
     if (numbers.isEmpty) {
       return '';
     }
@@ -124,7 +166,7 @@ class EditWorkoutSeriesComponentModel extends FlutterFlowModel {
     }
   }
 
-  bool hasPersonalNote(int setIndex) {
+  bool hasPersonalNote(dynamic workoutSets, int setIndex) {
     return (workoutSets[setIndex]['personalNote'] != null &&
         workoutSets[setIndex]['personalNote'].isNotEmpty);
   }
@@ -154,7 +196,7 @@ class EditWorkoutSeriesComponentModel extends FlutterFlowModel {
     int quantity = set['exercises'].length;
     dynamic info = trainingTechniqueInfo(quantity);
     if (quantity > 3) {
-      return info['title'];  
+      return info['title'];
     }
     return 'Criar ${info['title']}';
   }

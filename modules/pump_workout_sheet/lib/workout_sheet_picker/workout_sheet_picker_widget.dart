@@ -8,12 +8,9 @@ import 'package:api_manager/api_requests/pump_creator_api_calls.dart';
 import 'package:flutter_flow/flutter_flow_animations.dart';
 import 'package:flutter_flow/flutter_flow_icon_button.dart';
 import 'package:flutter_flow/flutter_flow_theme.dart';
-import 'package:flutter_flow/flutter_flow_widgets.dart';
 import 'package:pump_components/components/bottom_button_fixed/bottom_button_fixed_widget.dart';
 import 'package:pump_components/components/cell_list_workout/cell_list_workout_widget.dart';
 import 'package:pump_components/components/empty_list/empty_list_widget.dart';
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:pump_components/components/information_dialog/information_dialog_widget.dart';
@@ -185,11 +182,11 @@ class _WorkoutSheetPickerWidgetState extends State<WorkoutSheetPickerWidget>
                   borderRadius: 20.0,
                   borderWidth: 1.0,
                   buttonSize: 40.0,
-                  fillColor: FlutterFlowTheme.of(context).primary,
+                  fillColor: Colors.transparent,
                   icon: Icon(
                     Icons.add_outlined,
-                    color: Colors.white,
-                    size: 20.0,
+                    color: FlutterFlowTheme.of(context).primary,
+                    size: 24.0,
                   ),
                   onPressed: () async {
                     if (_model.content != null) {

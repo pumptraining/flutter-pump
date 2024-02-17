@@ -2,10 +2,12 @@ import 'dart:async';
 import 'package:api_manager/api_manager/api_manager.dart';
 import 'package:api_manager/auth/firebase_auth/auth_util.dart';
 import 'package:api_manager/model/uploaded_file.dart';
+import 'package:flutter_flow/flutter_flow_data_table.dart';
 import 'package:flutter_flow/flutter_flow_model.dart';
 import 'package:flutter_flow/flutter_flow_util.dart';
 import 'package:flutter_flow/form_field_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:pump_components/components/edit_workout_series/edit_workout_series_component_model.dart';
 
 class AddWorkoutModel extends FlutterFlowModel {
   ///  State fields for stateful widgets in this page.
@@ -187,7 +189,7 @@ class AddWorkoutModel extends FlutterFlowModel {
           return "Adicione os exercícios nas séries para criar o treino.";
         }
         for (dynamic exercise in series['exercises']) {
-          if (exercise['tempRep'] == null || exercise['tempRep'] == '') {
+          if ((exercise['tempRep'] == null || exercise['tempRep'] == '') && exercise['tempRepArray'] == null) {
             return "Preencha as repetições ou segundos do exercício.";
           }
         }
@@ -291,5 +293,61 @@ class AddWorkoutModel extends FlutterFlowModel {
       name = 'Resistência';
     }
     return name == element['title'];
+  }
+
+  final paginatedDataTableController =
+      FlutterFlowDataTableController<dynamic>();
+  List<dynamic> workoutSets = [];
+  List<DropdownData> dataArray = [];
+  int setIndexToAddExercise = 0;
+
+  void addSeriesWithExercises(dynamic exercises) {
+    if (exercises is bool) {
+      return;
+    }
+    for (var newExercise in exercises) {
+      dynamic newItem = {};
+      newExercise['videoUrl'] = null;
+      newExercise['streamingURL'] = null;
+      newExercise['personalId'] = null;
+      newItem['exercise'] = newExercise;
+      newItem['tempRepDescription'] = 'Repetições';
+      newItem['pauseArray'] = [60, 60, 60];
+      newItem['tempRepArray'] = [10, 10, 10];
+      newItem['intensityArray'] = ['-', '-', '-'];
+
+      final set = {
+        'quantity': 3,
+        'exercises': [newItem]
+      };
+
+      workout['series'].add(set);
+    }
+  }
+
+  void addExercisesInSet(dynamic exercises) {
+    if (exercises is bool) {
+      return;
+    }
+    for (var newExercise in exercises) {
+      dynamic newItem = {};
+      newExercise['videoUrl'] = null;
+      newExercise['streamingURL'] = null;
+      newExercise['personalId'] = null;
+      newItem['exercise'] = newExercise;
+      newItem['tempRepDescription'] = 'Repetições';
+
+      newItem['pauseArray'] = [60];
+      newItem['tempRepArray'] = [10];
+      newItem['intensityArray'] = ['-'];
+
+      for (int i = 1; workout['series'][setIndexToAddExercise]['quantity'] > i; i++) {
+        newItem['pauseArray'].add(60);
+        newItem['tempRepArray'].add(10);
+        newItem['intensityArray'].add('-');
+      }
+
+      workout['series'][setIndexToAddExercise]['exercises'].add(newItem);
+    }
   }
 }

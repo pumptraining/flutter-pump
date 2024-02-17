@@ -138,13 +138,13 @@ class _InformationBottomSheetTextWidgetState
                                   .primaryBackground,
                               borderRadius: 20.0,
                               borderWidth: 1.0,
-                              buttonSize: 40.0,
+                              buttonSize: 34.0,
                               fillColor: FlutterFlowTheme.of(context)
                                   .primaryBackground,
                               icon: Icon(
                                 Icons.close,
                                 color: FlutterFlowTheme.of(context).primaryText,
-                                size: 24.0,
+                                size: 16.0,
                               ),
                               onPressed: () async {
                                 Navigator.pop(context);

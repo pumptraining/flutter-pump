@@ -311,6 +311,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           path: '/EditWorkoutSeriesWidget',
           builder: (context, params) => EditWorkoutSeriesWidget(
             workout: params.getParam('workout', ParamType.JSON),
+            showBottomButton: params.getParam('showBottomButton', ParamType.bool),
           ),
         ),
       ].map((r) => r.toRoute(appStateNotifier)).toList(),

@@ -62,4 +62,23 @@ class Utils {
                   )));
         });
   }
+
+  static int sumList(List<int> list) {
+    return list.fold(0, (int total, int value) => total + value);
+  }
+
+  static int calculateTotalTime(
+      List<int> pauseArray, List<int> tempRepArray, int secondsVale) {
+    int totalPauseTime = sumList(pauseArray);
+    int totalTempRepTime = sumList(tempRepArray
+        .map((int reps) => getTimeToReps(reps, secondsVale))
+        .toList());
+    int totalTime = totalPauseTime + totalTempRepTime;
+
+    return totalTime;
+  }
+
+  static int getTimeToReps(int reps, int secondsValue) {
+    return reps * secondsValue;
+  }
 }

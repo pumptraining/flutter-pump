@@ -1,20 +1,20 @@
+import 'package:flutter_flow/common/utils.dart';
+import 'package:flutter_flow/flutter_flow_icon_button.dart';
 import 'package:flutter_flow/flutter_flow_model.dart';
 import 'package:flutter_flow/flutter_flow_theme.dart';
-import 'package:flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'action_sheet_buttons_new_model.dart';
 export 'action_sheet_buttons_new_model.dart';
 
 class ActionSheetButtonsNewWidget extends StatefulWidget {
-  const ActionSheetButtonsNewWidget(
-      {Key? key,
-      this.firstAction,
-      this.secondAction,
-      this.firstActionTitle,
-      this.secondActionTitle,
-      this.title,})
-      : super(key: key);
+  const ActionSheetButtonsNewWidget({
+    Key? key,
+    this.firstAction,
+    this.secondAction,
+    this.firstActionTitle,
+    this.secondActionTitle,
+    this.title,
+  }) : super(key: key);
 
   final VoidCallback? firstAction;
   final VoidCallback? secondAction;
@@ -27,7 +27,8 @@ class ActionSheetButtonsNewWidget extends StatefulWidget {
       _ActionSheetButtonsNewWidgetState();
 }
 
-class _ActionSheetButtonsNewWidgetState extends State<ActionSheetButtonsNewWidget> {
+class _ActionSheetButtonsNewWidgetState
+    extends State<ActionSheetButtonsNewWidget> {
   late ActionSheetButtonsNewModel _model;
 
   @override
@@ -85,98 +86,97 @@ class _ActionSheetButtonsNewWidgetState extends State<ActionSheetButtonsNewWidge
               ),
             ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 24.0, 0.0, 12.0),
+                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 24.0, 0.0, 44.0),
                   child: Text(
                     widget.title ?? 'Opções',
                     style: FlutterFlowTheme.of(context).titleLarge,
                   ),
                 ),
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 24.0),
+                  child: FlutterFlowIconButton(
+                    borderColor: FlutterFlowTheme.of(context).primaryBackground,
+                    borderRadius: 20.0,
+                    borderWidth: 1.0,
+                    buttonSize: 34.0,
+                    fillColor: FlutterFlowTheme.of(context).primaryBackground,
+                    icon: Icon(
+                      Icons.close,
+                      color: FlutterFlowTheme.of(context).primaryText,
+                      size: 16.0,
+                    ),
+                    onPressed: () async {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ),
               ],
             ),
-            Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(0.0, 24.0, 0.0, 0.0),
-              child: FFButtonWidget(
-                onPressed: () {
-                  context.pop();
-                  widget.firstAction!();
-                },
-                text: widget.firstActionTitle ?? '',
-                options: FFButtonOptions(
-                  width: double.infinity,
-                  height: 44.0,
-                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                  iconPadding:
-                      EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                  color: FlutterFlowTheme.of(context).primary,
-                  textStyle: FlutterFlowTheme.of(context).bodyLarge.override(
-                        fontFamily: 'Poppins',
-                        color: Colors.white,
+            InkWell(
+              onTap: () {
+                Navigator.pop(context);
+                widget.firstAction?.call();
+              },
+              child: Padding(
+                padding: EdgeInsetsDirectional.only(bottom: 16),
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Icon(
+                      Icons.note_add,
+                      color: Colors.white,
+                      size: 24.0,
+                    ),
+                    Padding(
+                      padding: EdgeInsetsDirectional.only(start: 16),
+                      child: Text(
+                        widget.firstActionTitle ?? '',
+                        style: FlutterFlowTheme.of(context).bodyLarge.override(
+                              fontFamily: 'Poppins',
+                              color: FlutterFlowTheme.of(context).primaryText,
+                            ),
                       ),
-                  elevation: 2.0,
-                  borderSide: BorderSide(
-                    color: FlutterFlowTheme.of(context).primary,
-                    width: 1.0,
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
-            Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
-              child: FFButtonWidget(
-                onPressed: () {
-                  context.pop();
-                  widget.secondAction!();
-                },
-                text: widget.secondActionTitle ?? '',
-                options: FFButtonOptions(
-                  width: double.infinity,
-                  height: 44.0,
-                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                  iconPadding:
-                      EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                  color: FlutterFlowTheme.of(context).secondaryBackground,
-                  textStyle: FlutterFlowTheme.of(context).bodyLarge.override(
-                        fontFamily: 'Poppins',
-                        color: FlutterFlowTheme.of(context).primary,
+            Divider(
+              color: FlutterFlowTheme.of(context).primaryBackground,
+            ),
+            InkWell(
+              onTap: () {
+                Navigator.pop(context);
+                widget.secondAction?.call();
+              },
+              child: Padding(
+                padding: EdgeInsetsDirectional.only(
+                    bottom: 16 + Utils.getBottomSafeArea(context), top: 16),
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Icon(
+                      Icons.content_copy_rounded,
+                      color: Colors.white,
+                      size: 24.0,
+                    ),
+                    Padding(
+                      padding: EdgeInsetsDirectional.only(start: 16),
+                      child: Text(
+                        widget.secondActionTitle ?? '',
+                        style: FlutterFlowTheme.of(context).bodyLarge.override(
+                              fontFamily: 'Poppins',
+                              color: FlutterFlowTheme.of(context).primaryText,
+                            ),
                       ),
-                  elevation: 2.0,
-                  borderSide: BorderSide(
-                    color: FlutterFlowTheme.of(context).primary,
-                    width: 1.0,
-                  ),
+                    ),
+                  ],
                 ),
               ),
-            ),
-            Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
-              child: FFButtonWidget(
-                onPressed: () async {
-                  context.pop();
-                },
-                text: 'Cancelar',
-                options: FFButtonOptions(
-                  width: double.infinity,
-                  height: 60.0,
-                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                  iconPadding:
-                      EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                  color: FlutterFlowTheme.of(context).secondaryBackground,
-                  textStyle: FlutterFlowTheme.of(context).titleSmall.override(
-                        fontFamily: 'Lexend Deca',
-                        color: FlutterFlowTheme.of(context).secondaryText,
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.normal,
-                      ),
-                  elevation: 0.0,
-                  borderSide: BorderSide(
-                    color: Colors.transparent,
-                    width: 0.0,
-                  ),
-                ),
-              ),
-            ),
+            )
           ],
         ),
       ),

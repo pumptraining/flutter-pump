@@ -1,5 +1,7 @@
+import 'package:flutter_flow/flutter_flow_icon_button.dart';
 import 'package:flutter_flow/flutter_flow_model.dart';
 import 'package:pump_components/components/bottom_button_fixed/bottom_button_fixed_widget.dart';
+import 'package:pump_components/components/information_bottom_sheet_text/information_bottom_sheet_text_widget.dart';
 import 'package:pump_creator/index.dart';
 import 'package:flutter_flow/flutter_flow_count_controller.dart';
 import 'package:flutter_flow/flutter_flow_theme.dart';
@@ -86,7 +88,7 @@ class _AddWorkoutSheetPlanWidgetState extends State<AddWorkoutSheetPlanWidget> {
           backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
           automaticallyImplyLeading: true,
           title: Text(
-            _isEditing ? 'Editar' : 'Adicionar',
+            _isEditing ? 'Editar' : 'Treinos',
             style: FlutterFlowTheme.of(context).headlineMedium.override(
                   fontFamily: 'Outfit',
                   color: FlutterFlowTheme.of(context).primaryText,
@@ -109,111 +111,84 @@ class _AddWorkoutSheetPlanWidgetState extends State<AddWorkoutSheetPlanWidget> {
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
                       children: [
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    4.0, 16.0, 0.0, 0.0),
+                                child: FlutterFlowIconButton(
+                                  borderColor: FlutterFlowTheme.of(context)
+                                      .primaryBackground,
+                                  borderRadius: 20.0,
+                                  borderWidth: 1.0,
+                                  buttonSize: 32.0,
+                                  fillColor: FlutterFlowTheme.of(context)
+                                      .primaryBackground,
+                                  icon: Icon(
+                                    Icons.info,
+                                    color: FlutterFlowTheme.of(context)
+                                        .primaryText,
+                                    size: 20.0,
+                                  ),
+                                  onPressed: () {
+                                    showModalBottomSheet(
+                                      isScrollControlled: true,
+                                      backgroundColor: Colors.transparent,
+                                      context: context,
+                                      builder: (context) {
+                                        return Padding(
+                                          padding:
+                                              MediaQuery.viewInsetsOf(context),
+                                          child:
+                                              InformationBottomSheetTextWidget(
+                                            title: 'Semanas',
+                                            personalNote:
+                                                'Escolha a quantidade de semanas que o aluno irá realizar os treinos escolhidos.',
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  },
+                                ),
+                              ),
+                            ]),
                         Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 32.0, 0.0, 0.0),
+                              0.0, 0.0, 0.0, 0.0),
                           child: Row(
                             mainAxisSize: MainAxisSize.max,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Expanded(
-                                child: Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      20.0, 0.0, 16.0, 16.0),
-                                  child: TextFormField(
-                                    focusNode: _unfocusNode,
-                                    maxLength: 2,
-                                    buildCounter: (context,
-                                        {int? currentLength,
-                                        bool? isFocused,
-                                        maxLength}) {
-                                      return null;
-                                    },
-                                    controller: _model.yourNameController,
-                                    textCapitalization:
-                                        TextCapitalization.words,
-                                    obscureText: false,
-                                    decoration: InputDecoration(
-                                      labelText: 'Semanas',
-                                      labelStyle: FlutterFlowTheme.of(context)
-                                          .labelMedium,
-                                      hintStyle: FlutterFlowTheme.of(context)
-                                          .labelMedium,
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .primaryBackground,
-                                          width: 2.0,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
+                              Padding(
+                                padding: EdgeInsets.only(left: 16),
+                                child: Text(
+                                  'Semanas',
+                                  style: FlutterFlowTheme.of(context)
+                                      .headlineMedium
+                                      .override(
+                                        fontFamily: 'Outfit',
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                        fontSize: 20.0,
                                       ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .primary,
-                                          width: 2.0,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                      ),
-                                      errorBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .error,
-                                          width: 2.0,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                      ),
-                                      focusedErrorBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: FlutterFlowTheme.of(context)
-                                              .error,
-                                          width: 2.0,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                      ),
-                                      filled: true,
-                                      fillColor: FlutterFlowTheme.of(context)
-                                          .secondaryBackground,
-                                      contentPadding:
-                                          EdgeInsetsDirectional.fromSTEB(
-                                              20.0, 24.0, 0.0, 24.0),
-                                    ),
-                                    style:
-                                        FlutterFlowTheme.of(context).bodyMedium,
-                                    keyboardType: TextInputType.number,
-                                    validator: _model
-                                        .yourNameControllerValidator
-                                        .asValidator(context),
-                                    onChanged: (value) {
-                                      setState(() {
-                                        var valueString =
-                                            value.isEmpty ? "0" : value;
-                                        _model.workoutPlan['quantity'] =
-                                            int.parse(valueString);
-                                      });
-                                    },
-                                  ),
                                 ),
                               ),
                               Padding(
                                 padding: EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 0.0, 20.0, 16.0),
+                                    0.0, 0.0, 0.0, 0.0),
                                 child: Container(
                                   width: 150.0,
                                   height: 64.0,
                                   decoration: BoxDecoration(
                                     color: FlutterFlowTheme.of(context)
-                                        .secondaryBackground,
+                                        .primaryBackground,
                                     borderRadius: BorderRadius.circular(8.0),
                                     shape: BoxShape.rectangle,
                                     border: Border.all(
                                       color: FlutterFlowTheme.of(context)
-                                          .secondaryBackground,
+                                          .primaryBackground,
                                       width: 1.0,
                                     ),
                                   ),
@@ -229,7 +204,7 @@ class _AddWorkoutSheetPlanWidgetState extends State<AddWorkoutSheetPlanWidget> {
                                     incrementIconBuilder: (enabled) => FaIcon(
                                       FontAwesomeIcons.plus,
                                       color: enabled
-                                          ? Colors.blue
+                                          ? FlutterFlowTheme.of(context).primary
                                           : Color(0xFFEEEEEE),
                                       size: 20.0,
                                     ),
@@ -265,6 +240,13 @@ class _AddWorkoutSheetPlanWidgetState extends State<AddWorkoutSheetPlanWidget> {
                               ),
                             ],
                           ),
+                        ),
+                        Divider(
+                          color:
+                              FlutterFlowTheme.of(context).secondaryBackground,
+                          endIndent: 16,
+                          indent: 16,
+                          thickness: 1,
                         ),
                         Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(
@@ -417,29 +399,31 @@ class _AddWorkoutSheetPlanWidgetState extends State<AddWorkoutSheetPlanWidget> {
                                 }
                               },
                               text: 'Adicionar',
+                              icon: Icon(
+                                Icons.add,
+                                size: 20,
+                              ),
                               options: FFButtonOptions(
-                                width: 130,
-                                height: 40,
-                                padding:
-                                    EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                                height: 34,
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    16, 0, 16, 0),
                                 iconPadding:
                                     EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-                                color: FlutterFlowTheme.of(context)
-                                    .primaryBackground,
+                                color: FlutterFlowTheme.of(context).info,
                                 textStyle: FlutterFlowTheme.of(context)
-                                    .titleSmall
+                                    .labelMedium
                                     .override(
-                                      fontFamily: 'Poppins',
-                                      fontSize: 14,
-                                      color:
-                                          FlutterFlowTheme.of(context).primary,
-                                    ),
+                                        fontFamily: 'Poppins',
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryBackground),
+                                elevation: 3,
                                 borderSide: BorderSide(
-                                  color: FlutterFlowTheme.of(context).primary,
+                                  color: FlutterFlowTheme.of(context).info,
                                   width: 1,
                                 ),
-                                borderRadius: BorderRadius.circular(20),
+                                borderRadius: BorderRadius.circular(17),
                               ),
+                              showLoadingIndicator: false,
                             ),
                           ),
                         ),

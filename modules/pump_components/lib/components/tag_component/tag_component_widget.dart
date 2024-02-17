@@ -11,7 +11,12 @@ class TagComponentWidget extends StatefulWidget {
       required this.selected,
       this.onTagPressed,
       this.maxHeight, 
-      this.unselectedColor})
+      this.unselectedColor,
+      this.alpha = 0.7,
+      this.borderWidth = 1.0,
+      this.borderRadius = 4,
+      this.selectedTextColor,
+      })
       : super(key: key);
 
   final String title;
@@ -20,6 +25,10 @@ class TagComponentWidget extends StatefulWidget {
   final VoidCallback? onTagPressed;
   final double? maxHeight;
   final Color? unselectedColor;
+  final double alpha;
+  final double borderWidth;
+  final double borderRadius;
+  final Color? selectedTextColor;
 
   @override
   _TagComponentWidgetState createState() => _TagComponentWidgetState();
@@ -52,6 +61,7 @@ class _TagComponentWidgetState extends State<TagComponentWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final Color selectedTextColor = widget.selectedTextColor ?? Colors.white;
     return IntrinsicWidth(
       child: GestureDetector(
         onTap: () {
@@ -66,14 +76,14 @@ class _TagComponentWidgetState extends State<TagComponentWidget> {
           ),
           decoration: BoxDecoration(
             color: widget.selected
-                ? widget.tagColor.withOpacity(0.6)
+                ? widget.tagColor.withOpacity(widget.alpha)
                 : widget.unselectedColor ??
                     FlutterFlowTheme.of(context).secondaryBackground,
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: BorderRadius.circular(widget.borderRadius),
             border: Border.all(
-              width: 1,
+              width: widget.borderWidth,
               color: widget.selected
-                  ? widget.tagColor.withOpacity(0.7)
+                  ? widget.tagColor.withOpacity(widget.alpha != 1 ? (widget.alpha + 0.1) : 1)
                   : widget.unselectedColor ?? FlutterFlowTheme.of(context).secondaryBackground,
             ),
           ),
@@ -91,7 +101,7 @@ class _TagComponentWidgetState extends State<TagComponentWidget> {
                       style: FlutterFlowTheme.of(context).bodyMedium.override(
                             fontFamily: 'Lexend Deca',
                             color: widget.selected
-                                ? Colors.white
+                                ? selectedTextColor
                                 : FlutterFlowTheme.of(context).secondaryText,
                             fontSize: 12,
                             fontWeight: FontWeight.normal,

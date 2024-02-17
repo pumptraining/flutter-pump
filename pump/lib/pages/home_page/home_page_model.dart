@@ -112,12 +112,35 @@ class HomePageModel extends FlutterFlowModel {
         for (var j = 0; j < exerciseCount; j++) {
           var exercise = exercises[j];
 
+          String intensity = '';
+          if (exercise['intensityArray'] != null) {
+            intensity = exercise['intensityArray'][i];
+          }
+
+          int reps = 0;
+          int seconds = 0;
+          if (exercise['tempRepArray'] != null) {
+            reps = exercise['tempRepArray'][i];
+            seconds = exercise['tempRepArray'][i];
+          } else {
+            reps = exercise['rep'];
+            seconds = exercise['seconds'];
+          }
+
+          int pause = 0;
+          if (exercise['pauseArray'] != null) {
+            pause = exercise['pauseArray'][i];
+          } else {
+            pause = exercise['pause'];
+          }
+
           modifiedExercises.add({
+            'intensity': intensity,
             'category': exercise['category'],
-            'rep': exercise['rep'],
+            'rep': reps,
             'repDescription': exercise['repDescription'],
-            'seconds': exercise['seconds'],
-            'pause': exercise['pause'],
+            'seconds': seconds,
+            'pause': pause,
             'weightType': exercise['weightType'],
             'imageUrl': exercise['imageUrl'],
             'videoUrl': exercise['videoUrl'],
@@ -463,12 +486,13 @@ class HomePageModel extends FlutterFlowModel {
     return null;
   }
 
-  String? getCadence() {
+  String? getIntensity() {
     dynamic exercise = getCurrentExercise();
 
-    if (exercise['cadence'] != null &&
-        exercise['cadence'].toString().isNotEmpty) {
-      return 'Cadência ${exercise['cadence']}';
+    if (exercise['intensity'] != null &&
+        exercise['intensity'].toString().isNotEmpty &&
+        exercise['intensity'] != '-') {
+      return 'Carga ${exercise['intensity']}';
     }
 
     return null;

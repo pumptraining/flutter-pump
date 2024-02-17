@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:api_manager/api_manager/api_manager.dart';
+import 'package:flutter_flow/common/utils.dart';
 import 'package:flutter_flow/flutter_flow_model.dart';
 import 'package:flutter_flow/form_field_controller.dart';
 import 'package:flutter/material.dart';
@@ -104,51 +105,68 @@ class ListWorkoutModel extends FlutterFlowModel {
     int totalSeconds = ((workout['series'] as List<dynamic>).fold<int>(0,
             (partialResult, currentSeries) {
           int seriesTime = calculateSeriesTotalTime(currentSeries);
-          return partialResult +
-              (seriesTime *
-                  (int.tryParse(currentSeries['quantity']?.toString() ?? '1') ??
-                      1));
+          return partialResult += seriesTime;
         }) ??
         0);
-    return totalSeconds ~/ 60;
+    final total = totalSeconds ~/ 60;
+    return total;
   }
 
   int calculateSeriesTotalTime(dynamic currentSeries) {
+    int setsCount =
+        int.tryParse(currentSeries['quantity']?.toString() ?? '1') ?? 1;
+
     return ((currentSeries['exercises'] as List<dynamic>).fold<int>(0,
             (partialResult, currentExercise) {
-          if (currentExercise['tempRepDescription'].toString().toLowerCase() ==
-              "repetições") {
-            int tempRep =
-                int.tryParse(currentExercise['tempRep']?.toString() ?? '0') ??
-                    0;
-            int pause =
-                int.tryParse(currentExercise['pause']?.toString() ?? '0') ?? 0;
-
-            if (tempRep >= 0 && tempRep < 12) {
-              return (partialResult ?? 0) + 30 + pause;
-            } else if (tempRep >= 12 && tempRep < 15) {
-              return (partialResult ?? 0) + 40 + pause;
-            } else if (tempRep >= 15 && tempRep <= 21) {
-              return (partialResult ?? 0) + 50 + pause;
-            } else if (tempRep >= 21) {
-              return (partialResult ?? 0) + 90 + pause;
-            } else {
-              return (partialResult ?? 0) + pause;
-            }
+          if (currentExercise['pauseArray'] != null) {
+            bool isReps = currentExercise['tempRepDescription']
+                    .toString()
+                    .toLowerCase() ==
+                "repetições";
+            List<int> pauseArray = currentExercise['pauseArray'].cast<int>();
+            List<int> tempRepArray =
+                currentExercise['tempRepArray'].cast<int>();
+            final time = Utils.calculateTotalTime(
+                pauseArray, tempRepArray, isReps ? 4 : 1);
+            return partialResult + time;
           } else {
-            int tempRep =
-                int.tryParse(currentExercise['tempRep']?.toString() ?? '0') ??
-                    0;
-            int pause =
-                int.tryParse(currentExercise['pause']?.toString() ?? '0') ?? 0;
-            return (partialResult ?? 0) + tempRep + pause;
+            if (currentExercise['tempRepDescription']
+                    .toString()
+                    .toLowerCase() ==
+                "repetições") {
+              int tempRep =
+                  int.tryParse(currentExercise['tempRep']?.toString() ?? '0') ??
+                      0;
+              int pause =
+                  int.tryParse(currentExercise['pause']?.toString() ?? '0') ??
+                      0;
+
+              if (tempRep >= 0 && tempRep < 12) {
+                return ((partialResult ?? 0) + 30 + pause) * setsCount;
+              } else if (tempRep >= 12 && tempRep < 15) {
+                return ((partialResult ?? 0) + 40 + pause) * setsCount;
+              } else if (tempRep >= 15 && tempRep <= 21) {
+                return ((partialResult ?? 0) + 50 + pause) * setsCount;
+              } else if (tempRep >= 21) {
+                return ((partialResult ?? 0) + 90 + pause) * setsCount;
+              } else {
+                return ((partialResult ?? 0) + pause) * setsCount;
+              }
+            } else {
+              int tempRep =
+                  int.tryParse(currentExercise['tempRep']?.toString() ?? '0') ??
+                      0;
+              int pause =
+                  int.tryParse(currentExercise['pause']?.toString() ?? '0') ??
+                      0;
+              return ((partialResult ?? 0) + tempRep + pause) * setsCount;
+            }
           }
         }) ??
         0);
   }
 
-  List<dynamic> filterTrainings(
-      List<dynamic> trainings) {
+  List<dynamic> filterTrainings(List<dynamic> trainings) {
     if (selectedFilter == null || selectedFilter!.isEmpty) {
       return trainings;
     }
