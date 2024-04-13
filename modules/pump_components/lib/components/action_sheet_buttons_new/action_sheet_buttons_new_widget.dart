@@ -14,6 +14,8 @@ class ActionSheetButtonsNewWidget extends StatefulWidget {
     this.firstActionTitle,
     this.secondActionTitle,
     this.title,
+    this.firstIcon,
+    this.secondIcon
   }) : super(key: key);
 
   final VoidCallback? firstAction;
@@ -21,6 +23,8 @@ class ActionSheetButtonsNewWidget extends StatefulWidget {
   final String? firstActionTitle;
   final String? secondActionTitle;
   final String? title;
+  final IconData? firstIcon;
+  final IconData? secondIcon;
 
   @override
   _ActionSheetButtonsNewWidgetState createState() =>
@@ -126,9 +130,9 @@ class _ActionSheetButtonsNewWidgetState
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     Icon(
-                      Icons.note_add,
+                      widget.firstIcon ?? Icons.note_add,
                       color: Colors.white,
-                      size: 24.0,
+                      size: 20.0,
                     ),
                     Padding(
                       padding: EdgeInsetsDirectional.only(start: 16),
@@ -137,6 +141,7 @@ class _ActionSheetButtonsNewWidgetState
                         style: FlutterFlowTheme.of(context).bodyLarge.override(
                               fontFamily: 'Poppins',
                               color: FlutterFlowTheme.of(context).primaryText,
+                              fontSize: 16,
                             ),
                       ),
                     ),
@@ -159,9 +164,9 @@ class _ActionSheetButtonsNewWidgetState
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     Icon(
-                      Icons.content_copy_rounded,
+                      widget.secondIcon ?? Icons.content_copy_rounded,
                       color: Colors.white,
-                      size: 24.0,
+                      size: 20.0,
                     ),
                     Padding(
                       padding: EdgeInsetsDirectional.only(start: 16),
@@ -170,6 +175,7 @@ class _ActionSheetButtonsNewWidgetState
                         style: FlutterFlowTheme.of(context).bodyLarge.override(
                               fontFamily: 'Poppins',
                               color: FlutterFlowTheme.of(context).primaryText,
+                              fontSize: 16,
                             ),
                       ),
                     ),

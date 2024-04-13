@@ -1,21 +1,22 @@
+import 'package:api_manager/common/loader_state.dart';
 import 'package:flutter_flow/flutter_flow_model.dart';
 import 'package:flutter_flow/nav/serialization_util.dart';
 import 'package:flutter_flow/transition_info.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:api_manager/auth/firebase_auth/auth_util.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pump/flutter_flow/nav/nav.dart';
+import 'package:pump_components/components/bottom_button_fixed/bottom_button_fixed_widget.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:flutter_flow/flutter_flow_timer.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:api_manager/api_requests/pump_api_calls.dart';
 import '/components/information_bottom_sheet_widget.dart';
 import 'package:pump_components/components/information_dialog/information_dialog_widget.dart';
-import 'package:flutter_flow/flutter_flow_animations.dart';
 import 'package:flutter_flow/flutter_flow_icon_button.dart';
 import 'package:flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter_flow/flutter_flow_util.dart';
 import 'package:flutter_flow/flutter_flow_video_player.dart';
-import 'package:flutter_flow/flutter_flow_widgets.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:aligned_dialog/aligned_dialog.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -23,7 +24,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'home_page_model.dart';
 import 'package:pump_components/components/information_bottom_sheet_text/information_bottom_sheet_text_widget.dart';
@@ -48,42 +48,12 @@ class _HomePageWidgetState extends State<HomePageWidget>
   double topValue = 0.0;
   String trainingId = '';
   String userId = currentUserUid;
-  static const platform = MethodChannel('com.pump.workout');
   FlutterTts flutterTts = FlutterTts();
   String personalImageUrl = '';
   String personalId = '';
   String imageUrl = '';
-  bool isLoading = false;
-  bool isError = false;
   final stopwatch = Stopwatch();
-  bool flutterClose = false;
-
-  final animationsMap = {
-    'videoPlayerOnPageLoadAnimation': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        FadeEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 600.ms,
-          begin: 0.0,
-          end: 1.0,
-        ),
-      ],
-    ),
-    'containerOnPageLoadAnimation': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        MoveEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 600.ms,
-          begin: Offset(0.0, 100.0),
-          end: Offset(0.0, 0.0),
-        ),
-      ],
-    ),
-  };
+  bool _volumeOn = true;
 
   @override
   void initState() {
@@ -92,13 +62,6 @@ class _HomePageWidgetState extends State<HomePageWidget>
 
     trainingId = widget.workoutId ?? '';
     userId = widget.userId ?? currentUserUid;
-
-    if (trainingId.isEmpty) {
-      _fetchData();
-    } else {
-      flutterClose = true;
-      _loadContent();
-    }
 
     Wakelock.enable();
     startWorkout(stopwatch);
@@ -112,54 +75,15 @@ class _HomePageWidgetState extends State<HomePageWidget>
     stopwatch.stop();
   }
 
-  void _fetchData() {
-    platform.setMethodCallHandler((call) async {
-      if (call.method == 'userId') {
-        setState(() {
-          this.userId = call.arguments as String;
-        });
-      }
-
-      if (call.method == 'trainingId') {
-        final newId = call.arguments as String;
-        if (trainingId != newId) {
-          setState(() {
-            trainingId = newId;
-            _loadContent();
-          });
-        }
-      }
-    });
-  }
-
-  Future<ApiCallResponse>? _loadContent() async {
-    isLoading = true;
-    isError = false;
-
-    if (trainingId.isEmpty) {
-      return ApiCallResponse([], new Map<String, String>(), 0);
-    }
-
-    ApiCallResponse response =
-        await PumpGroup.workoutDetailsCall.call(trainingId: trainingId);
-
-    if (response.succeeded) {
-      isLoading = false;
-      isError = false;
-    } else {
-      isLoading = false;
-      isError = true;
-    }
-    return response;
-  }
-
   Future<void> speakText(String text) async {
-    await flutterTts.stop();
-    await flutterTts.setLanguage('pt-BR');
-    await flutterTts.setSpeechRate(0.5);
-    await flutterTts.setIosAudioCategory(IosTextToSpeechAudioCategory.ambient,
-        [IosTextToSpeechAudioCategoryOptions.mixWithOthers]);
-    await flutterTts.speak(text);
+    if (_volumeOn) {
+      await flutterTts.stop();
+      await flutterTts.setLanguage('pt-BR');
+      await flutterTts.setSpeechRate(0.5);
+      await flutterTts.setIosAudioCategory(IosTextToSpeechAudioCategory.ambient,
+          [IosTextToSpeechAudioCategoryOptions.mixWithOthers]);
+      await flutterTts.speak(text);
+    }
   }
 
   @override
@@ -175,40 +99,23 @@ class _HomePageWidgetState extends State<HomePageWidget>
     if (_model.sets.isEmpty || trainingId.isEmpty) {
       return GestureDetector(
         onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
-        child: FutureBuilder<ApiCallResponse>(
-          future: _loadContent(),
+        child: ApiLoaderWidget(
+          apiCall: PumpGroup.workoutDetailsCall,
+          params: {'trainingId': trainingId},
           builder: (context, snapshot) {
-            if (isLoading) {
-              return Scaffold(
-                backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-                body: Center(
-                  child: SizedBox(
-                    width: 40.0,
-                    height: 40.0,
-                    child: CircularProgressIndicator(strokeWidth: 1.0,
-                      color: FlutterFlowTheme.of(context).primary,
-                    ),
-                  ),
-                ),
-              );
-            }
-
-            if (isError) {
-              return buildErrorColumn(context);
-            }
-
+            _model.workout = snapshot?.data!.jsonBody;
             _model.setWorkout(
-                PumpGroup.workoutDetailsCall.sets(snapshot.data!.jsonBody),
+                PumpGroup.workoutDetailsCall.sets(snapshot?.data!.jsonBody),
                 context);
             personalImageUrl = PumpGroup.workoutDetailsCall
-                .personalImageUrl(snapshot.data!.jsonBody);
+                .personalImageUrl(snapshot?.data?.jsonBody);
 
             personalId = PumpGroup.workoutDetailsCall
-                    .personalId(snapshot.data!.jsonBody) ??
+                    .personalId(snapshot?.data!.jsonBody) ??
                 '';
 
             imageUrl = PumpGroup.workoutDetailsCall
-                    .imageUrl(snapshot.data!.jsonBody) ??
+                    .imageUrl(snapshot?.data!.jsonBody) ??
                 '';
 
             if (_model.doneSelected) {
@@ -223,109 +130,6 @@ class _HomePageWidgetState extends State<HomePageWidget>
     } else {
       return buildContent(context);
     }
-  }
-
-  Scaffold buildErrorColumn(BuildContext context) {
-    return Scaffold(
-      backgroundColor: FlutterFlowTheme.of(context).secondary,
-      body: Center(
-        child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Align(
-                alignment: AlignmentDirectional(0, 1),
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.error_outline,
-                      color: FlutterFlowTheme.of(context).info,
-                      size: 90,
-                    ),
-                    Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Ooops!',
-                            textAlign: TextAlign.center,
-                            style: FlutterFlowTheme.of(context)
-                                .headlineSmall
-                                .override(
-                                    fontFamily: 'Outfit',
-                                    color: FlutterFlowTheme.of(context)
-                                        .primaryText,
-                                    decoration: TextDecoration.none),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(12, 4, 12, 0),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              'Não foi possível carregar as informações.\nPor favor, tente novamente.',
-                              textAlign: TextAlign.center,
-                              style: FlutterFlowTheme.of(context)
-                                  .bodySmall
-                                  .override(
-                                    fontFamily: 'Outfit',
-                                    color: FlutterFlowTheme.of(context).info,
-                                    fontSize: 16,
-                                    decoration: TextDecoration.none,
-                                  ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(0, 28, 0, 0),
-                      child: FFButtonWidget(
-                        onPressed: () {
-                          setState(() {
-                            _model.sets = [];
-                            _loadContent();
-                          });
-                        },
-                        text: 'Tentar novamente',
-                        options: FFButtonOptions(
-                          width: 170,
-                          height: 50,
-                          padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-                          iconPadding:
-                              EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-                          color: Colors.white,
-                          textStyle: FlutterFlowTheme.of(context)
-                              .titleSmall
-                              .override(
-                                fontFamily: 'Lexend Deca',
-                                color: FlutterFlowTheme.of(context).secondary,
-                                fontSize: 16,
-                                fontWeight: FontWeight.normal,
-                              ),
-                          elevation: 2,
-                          borderSide: BorderSide(
-                            color: Colors.transparent,
-                            width: 1,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ]),
-      ),
-    );
   }
 
   Scaffold buildContent(BuildContext context) {
@@ -357,7 +161,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
                               height: MediaQuery.of(context).size.height - 300,
                               decoration: BoxDecoration(
                                 color: FlutterFlowTheme.of(context)
-                                    .secondaryBackground,
+                                    .primaryBackground,
                               ),
                               child: Container(
                                 height:
@@ -383,8 +187,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                               showControls: true,
                                               allowFullScreen: true,
                                               allowPlaybackSpeedMenu: false,
-                                            ).animateOnPageLoad(animationsMap[
-                                                'videoPlayerOnPageLoadAnimation']!),
+                                            ),
                                           ),
                                         ),
                                       ],
@@ -725,8 +528,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                                       Colors.transparent,
                                                   highlightColor:
                                                       Colors.transparent,
-                                                  onTap: () async {
-                                                  },
+                                                  onTap: () async {},
                                                   child: IntrinsicWidth(
                                                     child: Container(
                                                       height: 32,
@@ -767,8 +569,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                                                   .center,
                                                           children: [
                                                             Icon(
-                                                              Icons
-                                                                  .bar_chart,
+                                                              Icons.bar_chart,
                                                               color:
                                                                   Colors.white,
                                                               size: 16.0,
@@ -962,78 +763,140 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                                                   .of(context)
                                                               .secondaryBackground,
                                                           icon: Icon(
-                                                            Icons.close,
+                                                            _volumeOn
+                                                                ? Icons
+                                                                    .volume_up
+                                                                : Icons
+                                                                    .volume_off,
                                                             color: FlutterFlowTheme
                                                                     .of(context)
                                                                 .primaryText,
-                                                            size: 24.0,
+                                                            size: 20.0,
                                                           ),
                                                           onPressed: () async {
                                                             HapticFeedback
                                                                 .mediumImpact();
-                                                            await showAlignedDialog(
-                                                              context: context,
-                                                              isGlobal: true,
-                                                              avoidOverflow:
-                                                                  false,
-                                                              targetAnchor:
-                                                                  AlignmentDirectional(
-                                                                          0.0,
-                                                                          0.0)
-                                                                      .resolve(
-                                                                          Directionality.of(
-                                                                              context)),
-                                                              followerAnchor:
-                                                                  AlignmentDirectional(
-                                                                          0.0,
-                                                                          0.0)
-                                                                      .resolve(
-                                                                          Directionality.of(
-                                                                              context)),
-                                                              builder:
-                                                                  (dialogContext) {
-                                                                return Material(
-                                                                  color: Colors
-                                                                      .transparent,
-                                                                  child:
-                                                                      GestureDetector(
-                                                                    onTap: () => FocusScope.of(
-                                                                            context)
-                                                                        .requestFocus(
-                                                                            _model.unfocusNode),
-                                                                    child:
-                                                                        InformationDialogWidget(
-                                                                      title:
-                                                                          'Atenção',
-                                                                      message:
-                                                                          'O progresso do treino não será salvo. Tem certeza que deseja sair do treino?',
-                                                                      actionButtonTitle:
-                                                                          'Sair do treino',
-                                                                    ),
-                                                                  ),
-                                                                );
-                                                              },
-                                                            ).then(
-                                                              (value) {
-                                                                setState(() {
-                                                                  if (value ==
-                                                                      'leave') {
-                                                                    Wakelock
-                                                                        .disable();
-
-                                                                    if (flutterClose) {
-                                                                      context
-                                                                          .safePop();
-                                                                    } else {
-                                                                      platform.invokeMethod(
-                                                                          'close');
-                                                                    }
-                                                                  }
-                                                                });
-                                                              },
-                                                            );
+                                                            safeSetState(() {
+                                                              _volumeOn =
+                                                                  !_volumeOn;
+                                                            });
                                                           },
                                                         ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            Align(
+                                              alignment: AlignmentDirectional(
+                                                  1.0, -1.0),
+                                              child: Padding(
+                                                padding: EdgeInsetsDirectional
+                                                    .fromSTEB(
+                                                        0.0, 0.0, 16.0, 0.0),
+                                                child: Container(
+                                                  width: 40.0,
+                                                  height: 40.0,
+                                                  decoration: BoxDecoration(
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .secondaryBackground,
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        blurRadius: 4.0,
+                                                        color:
+                                                            Color(0x33000000),
+                                                        offset:
+                                                            Offset(0.0, 2.0),
+                                                      )
+                                                    ],
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                  child: Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            0.0, 0.0),
+                                                    child: Builder(
+                                                      builder: (context) =>
+                                                          FlutterFlowIconButton(
+                                                        borderColor:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .secondaryBackground,
+                                                        borderRadius: 20.0,
+                                                        borderWidth: 1.0,
+                                                        buttonSize: 40.0,
+                                                        fillColor: FlutterFlowTheme
+                                                                .of(context)
+                                                            .secondaryBackground,
+                                                        icon: Icon(
+                                                          Icons.close,
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .primaryText,
+                                                          size: 20.0,
+                                                        ),
+                                                        onPressed: () async {
+                                                          HapticFeedback
+                                                              .mediumImpact();
+                                                          await showAlignedDialog(
+                                                            context: context,
+                                                            isGlobal: true,
+                                                            avoidOverflow:
+                                                                false,
+                                                            targetAnchor:
+                                                                AlignmentDirectional(
+                                                                        0.0,
+                                                                        0.0)
+                                                                    .resolve(
+                                                                        Directionality.of(
+                                                                            context)),
+                                                            followerAnchor:
+                                                                AlignmentDirectional(
+                                                                        0.0,
+                                                                        0.0)
+                                                                    .resolve(
+                                                                        Directionality.of(
+                                                                            context)),
+                                                            builder:
+                                                                (dialogContext) {
+                                                              return Material(
+                                                                color: Colors
+                                                                    .transparent,
+                                                                child:
+                                                                    GestureDetector(
+                                                                  onTap: () => FocusScope.of(
+                                                                          context)
+                                                                      .requestFocus(
+                                                                          _model
+                                                                              .unfocusNode),
+                                                                  child:
+                                                                      InformationDialogWidget(
+                                                                    title:
+                                                                        'Atenção',
+                                                                    message:
+                                                                        'O progresso do treino não será salvo. Tem certeza que deseja sair do treino?',
+                                                                    actionButtonTitle:
+                                                                        'Sair do treino',
+                                                                  ),
+                                                                ),
+                                                              );
+                                                            },
+                                                          ).then(
+                                                            (value) {
+                                                              setState(() {
+                                                                if (value ==
+                                                                    'leave') {
+                                                                  Wakelock
+                                                                      .disable();
+                                                                  context
+                                                                      .safePop();
+                                                                }
+                                                              });
+                                                            },
+                                                          );
+                                                        },
                                                       ),
                                                     ),
                                                   ),
@@ -1063,48 +926,71 @@ class _HomePageWidgetState extends State<HomePageWidget>
                 height: 300,
                 decoration: BoxDecoration(
                   color: FlutterFlowTheme.of(context).primaryBackground,
-                  boxShadow: [
-                    BoxShadow(
-                      blurRadius: 4.0,
-                      color: Color(0x33000000),
-                      offset: Offset(0.0, 2.0),
-                    )
-                  ],
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(0.0),
-                    bottomRight: Radius.circular(0.0),
-                    topLeft: Radius.circular(36.0),
-                    topRight: Radius.circular(36.0),
-                  ),
                 ),
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
                   children: [
+                    SizedBox(
+                      height: 1,
+                    ),
+                    Divider(
+                      color: FlutterFlowTheme.of(context).secondaryText,
+                      height: 1,
+                    ),
                     Container(
-                      height: 80,
+                      height: 100,
                       child: Row(
-                        mainAxisSize: MainAxisSize.max,
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Expanded(
                             child: Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  16.0, 24.0, 16.0, 0.0),
-                              child: AutoSizeText(
-                                _model.getExerciseTitle(),
-                                maxLines: 2,
-                                style: FlutterFlowTheme.of(context)
-                                    .headlineLarge
-                                    .override(
-                                      fontFamily: 'Outfit',
-                                      fontWeight: FontWeight.normal,
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    16.0, 16.0, 16.0, 0.0),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    AutoSizeText(
+                                      _model.getExerciseTitle().toUpperCase(),
+                                      maxLines: 2,
+                                      style: FlutterFlowTheme.of(context)
+                                          .headlineMedium
+                                          .override(
+                                              fontFamily: 'Montserrat',
+                                              fontSize: 16.0,
+                                              fontWeight: FontWeight.w600,
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primaryText),
                                     ),
-                              ),
-                            ),
+                                    SizedBox(
+                                      height: 8,
+                                    ),
+                                    Row(
+                                      children: [
+                                        AutoSizeText(
+                                          _model.getCurrentExercisePause(),
+                                          style: FlutterFlowTheme.of(context)
+                                              .bodyMedium
+                                              .override(
+                                                fontFamily: 'Montserrat',
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .secondaryText,
+                                                fontWeight: FontWeight.normal,
+                                              ),
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                )),
                           ),
                           Padding(
                             padding: EdgeInsetsDirectional.fromSTEB(
                                 0.0, 24.0, 16.0, 0.0),
                             child: CircularPercentIndicator(
+                              circularStrokeCap: CircularStrokeCap.round,
                               percent: _model.calculateCompletionValue(),
                               radius: 25.0,
                               lineWidth: 5.0,
@@ -1122,49 +1008,19 @@ class _HomePageWidgetState extends State<HomePageWidget>
                         ],
                       ),
                     ),
-
-                    Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Expanded(
-                          child: Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                16.0, 16.0, 16.0, 0.0),
-                            child: Text(
-                              'Próximo',
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .override(
-                                    fontFamily: 'Readex Pro',
-                                    color: FlutterFlowTheme.of(context)
-                                        .secondaryText,
-                                  ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    // Generated code for this Row Widget...
                     Row(
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         Expanded(
                           child: Padding(
                             padding:
-                                EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
+                                EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
                             child: Container(
                               width: 100,
                               height: 80,
                               decoration: BoxDecoration(
                                 color: FlutterFlowTheme.of(context)
-                                    .secondaryBackground,
-                                boxShadow: [
-                                  BoxShadow(
-                                    blurRadius: 4,
-                                    color: Color(0x33000000),
-                                    offset: Offset(0, 2),
-                                  )
-                                ],
+                                    .primaryBackground,
                                 borderRadius: BorderRadius.circular(16),
                                 shape: BoxShape.rectangle,
                               ),
@@ -1266,24 +1122,24 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                   }
                                 },
                                 child: Column(
-                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Expanded(
                                       child: Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            8, 8, 8, 8),
+                                        padding: EdgeInsetsDirectional.zero,
                                         child: Row(
                                           mainAxisSize: MainAxisSize.max,
                                           children: [
                                             Container(
-                                                width: 60,
-                                                height: 60,
+                                                width: 48,
+                                                height: 48,
                                                 decoration: BoxDecoration(
                                                   color: FlutterFlowTheme.of(
                                                           context)
-                                                      .primaryBackground,
+                                                      .secondaryBackground,
                                                   borderRadius:
-                                                      BorderRadius.circular(12),
+                                                      BorderRadius.circular(8),
                                                 ),
                                                 child: _model
                                                             .getNextExercise() ==
@@ -1309,7 +1165,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .circular(
-                                                                        12),
+                                                                        8),
                                                             child:
                                                                 CachedNetworkImage(
                                                               imageUrl: _model
@@ -1321,7 +1177,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                             Expanded(
                                               child: Padding(
                                                 padding: EdgeInsetsDirectional
-                                                    .fromSTEB(8, 0, 0, 0),
+                                                    .fromSTEB(12, 2, 0, 0),
                                                 child: Column(
                                                   mainAxisSize:
                                                       MainAxisSize.max,
@@ -1333,8 +1189,8 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                                       child: Padding(
                                                         padding:
                                                             EdgeInsetsDirectional
-                                                                .fromSTEB(0, 16,
-                                                                    0, 0),
+                                                                .fromSTEB(0, 12,
+                                                                    0, 6),
                                                         child: Row(
                                                           mainAxisSize:
                                                               MainAxisSize.max,
@@ -1347,7 +1203,19 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                                                 maxLines: 1,
                                                                 style: FlutterFlowTheme.of(
                                                                         context)
-                                                                    .bodyLarge,
+                                                                    .headlineMedium
+                                                                    .override(
+                                                                      fontFamily:
+                                                                          'Montserrat',
+                                                                      fontSize:
+                                                                          14.0,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w400,
+                                                                      color: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .primaryText,
+                                                                    ),
                                                               ),
                                                             ),
                                                           ],
@@ -1368,10 +1236,13 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                                                 .bodyMedium
                                                                 .override(
                                                                   fontFamily:
-                                                                      'Readex Pro',
+                                                                      'Montserrat',
                                                                   color: FlutterFlowTheme.of(
                                                                           context)
                                                                       .secondaryText,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .normal,
                                                                 ),
                                                           ),
                                                         ),
@@ -1384,18 +1255,18 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                             FlutterFlowIconButton(
                                               borderColor:
                                                   FlutterFlowTheme.of(context)
-                                                      .primaryBackground,
+                                                      .secondaryBackground,
                                               borderRadius: 20,
                                               borderWidth: 1,
                                               buttonSize: 40,
                                               fillColor:
                                                   FlutterFlowTheme.of(context)
-                                                      .primaryBackground,
+                                                      .secondaryBackground,
                                               icon: Icon(
                                                 Icons.list,
                                                 color:
                                                     FlutterFlowTheme.of(context)
-                                                        .primaryText,
+                                                        .primary,
                                                 size: 16,
                                               ),
                                               onPressed: () async {
@@ -1521,6 +1392,14 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                         ),
                                       ),
                                     ),
+                                    SizedBox(
+                                      height: 8,
+                                    ),
+                                    Divider(
+                                      color: FlutterFlowTheme.of(context)
+                                          .secondaryText,
+                                      height: 1,
+                                    ),
                                   ],
                                 ),
                               ),
@@ -1537,10 +1416,24 @@ class _HomePageWidgetState extends State<HomePageWidget>
                             child: Align(
                               alignment: AlignmentDirectional(0.0, 1.0),
                               child: Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      16.0, 16.0, 16.0, 24.0),
+                                  padding: EdgeInsetsDirectional.zero,
                                   child: _model.timerValue() == null
-                                      ? FFButtonWidget(
+                                      ? BottomButtonFixedWidget(
+                                          buttonTitle:
+                                              _model.getNextExercise() == null
+                                                  ? 'Finalizar'
+                                                  : (_model.showRest()
+                                                      ? 'Intervalo'
+                                                      : 'Próximo'),
+                                          icon: FaIcon(
+                                            _model.getNextExercise() == null
+                                                ? Icons.arrow_forward_rounded
+                                                : _model.showRest()
+                                                    ? Icons.timer_outlined
+                                                    : Icons
+                                                        .arrow_forward_rounded,
+                                            size: 22,
+                                          ),
                                           onPressed: () async {
                                             HapticFeedback.mediumImpact();
                                             _model.completeLastExercise();
@@ -1583,6 +1476,10 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                                     personalId,
                                                     ParamType.String,
                                                   ),
+                                                  'level': serializeParam(
+                                                    _model.getWorkoutLevel(),
+                                                    ParamType.String,
+                                                  ),
                                                 }.withoutNulls,
                                                 extra: <String, dynamic>{
                                                   kTransitionInfoKey:
@@ -1598,7 +1495,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
 
                                             Object? result;
 
-                                            if (_model.showRestInNext()) {
+                                            if (_model.showRest()) {
                                               speakText('Faça uma pausa.');
                                               result = await context.pushNamed(
                                                 'RestScreen',
@@ -1715,35 +1612,211 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                                 }
                                               }
                                             });
-                                          },
-                                          text: 'Concluído',
-                                          options: FFButtonOptions(
-                                            width: 390.0,
-                                            height: 60.0,
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    0.0, 0.0, 0.0, 0.0),
-                                            iconPadding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    0.0, 0.0, 0.0, 0.0),
-                                            color: FlutterFlowTheme.of(context)
-                                                .primary,
-                                            textStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .titleSmall
-                                                    .override(
-                                                      fontFamily: 'Readex Pro',
-                                                      color: Colors.white,
-                                                    ),
-                                            elevation: 3.0,
-                                            borderSide: BorderSide(
-                                              color: Colors.transparent,
-                                              width: 1.0,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(30.0),
-                                          ),
-                                        )
+                                          })
+                                      // ? FFButtonWidget(
+                                      //     onPressed: () async {
+                                      // HapticFeedback.mediumImpact();
+                                      // _model.completeLastExercise();
+
+                                      // final nextExercise =
+                                      //     _model.getNextExercise();
+
+                                      // if (nextExercise == null) {
+                                      //   stopWorkout(stopwatch);
+                                      //   context.pushNamed(
+                                      //     'CompletedWorkout',
+                                      //     queryParameters: {
+                                      //       'workoutId': serializeParam(
+                                      //         trainingId,
+                                      //         ParamType.String,
+                                      //       ),
+                                      //       'userId': serializeParam(
+                                      //         userId,
+                                      //         ParamType.String,
+                                      //       ),
+                                      //       'imageUrl': serializeParam(
+                                      //         imageUrl,
+                                      //         ParamType.String,
+                                      //       ),
+                                      //       'personalImageUrl':
+                                      //           serializeParam(
+                                      //         personalImageUrl,
+                                      //         ParamType.String,
+                                      //       ),
+                                      //       'totalSecondsTime':
+                                      //           serializeParam(
+                                      //         stopwatch.elapsed.inSeconds,
+                                      //         ParamType.int,
+                                      //       ),
+                                      //       'timeString': serializeParam(
+                                      //         _formatTotalTimeString(),
+                                      //         ParamType.String,
+                                      //       ),
+                                      //       'personalId': serializeParam(
+                                      //         personalId,
+                                      //         ParamType.String,
+                                      //       ),
+                                      //     }.withoutNulls,
+                                      //     extra: <String, dynamic>{
+                                      //       kTransitionInfoKey:
+                                      //           TransitionInfo(
+                                      //         hasTransition: true,
+                                      //         transitionType:
+                                      //             PageTransitionType.fade,
+                                      //       ),
+                                      //     },
+                                      //   );
+                                      //   return;
+                                      // }
+
+                                      // Object? result;
+
+                                      // if (_model.showRestInNext()) {
+                                      //   speakText('Faça uma pausa.');
+                                      //   result = await context.pushNamed(
+                                      //     'RestScreen',
+                                      //     queryParameters: {
+                                      //       'nextExercise':
+                                      //           serializeParam(
+                                      //         nextExercise,
+                                      //         ParamType.JSON,
+                                      //       ),
+                                      //       'personalImageUrl':
+                                      //           serializeParam(
+                                      //         personalImageUrl,
+                                      //         ParamType.String,
+                                      //       ),
+                                      //       'workout': serializeParam(
+                                      //         _model
+                                      //             .copyOriginalFormatSets,
+                                      //         ParamType.JSON,
+                                      //         true,
+                                      //       ),
+                                      //       'restTime': serializeParam(
+                                      //         _model.getCurrentExercise()[
+                                      //             'pause'],
+                                      //         ParamType.int,
+                                      //       ),
+                                      //       'changedWorkout':
+                                      //           serializeParam(
+                                      //         _model.copySets,
+                                      //         ParamType.JSON,
+                                      //         true,
+                                      //       ),
+                                      //       'currentSetIndex':
+                                      //           serializeParam(
+                                      //         _model.currentSetIndex,
+                                      //         ParamType.int,
+                                      //       ),
+                                      //     }.withoutNulls,
+                                      //     extra: <String, dynamic>{
+                                      //       kTransitionInfoKey:
+                                      //           TransitionInfo(
+                                      //         hasTransition: true,
+                                      //         transitionType:
+                                      //             PageTransitionType.fade,
+                                      //       ),
+                                      //     },
+                                      //   );
+                                      // }
+
+                                      // setState(() {
+                                      //   _model.doneSelected = true;
+                                      //   _model.completeExercise();
+
+                                      //   if (result != null) {
+                                      //     _model.currentSetIndex =
+                                      //         int.parse(
+                                      //             result.toString());
+                                      //   }
+
+                                      //   speakText(
+                                      //       _model.getSpeakerExercise());
+
+                                      //   if (_model.timerValue() != null) {
+                                      //     _model.timerController =
+                                      //         StopWatchTimer(
+                                      //             mode: StopWatchMode
+                                      //                 .countDown);
+
+                                      //     _model.timerController
+                                      //         .setPresetTime(
+                                      //             mSec: _model
+                                      //                     .timerValue()! *
+                                      //                 1000,
+                                      //             add: false);
+
+                                      //     ScaffoldMessenger.of(context)
+                                      //         .showSnackBar(SnackBar(
+                                      //       content: Text(
+                                      //         'Prepare-se',
+                                      //         style: TextStyle(
+                                      //           fontSize: 24,
+                                      //           color:
+                                      //               FlutterFlowTheme.of(
+                                      //                       context)
+                                      //                   .primaryText,
+                                      //         ),
+                                      //       ),
+                                      //       duration: Duration(
+                                      //           milliseconds: 5000),
+                                      //       backgroundColor:
+                                      //           FlutterFlowTheme.of(
+                                      //                   context)
+                                      //               .secondary,
+                                      //     ));
+                                      //     speakText('Prepare-se');
+
+                                      //     _model.isTimerEnded = false;
+
+                                      //     if (_model.timerValue() !=
+                                      //         null) {
+                                      //       SchedulerBinding.instance
+                                      //           .addPostFrameCallback(
+                                      //               (_) async {
+                                      //         await Future.delayed(
+                                      //             Duration(seconds: 5));
+                                      //         speakText('Comece');
+                                      //         if (_model.timerValue() !=
+                                      //             null) {
+                                      //           _model.timerController
+                                      //               .onExecute
+                                      //               .add(StopWatchExecute
+                                      //                   .start);
+                                      //         }
+                                      //       });
+                                      //     }
+                                      //   }
+                                      // });
+                                      //     },
+                                      //     text: 'Concluído',
+                                      //     options: FFButtonOptions(
+                                      //       width: 390.0,
+                                      //       height: 60.0,
+                                      //       padding:
+                                      //           EdgeInsetsDirectional.fromSTEB(
+                                      //               0.0, 0.0, 0.0, 0.0),
+                                      //       iconPadding:
+                                      //           EdgeInsetsDirectional.fromSTEB(
+                                      //               0.0, 0.0, 0.0, 0.0),
+                                      //       color: FlutterFlowTheme.of(context)
+                                      //           .primary,
+                                      //       textStyle:
+                                      //           FlutterFlowTheme.of(context)
+                                      //               .titleSmall
+                                      //               .override(
+                                      //                 fontFamily: 'Readex Pro',
+                                      //                 color: Colors.white,
+                                      //               ),
+                                      //       elevation: 3.0,
+                                      //       borderSide: BorderSide(
+                                      //         color: Colors.transparent,
+                                      //         width: 1.0,
+                                      //       ),
+                                      //       borderRadius:
+                                      //           BorderRadius.circular(30.0),
+                                      //     ),
+                                      //   )
                                       : Align(
                                           alignment: Alignment.center,
                                           child: FlutterFlowTimer(
@@ -1960,8 +2033,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
                     ),
                   ],
                 ),
-              ).animateOnPageLoad(
-                  animationsMap['containerOnPageLoadAnimation']!),
+              ),
             ),
           ],
         ),

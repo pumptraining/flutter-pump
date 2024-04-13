@@ -1,5 +1,7 @@
+import 'package:flutter_flow/common/utils.dart';
 import 'package:flutter_flow/flutter_flow_model.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:pump/common/map_skill_level.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +22,7 @@ class HomePageModel extends FlutterFlowModel {
   bool isTimerEnded = false;
   bool personalNoteSelected = false;
   bool doneSelected = true;
+  dynamic workout;
 
   StopWatchTimer timerController =
       StopWatchTimer(mode: StopWatchMode.countDown);
@@ -168,6 +171,14 @@ class HomePageModel extends FlutterFlowModel {
     return modifiedSets;
   }
 
+  String getCurrentExercisePause() {
+    final exercise = getCurrentExercise();
+    if (exercise['pause'] != null) {
+      return '${exercise['pause']}s de descanso';
+    }
+    return 'sem descanso';
+  }
+
   dynamic getCurrentExercise() {
     if (sets.isEmpty) {
       return null;
@@ -218,6 +229,10 @@ class HomePageModel extends FlutterFlowModel {
   }
 
   bool showRestInNext() {
+    return false;
+  }
+
+  bool showRest() {
     final exercise = getCurrentExercise();
 
     if (exercise == null) {
@@ -250,22 +265,7 @@ class HomePageModel extends FlutterFlowModel {
   }
 
   String getNextExerciseSubtitle() {
-    final exercise = getNextExercise();
-
-    if (exercise == null) {
-      return 'Fim do treino';
-    }
-
-    if (showRestInNext()) {
-      return 'Recuperação';
-    }
-
-    if (exercise['equipment'] != null &&
-        exercise['equipment'].toString().isNotEmpty) {
-      return exercise['equipment'];
-    }
-
-    return 'Sem equipamento';
+    return 'próximo';
   }
 
   dynamic getNextExercise() {
@@ -525,7 +525,7 @@ class HomePageModel extends FlutterFlowModel {
 
   void completeLastExercise() {
     personalNoteSelected = false;
-    
+
     int currentExercise = getCurrentExerciseIndex();
 
     var set = copySets[currentSetIndex];
@@ -574,5 +574,10 @@ class HomePageModel extends FlutterFlowModel {
       copySets[currentSetIndex]['isDone'] = true;
       copyOriginalFormatSets[currentSetIndex]['isDone'] = true;
     }
+  }
+
+  String getWorkoutLevel() {
+    final level = workout['level'];
+    return WorkoutMap.mapSkillLevel(level);
   }
 }

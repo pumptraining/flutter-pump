@@ -30,22 +30,13 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>com.googleusercontent.apps.784151565290-cov2u3vseb8f6rk0aorqohh322alv0er</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>otpless</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
 				<string>pumpcreator</string>
-				<string>$(PRODUCT_BUNDLE_IDENTIFIER).otpless</string>
+				<string>fb312791141775351</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>20240217.01</string>
+	<string>20240229.01</string>
 	<key>FlutterDeepLinkingEnabled</key>
 	<true/>
 	<key>LSRequiresIPhoneOS</key>
@@ -91,5 +82,11 @@
 		<string>gootpless</string>
 		<string>com.otpless.ios.app.otpless</string>
 	</array>
+	<key>FacebookAppID</key>
+	<string>312791141775351</string>
+	<key>FacebookClientToken</key>
+	<string>53b8fe2fd099566eb6e8833dce81dd44</string>
+	<key>FacebookDisplayName</key>
+	<string>Pump Personal App</string>
 </dict>
 </plist>

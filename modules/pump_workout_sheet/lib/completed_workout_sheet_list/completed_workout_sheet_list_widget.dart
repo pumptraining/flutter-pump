@@ -1,4 +1,3 @@
-import 'package:api_manager/api_manager/api_manager.dart';
 import 'package:flutter/services.dart';
 import 'package:api_manager/api_requests/pump_api_calls.dart';
 import 'package:flutter_flow/flutter_flow_model.dart';
@@ -170,7 +169,8 @@ class _CompletedWorkoutSheetListWidgetState
                     child: SizedBox(
                       width: 40.0,
                       height: 40.0,
-                      child: CircularProgressIndicator(strokeWidth: 1.0,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 1.0,
                         color: FlutterFlowTheme.of(context).primary,
                       ),
                     ),
@@ -458,7 +458,7 @@ class _CompletedWorkoutSheetListWidgetState
                                 children: [
                                   Expanded(
                                     child: AutoSizeText(
-                                      workoutSheet['shortDescription'],
+                                      workoutSheet['shortDescription'] ?? '',
                                       maxLines: 2,
                                       style: FlutterFlowTheme.of(context)
                                           .bodyMedium

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:api_manager/api_manager/api_manager.dart';
-import 'package:api_manager/api_requests/pump_api_calls.dart';
+import 'package:api_manager/api_requests/pump_creator_api_calls.dart';
 import 'package:api_manager/auth/firebase_auth/auth_util.dart';
 import 'package:api_manager/auth/firebase_auth/firebase_user_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,6 +9,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_flow/common/event_logger.dart';
 import 'package:flutter_flow/common/user_settings.dart';
 import 'package:flutter_flow/common/utils.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -115,7 +116,7 @@ Future<void> _setupRemoteConfig() async {
 
 Future<void> _updateFCMToken(String token) async {
   final result =
-      await PumpGroup.updateUserFCMTokenCall.call(params: {'fcmToken': token});
+      await BaseGroup.updateUserFCMTokenCall.call(params: {'fcmToken': token});
   debugPrint("Result update: ${result.succeeded}");
 }
 
@@ -165,7 +166,9 @@ class _MyAppState extends State<MyApp> {
       } else if (user != null) {
         logoutCalled = false;
         ApiManager.setFirebaseUser(user);
-        debugPrint('User is signed in!');
+
+        EventLogger.instance
+            .setUserData(name: currentUserDisplayName, email: currentUserEmail);
       }
     });
   }

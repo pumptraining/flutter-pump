@@ -207,7 +207,8 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                 child: SizedBox(
                   width: 40,
                   height: 40,
-                  child: CircularProgressIndicator(strokeWidth: 1.0,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 1.0,
                     color: FlutterFlowTheme.of(context).primary,
                   ),
                 ),
@@ -300,8 +301,11 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                                         children: [
                                           Expanded(
                                             child: Text(
-                                              _model.content != null ? _model.content['firstName'] ??
-                                                  currentUserDisplayName : '',
+                                              _model.content != null
+                                                  ? _model.content[
+                                                          'firstName'] ??
+                                                      currentUserDisplayName
+                                                  : '',
                                               style:
                                                   FlutterFlowTheme.of(context)
                                                       .headlineSmall,
@@ -317,8 +321,13 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                                               padding: EdgeInsetsDirectional
                                                   .fromSTEB(0, 4, 0, 0),
                                               child: AutoSizeText(
-                                                _model.content != null && _model.content['email'] != null ? _model.content['email'] ??
-                                                    currentUserEmail : '',
+                                                _model.content != null &&
+                                                        _model.content[
+                                                                'email'] !=
+                                                            null
+                                                    ? _model.content['email'] ??
+                                                        currentUserEmail
+                                                    : '',
                                                 maxLines: 1,
                                                 style:
                                                     FlutterFlowTheme.of(context)
@@ -642,7 +651,8 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                             logFirebaseEvent('PROFILE_PAGE_SHARE_ON_TAP');
                             logFirebaseEvent('Container_navigate_to');
 
-                            Share.share('https://pumpapp.com.br');
+                            Share.share(
+                                'https://https://pump-personal-trainer.webflow.io/');
                           },
                           child: Container(
                             width: double.infinity,
@@ -703,7 +713,8 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                             logFirebaseEvent('PROFILE_PAGE_TERMS_ON_TAP');
                             logFirebaseEvent('Container_navigate_to');
 
-                            launchURL('https://pumpapp.com.br/termos-de-uso');
+                            launchURL(
+                                'https://pump-personal-trainer.webflow.io/termos-de-uso');
                           },
                           child: Container(
                             width: double.infinity,
@@ -765,7 +776,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                             logFirebaseEvent('Container_navigate_to');
 
                             launchURL(
-                                'https://pumpapp.com.br/politica-de-privacidade');
+                                'https://pump-personal-trainer.webflow.io/politica-de-privacidade');
                           },
                           child: Container(
                             width: double.infinity,

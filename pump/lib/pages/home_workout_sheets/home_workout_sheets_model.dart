@@ -1,5 +1,8 @@
 import 'package:flutter_flow/flutter_flow_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_flow/flutter_flow_util.dart';
+import 'package:pump_components/components/card_workout_sheet_component/card_workout_sheet_component_widget.dart';
+import 'package:pump_components/components/horizontal_image_title_list_component/horizontal_image_title_list_component_widget.dart';
 
 class HomeWorkoutSheetsModel extends FlutterFlowModel {
   ///  State fields for stateful widgets in this page.
@@ -62,5 +65,44 @@ class HomeWorkoutSheetsModel extends FlutterFlowModel {
 
   String getSubtitle(dynamic workout) {
     return '${mapSkillLevel(workout['level'])} · ${workout['objective']}';
+  }
+
+  List<HorizontalImageTitleListDTO> getHorizontalImageTitleListDTO() {
+    final List<dynamic> dynamicList = content['personals'] as List<dynamic>;
+
+    return dynamicList.map((item) {
+      return HorizontalImageTitleListDTO(
+        id: item['personalId'] as String,
+        title: item['name'] as String,
+        imageUrl: item['imageUrl'] as String,
+      );
+    }).toList();
+  }
+
+  List<CardWorkoutSheetDTO> getWorkoutSheetListDTO() {
+    final List<dynamic> dynamicList = content['workoutSheets'];
+    return dynamicList.map((item) {
+      final dynamic amountValue = item['amount'];
+      final amount = amountValue != null
+          ? NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$').format(
+              amountValue is String
+                  ? double.parse(amountValue)
+                  : amountValue.isNegative
+                      ? -amountValue
+                      : amountValue,
+            )
+          : '';
+      return CardWorkoutSheetDTO(
+          id: item['workoutId'] as String,
+          title: item['title'] as String,
+          imageUrl: item['imageUrl'] as String,
+          circleImageUrl: item['personalImageUrl'],
+          tagTitle: amount,
+          subtitle: getSubtitle(item));
+    }).toList();
+  }
+
+  bool canShowListPersonal() {
+    return (content['personals'] as List<dynamic>).length >= 5;
   }
 }

@@ -745,7 +745,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                           onTap: () async {
                             if (isiOS) {
                               launchUrlString(
-                                  'https://apps.apple.com/br/app/pump-personal-trainer/id6445901855',
+                                  'https://apps.apple.com/br/app/pump-training/id1626404347',
                                   mode: LaunchMode.externalApplication);
                               return;
                             }
@@ -874,7 +874,8 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                             logFirebaseEvent('PROFILE_PAGE_SHARE_ON_TAP');
                             logFirebaseEvent('Container_navigate_to');
 
-                            Share.share('https://pumpapp.com.br');
+                            Share.share(
+                                'https://https://pump-personal-trainer.webflow.io/');
                           },
                           child: Container(
                             width: double.infinity,
@@ -935,7 +936,8 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                             logFirebaseEvent('PROFILE_PAGE_TERMS_ON_TAP');
                             logFirebaseEvent('Container_navigate_to');
 
-                            launchURL('https://pumpapp.com.br/termos-de-uso');
+                            launchURL(
+                                'https://pump-personal-trainer.webflow.io/termos-de-uso');
                           },
                           child: Container(
                             width: double.infinity,
@@ -996,7 +998,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                             logFirebaseEvent('PROFILE_PAGE_TERMS_ON_TAP');
                             logFirebaseEvent('Container_navigate_to');
                             launchURL(
-                                'https://pumpapp.com.br/politica-de-privacidade');
+                                'https://pump-personal-trainer.webflow.io/politica-de-privacidade');
                           },
                           child: Container(
                             width: double.infinity,

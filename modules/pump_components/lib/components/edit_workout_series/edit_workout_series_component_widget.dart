@@ -90,10 +90,10 @@ class _EditWorkoutSeriesComponentWidgetState
         },
         child: Padding(
           padding: EdgeInsetsDirectional.fromSTEB(
-              12, 16, 12, (widget.workoutSets.length == index + 1) ? 32 : 0),
+              0, 0, 0, (widget.workoutSets.length == index + 1) ? 32 : 0),
           child: Container(
             decoration: BoxDecoration(
-              color: FlutterFlowTheme.of(context).secondaryBackground,
+              color: FlutterFlowTheme.of(context).primaryBackground,
               borderRadius: BorderRadius.circular(8),
             ),
             child: Padding(
@@ -112,19 +112,6 @@ class _EditWorkoutSeriesComponentWidgetState
                             Expanded(
                               child: Stack(
                                 children: [
-                                  Align(
-                                    alignment: AlignmentDirectional(0, 0),
-                                    child: Container(
-                                      width: MediaQuery.sizeOf(context).width *
-                                          0.16,
-                                      height: 2,
-                                      decoration: BoxDecoration(
-                                        color: FlutterFlowTheme.of(context)
-                                            .primaryBackground,
-                                        borderRadius: BorderRadius.circular(1),
-                                      ),
-                                    ),
-                                  ),
                                   Visibility(
                                     visible: widget.canEdit,
                                     child: Align(
@@ -199,15 +186,14 @@ class _EditWorkoutSeriesComponentWidgetState
                                                     0, 0, 0, 0),
                                             color: FlutterFlowTheme.of(context)
                                                 .secondaryBackground,
-                                            textStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .labelMedium
-                                                    .override(
-                                                        fontFamily: 'Poppins',
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .primaryText),
+                                            textStyle: FlutterFlowTheme.of(
+                                                    context)
+                                                .labelMedium
+                                                .override(
+                                                    fontFamily: 'Montserrat',
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .primaryText),
                                             elevation: 0,
                                             borderSide: BorderSide(
                                               color:
@@ -254,6 +240,15 @@ class _EditWorkoutSeriesComponentWidgetState
                             ),
                           ),
                         ),
+                        Padding(
+                            padding: EdgeInsets.only(
+                              top: 8,
+                            ),
+                            child: Divider(
+                              color: FlutterFlowTheme.of(context).secondaryText,
+                              endIndent: 16,
+                              indent: 16,
+                            )),
                       ],
                     ),
                   ),
@@ -361,7 +356,7 @@ class _EditWorkoutSeriesComponentWidgetState
                                 style: FlutterFlowTheme.of(context)
                                     .bodySmall
                                     .override(
-                                      fontFamily: 'Poppins',
+                                      fontFamily: 'Montserrat',
                                       color: FlutterFlowTheme.of(context)
                                           .secondaryText,
                                     ),
@@ -389,7 +384,7 @@ class _EditWorkoutSeriesComponentWidgetState
                         ),
                       ),
                     ),
-                    GestureDetector(
+                    InkWell(
                       onTap: () {
                         Utils.showExerciseVideo(
                             context, exercise['exercise']['videoUrl']);
@@ -412,6 +407,8 @@ class _EditWorkoutSeriesComponentWidgetState
                                           ['imageUrl'],
                                       width: 38,
                                       height: 38,
+                                      maxHeightDiskCache: 200,
+                                      memCacheHeight: 150,
                                       fit: BoxFit.cover,
                                     )
                                   : Container(),
@@ -423,21 +420,24 @@ class _EditWorkoutSeriesComponentWidgetState
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Expanded(
-                                      child: AutoSizeText(
-                                        _model.getExerciseTitle(exercise),
-                                        maxLines: 2,
-                                        style: FlutterFlowTheme.of(context)
-                                            .titleSmall
-                                            .override(
-                                                fontFamily: 'Poppins',
-                                                fontSize: 12),
+                                Padding(
+                                  padding: EdgeInsets.only(bottom: 2),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      Expanded(
+                                        child: AutoSizeText(
+                                          _model.getExerciseTitle(exercise),
+                                          maxLines: 2,
+                                          style: FlutterFlowTheme.of(context)
+                                              .titleSmall
+                                              .override(
+                                                  fontFamily: 'Montserrat',
+                                                  fontSize: 12),
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                                 Row(
                                   mainAxisSize: MainAxisSize.max,
@@ -449,7 +449,7 @@ class _EditWorkoutSeriesComponentWidgetState
                                         style: FlutterFlowTheme.of(context)
                                             .bodySmall
                                             .override(
-                                              fontFamily: 'Poppins',
+                                              fontFamily: 'Montserrat',
                                               color:
                                                   FlutterFlowTheme.of(context)
                                                       .secondaryText,
@@ -626,7 +626,7 @@ class _EditWorkoutSeriesComponentWidgetState
                                 textStyle: FlutterFlowTheme.of(context)
                                     .labelMedium
                                     .override(
-                                        fontFamily: 'Poppins',
+                                        fontFamily: 'Montserrat',
                                         color: FlutterFlowTheme.of(context)
                                             .primaryBackground),
                                 elevation: 3,
@@ -646,26 +646,26 @@ class _EditWorkoutSeriesComponentWidgetState
                             (index + 1)
                         ? Padding(
                             padding:
-                                EdgeInsetsDirectional.fromSTEB(0, 6, 12, 6),
+                                EdgeInsetsDirectional.fromSTEB(60, 6, 16, 6),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               mainAxisSize: MainAxisSize.max,
                               children: [
+                                Expanded(
+                                  child: Container(
+                                    child: Divider(
+                                      color: FlutterFlowTheme.of(context)
+                                          .secondaryText,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 8),
                                 Transform.rotate(
                                   angle: 90 * math.pi / 180,
                                   child: Icon(
                                     Icons.link_sharp,
                                     size: 20,
-                                    color: FlutterFlowTheme.of(context)
-                                        .secondaryText,
-                                  ),
-                                ),
-                                SizedBox(width: 8),
-                                Expanded(
-                                  child: Container(
-                                    height: 0.7,
-                                    color: FlutterFlowTheme.of(context)
-                                        .primaryBackground,
+                                    color: FlutterFlowTheme.of(context).primary,
                                   ),
                                 ),
                               ],
@@ -832,7 +832,7 @@ class _EditWorkoutSeriesComponentWidgetState
                     child: Text(
                       getRepsTitle(),
                       style: FlutterFlowTheme.of(context).bodySmall.override(
-                            fontFamily: 'Poppins',
+                            fontFamily: 'Montserrat',
                             fontSize: 10,
                           ),
                     ),
@@ -845,7 +845,7 @@ class _EditWorkoutSeriesComponentWidgetState
                   child: Text(
                     'Pausa (seg)',
                     style: FlutterFlowTheme.of(context).bodySmall.override(
-                          fontFamily: 'Poppins',
+                          fontFamily: 'Montserrat',
                           fontSize: 10,
                         ),
                   ),
@@ -857,7 +857,7 @@ class _EditWorkoutSeriesComponentWidgetState
                   child: Text(
                     'Carga',
                     style: FlutterFlowTheme.of(context).bodySmall.override(
-                          fontFamily: 'Poppins',
+                          fontFamily: 'Montserrat',
                           fontSize: 10,
                         ),
                   ),
@@ -964,7 +964,7 @@ class _EditWorkoutSeriesComponentWidgetState
                     ),
                   ),
                   style: FlutterFlowTheme.of(context).bodySmall.override(
-                        fontFamily: 'Poppins',
+                        fontFamily: 'Montserrat',
                         fontSize: 10,
                       ),
                   textAlign: TextAlign.center,
@@ -1023,7 +1023,7 @@ class _EditWorkoutSeriesComponentWidgetState
                     ),
                   ),
                   style: FlutterFlowTheme.of(context).bodySmall.override(
-                        fontFamily: 'Poppins',
+                        fontFamily: 'Montserrat',
                         fontSize: 10,
                       ),
                   textAlign: TextAlign.center,
@@ -1045,7 +1045,7 @@ class _EditWorkoutSeriesComponentWidgetState
                   onChanged: (val) => updateIntensity(val),
                   height: 40,
                   textStyle: FlutterFlowTheme.of(context).bodySmall.override(
-                        fontFamily: 'Poppins',
+                        fontFamily: 'Montserrat',
                         fontSize: 10,
                       ),
                   hintText: 'Carga',

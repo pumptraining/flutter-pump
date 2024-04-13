@@ -1,10 +1,8 @@
-import 'package:api_manager/auth/firebase_auth/auth_util.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
-import 'package:flutter_flow/common/user_settings.dart';
 import 'package:flutter_flow/flutter_flow_icon_button.dart';
 import 'package:flutter_flow/flutter_flow_model.dart';
+import 'package:flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter_flow/nav/serialization_util.dart';
-import 'package:pump_components/components/subscribe_screen/subscribe_screen_widget.dart';
+import 'package:pump_components/components/action_sheet_buttons_new/action_sheet_buttons_new_widget.dart';
 import 'package:pump_creator/common/invite_link.dart';
 import 'package:pump_creator/flutter_flow/nav/nav.dart';
 import 'package:pump_creator/models/tag_model.dart';
@@ -20,9 +18,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import '../../backend/firebase_analytics/analytics.dart';
 import 'customer_list_model.dart';
+import 'dart:ui' as ui;
 export 'customer_list_model.dart';
 
 class CustomerListWidget extends StatefulWidget {
@@ -95,10 +94,6 @@ class _CustomerListWidgetState extends State<CustomerListWidget>
     super.dispose();
   }
 
-  Future<void> showAddCustomer(BuildContext context) async {
-    await InviteLink.shareDynamicLink();
-  }
-
   @override
   Widget build(BuildContext context) {
     if (isiOS) {
@@ -154,7 +149,7 @@ class _CustomerListWidgetState extends State<CustomerListWidget>
                   ),
                   onPressed: () async {
                     HapticFeedback.mediumImpact();
-                    await showAddCustomer(context);
+                    _addNew();
                   },
                 ),
               ),
@@ -173,15 +168,68 @@ class _CustomerListWidgetState extends State<CustomerListWidget>
               _model.content = snapshot?.data?.jsonBody['response'];
 
               if (_model.showEmptyState()) {
-                return EmptyListWidget(
-                  buttonTitle: "Compartilhar Link",
-                  title: "Sem alunos",
-                  message:
-                      "Nenhum aluno encontrado.\n\nEnvie o link de cadastro para os seus alunos. Os alunos aparecerão na lista após se cadastrarem e aceitarem o seu convite.",
-                  onButtonPressed: () async {
-                    await showAddCustomer(context);
-                  },
-                  iconData: Icons.people_outlined,
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    EmptyListWidget(
+                      buttonTitle: "Enviar Convite",
+                      title: "Sem alunos",
+                      message:
+                          "Nenhum aluno encontrado.\n\nEnvie o convite por e-mail ou compartilhe seu link único de cadastro para os seus alunos.",
+                      onButtonPressed: () async {
+                        _addNew();
+                      },
+                      iconData: Icons.people_outlined,
+                    ),
+                    Padding(
+                      padding: EdgeInsetsDirectional.all(32),
+                      child: Directionality(
+                        textDirection: ui.TextDirection.rtl,
+                        child: FFButtonWidget(
+                          onPressed: () async {
+                            if (isiOS) {
+                              launchUrlString(
+                                  'https://apps.apple.com/br/app/pump-training/id1626404347',
+                                  mode: LaunchMode.externalApplication);
+                              return;
+                            }
+                            await launchUrlString(
+                                'https://pumpapp.page.link/pump',
+                                mode: LaunchMode.externalApplication);
+                          },
+                          text: 'Conheça o App do Aluno',
+                          icon: Icon(
+                            Icons.arrow_back,
+                            size: 16,
+                            color: FlutterFlowTheme.of(context).primary,
+                          ),
+                          options: FFButtonOptions(
+                            height: 44,
+                            padding:
+                                EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
+                            iconPadding:
+                                EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                            color:
+                                FlutterFlowTheme.of(context).primaryBackground,
+                            textStyle: FlutterFlowTheme.of(context)
+                                .titleSmall
+                                .override(
+                                  fontFamily: 'Lexend Deca',
+                                  color: FlutterFlowTheme.of(context).primary,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.normal,
+                                ),
+                            borderSide: BorderSide(
+                              color: FlutterFlowTheme.of(context)
+                                  .primaryBackground,
+                              width: 1,
+                            ),
+                            borderRadius: BorderRadius.all(Radius.circular(22)),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 );
               }
 
@@ -258,55 +306,9 @@ class _CustomerListWidgetState extends State<CustomerListWidget>
 
           final customerItem = filtered[index - 1];
           final isLast = _model.isLastCustomer(index - 1, filtered);
-          final Color backgroundColor =
-              FlutterFlowTheme.of(context).secondaryBackground;
-          BoxDecoration box = BoxDecoration(
-            color: backgroundColor,
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(0),
-              bottomRight: Radius.circular(0),
-              topLeft: Radius.circular(0),
-              topRight: Radius.circular(0),
-            ),
-          );
-
-          if ((index - 1) == 0 && isLast) {
-            box = BoxDecoration(
-              color: backgroundColor,
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(12),
-                bottomRight: Radius.circular(12),
-                topLeft: Radius.circular(12),
-                topRight: Radius.circular(12),
-              ),
-            );
-          } else {
-            if ((index - 1) == 0) {
-              box = BoxDecoration(
-                color: backgroundColor,
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(0),
-                  bottomRight: Radius.circular(0),
-                  topLeft: Radius.circular(12),
-                  topRight: Radius.circular(12),
-                ),
-              );
-            }
-            if (isLast) {
-              box = BoxDecoration(
-                color: backgroundColor,
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(12),
-                  bottomRight: Radius.circular(12),
-                  topLeft: Radius.circular(0),
-                  topRight: Radius.circular(0),
-                ),
-              );
-            }
-          }
 
           return Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(16, 0, 16, isLast ? 24 : 0),
+            padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, isLast ? 24 : 0),
             child: Row(
               mainAxisSize: MainAxisSize.max,
               children: [
@@ -337,7 +339,6 @@ class _CustomerListWidgetState extends State<CustomerListWidget>
                     },
                     child: Container(
                       width: double.infinity,
-                      decoration: box,
                       child: Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
                         child: Row(
@@ -349,7 +350,7 @@ class _CustomerListWidgetState extends State<CustomerListWidget>
                               color: FlutterFlowTheme.of(context)
                                   .primaryBackground,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(50.0),
+                                borderRadius: BorderRadius.circular(44.0),
                               ),
                               child: Padding(
                                 padding: EdgeInsetsDirectional.zero,
@@ -358,8 +359,8 @@ class _CustomerListWidgetState extends State<CustomerListWidget>
                                     if (customerItem["imageUrl"] != null &&
                                         customerItem["imageUrl"]!.isNotEmpty)
                                       Container(
-                                        width: 50.0,
-                                        height: 50.0,
+                                        width: 44.0,
+                                        height: 44.0,
                                         clipBehavior: Clip.antiAlias,
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
@@ -372,13 +373,13 @@ class _CustomerListWidgetState extends State<CustomerListWidget>
                                     if (customerItem["imageUrl"] == null ||
                                         customerItem["imageUrl"]!.isEmpty)
                                       Container(
-                                        width: 50.0,
-                                        height: 50.0,
+                                        width: 44.0,
+                                        height: 44.0,
                                         clipBehavior: Clip.antiAlias,
                                         decoration: BoxDecoration(
                                             shape: BoxShape.circle,
                                             color: FlutterFlowTheme.of(context)
-                                                .primaryBackground),
+                                                .secondaryBackground),
                                         child: Center(
                                           child: AutoSizeText(
                                               (customerItem["name"] ??
@@ -386,7 +387,7 @@ class _CustomerListWidgetState extends State<CustomerListWidget>
                                                   .toUpperCase(),
                                               style:
                                                   FlutterFlowTheme.of(context)
-                                                      .headlineMedium),
+                                                      .titleMedium),
                                         ),
                                       ),
                                   ],
@@ -405,7 +406,7 @@ class _CustomerListWidgetState extends State<CustomerListWidget>
                                     AutoSizeText(
                                       customerItem["name"],
                                       style: FlutterFlowTheme.of(context)
-                                          .titleMedium,
+                                          .bodyLarge,
                                     ),
                                     Visibility(
                                       visible: customerItem['tags'] != null ||
@@ -510,6 +511,8 @@ class _CustomerListWidgetState extends State<CustomerListWidget>
                                                                         tagId);
 
                                                             return TagComponentWidget(
+                                                              borderRadius: 10,
+                                                              alpha: 0.4,
                                                               title:
                                                                   element.title,
                                                               tagColor:
@@ -560,7 +563,7 @@ class _CustomerListWidgetState extends State<CustomerListWidget>
                                       height: 1,
                                       decoration: BoxDecoration(
                                         color: FlutterFlowTheme.of(context)
-                                            .primaryBackground,
+                                            .secondaryBackground,
                                       ),
                                     ),
                                   ],
@@ -582,9 +585,33 @@ class _CustomerListWidgetState extends State<CustomerListWidget>
     ));
   }
 
-  TagComponentWidget buildLevelTag(String? level) {
-    final title = _model.mapSkillLevel(level ?? '');
-    return TagComponentWidget(
-        title: title, tagColor: Color(0xFFEB7F7F), selected: false);
+  void _addNew() {
+    showModalBottomSheet(
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        context: context,
+        builder: (bottomSheetContext) {
+          return GestureDetector(
+            onTap: () =>
+                FocusScope.of(context).requestFocus(_model.unfocusNode),
+            child: Padding(
+                padding: MediaQuery.of(bottomSheetContext).viewInsets,
+                child: ActionSheetButtonsNewWidget(
+                  firstIcon: Icons.ios_share_outlined,
+                  firstAction: () async {
+                    HapticFeedback.mediumImpact();
+                    await InviteLink.shareDynamicLink();
+                  },
+                  firstActionTitle: 'Compartilhar Link',
+                  secondIcon: Icons.email_outlined,
+                  secondAction: () async {
+                    HapticFeedback.mediumImpact();
+                    context.pushNamed('AddCustomer');
+                  },
+                  secondActionTitle: 'Enviar Convite por E-mail',
+                  title: 'Novo Treino',
+                )),
+          );
+        });
   }
 }

@@ -60,6 +60,14 @@ class WorkoutDetailsModel extends FlutterFlowModel {
     return items.join(' · ');
   }
 
+  List<dynamic> getEquipmentArray() {
+    final equipments = content['equipments'] as List<dynamic>;
+    if (equipments.isEmpty) {
+      return ['Sem equipamento'];
+    }
+    return equipments;
+  }
+
   String? getTechniqueName(dynamic listItem) {
     dynamic exercise = listItem;
 
@@ -137,5 +145,19 @@ class WorkoutDetailsModel extends FlutterFlowModel {
 
   bool showRating() {
     return content['feedbacks'] != null && content['feedbacks'].length > 0;
+  }
+
+  String getDescription() {
+    if (content['description'] != null && !content['description'].isEmpty) {
+      return content['description'];
+    }
+    return '';
+  }
+
+  String getRatingStringValue() {
+    if (content['averageRating'] == null) {
+      return '';
+    }
+    return '${content['averageRating']}';
   }
 }

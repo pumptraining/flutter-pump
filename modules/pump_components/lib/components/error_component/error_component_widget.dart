@@ -6,13 +6,13 @@ import 'package:flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
 
 class ErrorComponentWidget extends StatefulWidget {
-  const ErrorComponentWidget({
-    Key? key,
-    this.title,
-    this.message,
-    this.buttonTitle,
-    required this.onButtonPressed
-  }) : super(key: key);
+  const ErrorComponentWidget(
+      {Key? key,
+      this.title,
+      this.message,
+      this.buttonTitle,
+      required this.onButtonPressed})
+      : super(key: key);
 
   final String? title;
   final String? message;
@@ -65,7 +65,7 @@ class _EmptyListWidgetState extends State<ErrorComponentWidget> {
                     Icon(
                       Icons.error_outline,
                       color: FlutterFlowTheme.of(context).secondaryText,
-                      size: 90,
+                      size: 50,
                     ),
                     Padding(
                       padding: EdgeInsetsDirectional.fromSTEB(0, 24, 0, 0),
@@ -79,7 +79,7 @@ class _EmptyListWidgetState extends State<ErrorComponentWidget> {
                             style: FlutterFlowTheme.of(context)
                                 .headlineSmall
                                 .override(
-                                    fontFamily: 'Outfit',
+                                    fontFamily: 'Montserrat',
                                     color: FlutterFlowTheme.of(context)
                                         .primaryText,
                                     decoration: TextDecoration.none),
@@ -88,19 +88,20 @@ class _EmptyListWidgetState extends State<ErrorComponentWidget> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(12, 4, 12, 0),
+                      padding: EdgeInsetsDirectional.fromSTEB(12, 16, 12, 0),
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Expanded(
                             child: Text(
-                              widget.message ?? 'Não foi possível carregar as informações.\nPor favor, tente novamente.',
+                              widget.message ??
+                                  'Não foi possível carregar as informações.\nPor favor, tente novamente.',
                               textAlign: TextAlign.center,
                               style: FlutterFlowTheme.of(context)
                                   .bodySmall
                                   .override(
-                                    fontFamily: 'Outfit',
+                                    fontFamily: 'Montserrat',
                                     color: FlutterFlowTheme.of(context)
                                         .secondaryText,
                                     fontSize: 16,
@@ -120,24 +121,22 @@ class _EmptyListWidgetState extends State<ErrorComponentWidget> {
                         },
                         text: widget.buttonTitle ?? 'Tentar novamente',
                         options: FFButtonOptions(
-                          width: 170,
-                          height: 50,
-                          padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-                          iconPadding:
-                              EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-                          color: FlutterFlowTheme.of(context).primary,
-                          textStyle:
-                              FlutterFlowTheme.of(context).titleSmall.override(
-                                    fontFamily: 'Lexend Deca',
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.normal,
-                                  ),
-                          elevation: 2,
-                          borderSide: BorderSide(
-                            color: Colors.transparent,
-                            width: 1,
-                          ),
+                          height: 44,
+                          padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
+                          iconPadding: EdgeInsets.zero,
+                          color: FlutterFlowTheme.of(context).primaryText,
+                          textStyle: FlutterFlowTheme.of(context)
+                              .headlineMedium
+                              .override(
+                                fontFamily: 'Montserrat',
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: FlutterFlowTheme.of(context)
+                                    .primaryBackground,
+                              ),
+                          elevation: 2.0,
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(25.0),
                         ),
                       ),
                     ),

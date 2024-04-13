@@ -5,23 +5,25 @@ import 'package:flutter_flow/flutter_flow_theme.dart';
 import '../api_requests/pump_creator_api_calls.dart';
 
 class ApiLoaderController {
-  void Function()? reload;
+  void Function({dynamic params})? reload;
 }
 
 class ApiLoaderWidget extends StatefulWidget {
-  const ApiLoaderWidget({
-    Key? key,
-    required this.apiCall,
-    this.params,
-    required this.builder,
-    this.controller,
-  }) : super(key: key);
+  const ApiLoaderWidget(
+      {Key? key,
+      required this.apiCall,
+      this.params,
+      required this.builder,
+      this.controller,
+      this.appBar})
+      : super(key: key);
 
   final Requestable apiCall;
   final dynamic params;
   final Widget Function(
       BuildContext context, AsyncSnapshot<ApiCallResponse>? snapshot) builder;
   final ApiLoaderController? controller;
+  final PreferredSizeWidget? appBar;
 
   @override
   // ignore: library_private_types_in_public_api
@@ -33,12 +35,12 @@ class _ApiLoaderWidgetState extends State<ApiLoaderWidget> {
   bool isLoading = false;
   bool isError = false;
 
-  void reload() {
+  void reload({dynamic params}) {
     safeSetState(() {
       response = null;
     });
 
-    loadApiContent(widget.apiCall, params: widget.params);
+    loadApiContent(widget.apiCall, params: params ?? widget.params);
   }
 
   Future<ApiCallResponse?>? loadApiContent(Requestable apiCall,
@@ -81,6 +83,7 @@ class _ApiLoaderWidgetState extends State<ApiLoaderWidget> {
     if (isLoading) {
       return Scaffold(
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        appBar: widget.appBar,
         body: Center(
           child: SizedBox(
             width: 40.0,

@@ -19,6 +19,9 @@ dependencies:
   fl_chart: 0.55.0
   flutter_rating_bar: 4.0.1
   flutter_stripe: ^9.3.0
+  percent_indicator: 4.2.2
+  badges: 2.0.2
+  carousel_slider: ^4.2.1
   flutter_flow:
     path: ../flutter_flow
   api_manager:

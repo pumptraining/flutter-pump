@@ -1,5 +1,7 @@
 import 'package:flutter_flow/flutter_flow_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_flow/flutter_flow_util.dart';
+import 'package:pump_components/components/card_workout_sheet_component/card_workout_sheet_component_widget.dart';
 
 class Profile14OtherUserModel extends FlutterFlowModel {
   /// Initialization and disposal methods.
@@ -7,7 +9,7 @@ class Profile14OtherUserModel extends FlutterFlowModel {
   final unfocusNode = FocusNode();
   dynamic content;
   PageController? pageViewController;
-  
+
   void initState(BuildContext context) {}
 
   void dispose() {
@@ -19,7 +21,8 @@ class Profile14OtherUserModel extends FlutterFlowModel {
   }
 
   bool canShowWorkoutSheets() {
-    return content['workoutSheets'] != null && content['workoutSheets'].length > 0;
+    return content['workoutSheets'] != null &&
+        content['workoutSheets'].length > 0;
   }
 
   String getFeedbackName(dynamic feedback) {
@@ -54,6 +57,30 @@ class Profile14OtherUserModel extends FlutterFlowModel {
   }
 
   bool isPumpProfile() {
-    return content['personal']['personalUserId'] == 'Cq3RNV2Qvueil8hbRRrLbd82c0p2';
+    return content['personal']['personalUserId'] ==
+        'Cq3RNV2Qvueil8hbRRrLbd82c0p2';
+  }
+
+  List<CardWorkoutSheetDTO> getWorkoutSheetListDTO() {
+    final List<dynamic> dynamicList = content['workoutSheets'];
+    return dynamicList.map((item) {
+      final dynamic amountValue = item['amount'];
+      final amount = amountValue != null
+          ? NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$').format(
+              amountValue is String
+                  ? double.parse(amountValue)
+                  : amountValue.isNegative
+                      ? -amountValue
+                      : amountValue,
+            )
+          : '';
+      return CardWorkoutSheetDTO(
+          id: item['workoutId'] as String,
+          title: item['title'] as String,
+          imageUrl: item['imageUrl'] as String,
+          circleImageUrl: item['personalImageUrl'],
+          tagTitle: amount,
+          subtitle: getSubtitle(item));
+    }).toList();
   }
 }

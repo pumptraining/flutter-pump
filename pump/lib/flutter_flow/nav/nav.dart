@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'package:api_manager/auth/firebase_auth/auth_util.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter_flow/flutter_flow_util.dart';
 import 'package:flutter_flow/nav/serialization_util.dart';
 import 'package:flutter_flow/transition_info.dart';
+import 'package:pump/pages/personal_list/personal_list_widget.dart';
+import 'package:pump/pages/profile_details/profile_details_widget.dart';
+import 'package:pump/pages/sheets_list/sheets_list_widget.dart';
 import 'package:pump_workout/pages/workout_completed_list/workout_completed_list_widget.dart';
 import 'package:pump_workout_sheet/completed_workout_sheet_list/completed_workout_sheet_list_widget.dart';
 import 'package:pump/pages/edit_profile/edit_profile_widget.dart';
@@ -159,6 +161,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
             personalId: params.getParam('personalId', ParamType.String),
             personalImageUrl:
                 params.getParam('personalImageUrl', ParamType.String),
+            level: params.getParam('level', ParamType.String),
           ),
         ),
         FFRoute(
@@ -186,15 +189,17 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: 'HomeWorkout',
           path: '/homeWorkout',
-          builder: (context, params) => params.isEmpty
-              ? NavBarPage(initialPage: 'HomeWorkout')
-              : HomeWorkoutWidget(),
+          builder: (context, params) => HomeWorkoutWidget(),
         ),
         FFRoute(
           name: 'Home',
           path: '/home',
-          builder: (context, params) =>
-              params.isEmpty ? NavBarPage(initialPage: 'Home') : HomeWidget(),
+          builder: (context, params) => params.isEmpty
+              ? NavBarPage(initialPage: 'Home')
+              : HomeWidget(
+                  canShowFeedback:
+                      params.getParam('canShowFeedback', ParamType.bool),
+                ),
         ),
         FFRoute(
           name: 'Profile',
@@ -237,6 +242,11 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           ),
         ),
         FFRoute(
+          name: 'ProfileDetails',
+          path: '/profileDetails',
+          builder: (context, params) => ProfileDetailsWidget(),
+        ),
+        FFRoute(
           name: 'CompletedWorkoutSheetList',
           path: '/CompletedWorkoutSheetList',
           builder: (context, params) => CompletedWorkoutSheetListWidget(),
@@ -253,6 +263,11 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           name: 'UserPurchaseWorkoutSheet',
           path: '/userPurchaseWorkoutSheet',
           builder: (context, params) => UserPurchaseWorkoutSheetWidget(),
+        ),
+        FFRoute(
+          name: 'PersonalListWidget',
+          path: '/personalListWidget',
+          builder: (context, params) => PersonalListWidget(),
         ),
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
       observers: [routeObserver],

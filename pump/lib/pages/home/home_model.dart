@@ -24,6 +24,11 @@ class HomeModel extends FlutterFlowModel {
         content?['completedWorkoutCount'] > 0;
   }
 
+  bool hasSheetDone() {
+    return content?['workoutSheetCompletedCount'] != null &&
+        content?['workoutSheetCompletedCount'] > 0;
+  }
+
   dynamic getNextWorkout() {
     String nextWorkoutId = content?['nextWorkout'];
     return filterById(nextWorkoutId);
@@ -34,11 +39,29 @@ class HomeModel extends FlutterFlowModel {
   }
 
   double getWorkoutSheetPercent() {
-    return content?['programProgress'] / 100;
+    final value = content?['programProgress'] / 100;
+    if (value > 1.0) {
+      return 1.0;
+    }
+    return value;
   }
 
   double getWorkoutWeekPercent() {
-    return content?['weekProgress'] / 100;
+    final value = content?['weekProgress'] / 100;
+    if (value > 1.0) {
+      return 1.0;
+    }
+    return value;
+  }
+
+  String getSheetPercentString() {
+    String value = (getWorkoutSheetPercent() * 100).toStringAsFixed(0) + '%';
+    return value;
+  }
+
+  String getWeekPercentString() {
+    String value = (getWorkoutWeekPercent() * 100).toStringAsFixed(0) + '%';
+    return value;
   }
 
   bool currentWeekIsLessThan(int index) {
@@ -113,5 +136,34 @@ class HomeModel extends FlutterFlowModel {
       return !hasActiveSheet();
     }
     return false;
+  }
+
+  List<dynamic> getWeekWorkouts() {
+    return content['workoutWeekDetails'] ?? [];
+  }
+
+  bool hasPersonal() {
+    return content['personalDetails'] != null;
+  }
+
+  String getWellcomeText() {
+    var hour = DateTime.now().hour;
+    if (hour < 12) {
+      return 'Olá, bom dia';
+    } else if (hour < 18) {
+      return 'Olá, boa tarde';
+    } else {
+      return 'Olá, boa noite';
+    }
+  }
+
+  String getEmptyStateTitle() {
+    return 'Programa de treino';
+  }
+
+  String getEmptyStateDescription() {
+    return hasPendingPersonalAddWorkout()
+        ? 'Fique atento! ${content?['personalInvite']['personalName']} está criando seu treino personalizado.'
+        : 'Encontre seu próximo programa de treino \ne comece agora';
   }
 }

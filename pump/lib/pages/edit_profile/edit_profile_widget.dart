@@ -1,10 +1,9 @@
 import 'dart:io';
-
 import 'package:api_manager/auth/firebase_auth/auth_util.dart';
 import 'package:flutter_flow/flutter_flow_model.dart';
+import 'package:flutter_flow/transition_info.dart';
 import 'package:flutter_flow/upload_data.dart';
 import 'package:api_manager/api_requests/pump_api_calls.dart';
-import 'package:flutter_flow/flutter_flow_icon_button.dart';
 import 'package:flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter_flow/flutter_flow_util.dart';
 import 'package:flutter_flow/flutter_flow_widgets.dart';
@@ -12,6 +11,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pump/flutter_flow/nav/nav.dart';
+import 'package:pump_components/components/bottom_button_fixed/bottom_button_fixed_widget.dart';
+import 'package:pump_components/components/pump_app_bar/pump_app_bar.dart';
 import '../../backend/firebase_analytics/analytics.dart';
 import 'edit_profile_model.dart';
 export 'edit_profile_model.dart';
@@ -50,6 +51,10 @@ class _EditProfileWidgetState extends State<EditProfileWidget> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(_model.unfocusNode),
       child: Scaffold(
+        appBar: PumpAppBar(
+          title: 'Editar',
+          hasBackButton: widget.showBackButton ?? true,
+        ),
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
         body: SafeArea(
@@ -64,7 +69,8 @@ class _EditProfileWidgetState extends State<EditProfileWidget> {
                   child: SizedBox(
                     width: 40,
                     height: 40,
-                    child: CircularProgressIndicator(strokeWidth: 1.0,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 1.0,
                       color: FlutterFlowTheme.of(context).primary,
                     ),
                   ),
@@ -88,7 +94,7 @@ class _EditProfileWidgetState extends State<EditProfileWidget> {
                             width: MediaQuery.of(context).size.width,
                             decoration: BoxDecoration(
                               color: FlutterFlowTheme.of(context)
-                                  .secondaryBackground,
+                                  .primaryBackground,
                               boxShadow: [
                                 BoxShadow(
                                   blurRadius: 5,
@@ -109,7 +115,7 @@ class _EditProfileWidgetState extends State<EditProfileWidget> {
                                   alignment: AlignmentDirectional(0, 0),
                                   child: Padding(
                                     padding: EdgeInsetsDirectional.fromSTEB(
-                                        0, 100, 0, 20),
+                                        0, 32, 0, 20),
                                     child: Column(
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
@@ -123,12 +129,12 @@ class _EditProfileWidgetState extends State<EditProfileWidget> {
                                             decoration: BoxDecoration(
                                               color:
                                                   FlutterFlowTheme.of(context)
-                                                      .primaryBackground,
+                                                      .secondaryBackground,
                                               shape: BoxShape.circle,
                                               border: Border.all(
                                                 color:
                                                     FlutterFlowTheme.of(context)
-                                                        .primaryBackground,
+                                                        .secondaryText,
                                               ),
                                             ),
                                             child: Visibility(
@@ -145,41 +151,82 @@ class _EditProfileWidgetState extends State<EditProfileWidget> {
                                                   height: 100,
                                                   clipBehavior: Clip.antiAlias,
                                                   decoration: BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                  ),
+                                                      color:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .primaryText,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              100),
+                                                      border: Border.all(
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .primaryText)),
                                                   child: _model.imagePath !=
                                                           null
-                                                      ? Image.file(
-                                                          File(_model
-                                                              .imagePath!),
-                                                          width: 100,
-                                                          height: 100,
-                                                          fit: BoxFit.cover,
-                                                          errorBuilder:
-                                                              (context, error,
-                                                                  stackTrace) {
-                                                            return Text(
-                                                                'Imagem não pode ser carregada');
-                                                          },
-                                                        )
-                                                      : (_model.personal !=
-                                                                  null &&
-                                                              _model.personal[
-                                                                      'imageUrl'] !=
-                                                                  null)
-                                                          ? CachedNetworkImage(
-                                                              imageUrl: _model
-                                                                      .personal[
-                                                                  'imageUrl'],
-                                                              fit: BoxFit.cover,
-                                                            )
-                                                          : CachedNetworkImage(
-                                                              imageUrl:
-                                                                  currentUserPhoto,
-                                                              width: 100,
-                                                              height: 100,
+                                                      ? Container(
+                                                          width: 100.0,
+                                                          height: 100.0,
+                                                          clipBehavior:
+                                                              Clip.antiAlias,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            shape:
+                                                                BoxShape.circle,
+                                                          ),
+                                                          child: Image.file(
+                                                            File(_model
+                                                                .imagePath!),
+                                                            width: 100,
+                                                            height: 100,
+                                                            fit: BoxFit.cover,
+                                                            errorBuilder:
+                                                                (context, error,
+                                                                    stackTrace) {
+                                                              return Text(
+                                                                  'Imagem não pode ser carregada');
+                                                            },
+                                                          ))
+                                                      : Visibility(
+                                                          visible: (_model.personal !=
+                                                                      null &&
+                                                                  _model.personal[
+                                                                          'imageUrl'] !=
+                                                                      null) ||
+                                                              currentUserPhoto
+                                                                  .isNotEmpty,
+                                                          child: Container(
+                                                            width: 100.0,
+                                                            height: 100.0,
+                                                            clipBehavior:
+                                                                Clip.antiAlias,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              shape: BoxShape
+                                                                  .circle,
+                                                            ),
+                                                            child:
+                                                                CachedNetworkImage(
+                                                              fadeInDuration:
+                                                                  Duration(
+                                                                      milliseconds:
+                                                                          500),
+                                                              fadeOutDuration:
+                                                                  Duration(
+                                                                      milliseconds:
+                                                                          500),
+                                                              imageUrl: (_model
+                                                                              .personal !=
+                                                                          null &&
+                                                                      _model.personal[
+                                                                              'imageUrl'] !=
+                                                                          null)
+                                                                  ? _model.personal[
+                                                                      'imageUrl']
+                                                                  : currentUserPhoto,
                                                               fit: BoxFit.cover,
                                                             ),
+                                                          )),
                                                 ),
                                               ),
                                             ),
@@ -221,15 +268,13 @@ class _EditProfileWidgetState extends State<EditProfileWidget> {
                                             },
                                             text: 'Editar Foto',
                                             options: FFButtonOptions(
-                                              width: 130,
-                                              height: 40,
                                               padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0, 0, 0, 0),
+                                                  .fromSTEB(16, 0, 16, 0),
                                               iconPadding: EdgeInsetsDirectional
                                                   .fromSTEB(0, 0, 0, 0),
                                               color:
                                                   FlutterFlowTheme.of(context)
-                                                      .primaryBackground,
+                                                      .secondaryBackground,
                                               textStyle:
                                                   FlutterFlowTheme.of(context)
                                                       .bodyMedium,
@@ -250,7 +295,8 @@ class _EditProfileWidgetState extends State<EditProfileWidget> {
                                               Expanded(
                                                 child: TextFormField(
                                                   maxLength: 100,
-                                                  textCapitalization: TextCapitalization.words,
+                                                  textCapitalization:
+                                                      TextCapitalization.words,
                                                   controller:
                                                       _model.textController1 ??=
                                                           TextEditingController(
@@ -275,7 +321,7 @@ class _EditProfileWidgetState extends State<EditProfileWidget> {
                                                       borderSide: BorderSide(
                                                         color: FlutterFlowTheme
                                                                 .of(context)
-                                                            .primaryBackground,
+                                                            .secondaryBackground,
                                                         width: 2.0,
                                                       ),
                                                       borderRadius:
@@ -322,9 +368,10 @@ class _EditProfileWidgetState extends State<EditProfileWidget> {
                                                               8.0),
                                                     ),
                                                     filled: true,
-                                                    fillColor: FlutterFlowTheme
-                                                            .of(context)
-                                                        .secondaryBackground,
+                                                    fillColor:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .primaryBackground,
                                                     contentPadding:
                                                         EdgeInsetsDirectional
                                                             .fromSTEB(
@@ -335,7 +382,15 @@ class _EditProfileWidgetState extends State<EditProfileWidget> {
                                                   ),
                                                   style: FlutterFlowTheme.of(
                                                           context)
-                                                      .bodyMedium,
+                                                      .bodyMedium
+                                                      .override(
+                                                        fontFamily:
+                                                            'Montserrat',
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .primaryText,
+                                                      ),
                                                   maxLines: null,
                                                   validator: _model
                                                       .textController1Validator
@@ -368,13 +423,13 @@ class _EditProfileWidgetState extends State<EditProfileWidget> {
                                                     hintStyle:
                                                         FlutterFlowTheme.of(
                                                                 context)
-                                                            .bodySmall,
+                                                            .labelMedium,
                                                     enabledBorder:
                                                         OutlineInputBorder(
                                                       borderSide: BorderSide(
                                                         color: FlutterFlowTheme
                                                                 .of(context)
-                                                            .primaryBackground,
+                                                            .secondaryBackground,
                                                         width: 2,
                                                       ),
                                                       borderRadius:
@@ -386,7 +441,7 @@ class _EditProfileWidgetState extends State<EditProfileWidget> {
                                                       borderSide: BorderSide(
                                                         color: FlutterFlowTheme
                                                                 .of(context)
-                                                            .primaryBackground,
+                                                            .secondaryBackground,
                                                         width: 2,
                                                       ),
                                                       borderRadius:
@@ -432,22 +487,25 @@ class _EditProfileWidgetState extends State<EditProfileWidget> {
                                                           BorderRadius.circular(
                                                               8),
                                                     ),
+                                                    contentPadding:
+                                                        EdgeInsetsDirectional
+                                                            .fromSTEB(
+                                                                20.0,
+                                                                24.0,
+                                                                20.0,
+                                                                24.0),
                                                   ),
-                                                  style: TextStyle(
-                                                      fontFamily:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .fontFamily,
-                                                      fontSize:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .fontSize,
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .secondaryText),
+                                                  style: FlutterFlowTheme.of(
+                                                          context)
+                                                      .bodyMedium
+                                                      .override(
+                                                        fontFamily:
+                                                            'Montserrat',
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .secondaryText,
+                                                      ),
                                                   maxLines: null,
                                                   validator: _model
                                                       .textController2Validator
@@ -455,170 +513,6 @@ class _EditProfileWidgetState extends State<EditProfileWidget> {
                                                 ),
                                               ),
                                             ],
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding:
-                                              EdgeInsetsDirectional.fromSTEB(
-                                                  0, 12, 0, 12),
-                                          child: FFButtonWidget(
-                                            onPressed: () async {
-                                              logFirebaseEvent(
-                                                  'EDIT_PROFILE_Button_Secondary_ON_TAP');
-                                              logFirebaseEvent(
-                                                  'Button_Secondary_haptic_feedback');
-                                              HapticFeedback.selectionClick();
-
-                                              if (_model.needUploadImage()) {
-                                                try {
-                                                  final result =
-                                                      await UploadImageCall
-                                                          .call(_model
-                                                              .imagePath!);
-
-                                                  final json =
-                                                      jsonDecode(result.body);
-                                                  _model.setMedia(json);
-                                                } catch (error) {
-                                                  showDialog(
-                                                    context: context,
-                                                    builder:
-                                                        (BuildContext context) {
-                                                      return AlertDialog(
-                                                        title: Text('Erro'),
-                                                        content: Text(
-                                                            'Ocorreu um erro ao fazer o upload da imagem. Por favor, tente novamente.'),
-                                                        actions: [
-                                                          TextButton(
-                                                            child:
-                                                                Text('Fechar'),
-                                                            onPressed: () {
-                                                              Navigator.of(
-                                                                      context)
-                                                                  .pop();
-                                                            },
-                                                          ),
-                                                        ],
-                                                      );
-                                                    },
-                                                  );
-                                                }
-                                              }
-
-                                              if (_model.textController1.text
-                                                  .trim()
-                                                  .isEmpty) {
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(
-                                                  SnackBar(
-                                                    content: Text(
-                                                      'Preencha os campos para prosseguir.',
-                                                      style: TextStyle(
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .primaryText,
-                                                      ),
-                                                    ),
-                                                    duration: Duration(
-                                                        milliseconds: 4000),
-                                                    backgroundColor:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .error,
-                                                  ),
-                                                );
-                                                return;
-                                              }
-
-                                              _model.setPersonal();
-
-                                              final result = await PumpGroup
-                                                  .updateUserCall
-                                                  .call(
-                                                      personal:
-                                                          _model.personal);
-
-                                              if (result.succeeded) {
-                                                logFirebaseEvent(
-                                                    'Button_navigate_back');
-                                                context.safePop();
-                                                logFirebaseEvent(
-                                                    'Button_show_snack_bar');
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(
-                                                  SnackBar(
-                                                    content: Text(
-                                                      'Perfil atualizado.',
-                                                      style: TextStyle(
-                                                        color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .primaryText,
-                                                      ),
-                                                    ),
-                                                    duration: Duration(
-                                                        milliseconds: 4000),
-                                                    backgroundColor:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .secondary,
-                                                  ),
-                                                );
-                                              } else {
-                                                logFirebaseEvent(
-                                                    'Button_alert_dialog');
-                                                await showDialog(
-                                                  context: context,
-                                                  builder:
-                                                      (alertDialogContext) {
-                                                    return AlertDialog(
-                                                      title: Text('Ooops'),
-                                                      content: Text(
-                                                          'Ocorreu um erro inesperado. Por favor, tente novamente.'),
-                                                      actions: [
-                                                        TextButton(
-                                                          onPressed: () =>
-                                                              Navigator.pop(
-                                                                  alertDialogContext),
-                                                          child: Text('Ok'),
-                                                        ),
-                                                      ],
-                                                    );
-                                                  },
-                                                );
-                                              }
-                                            },
-                                            text: 'Salvar',
-                                            options: FFButtonOptions(
-                                              width: 230,
-                                              height: 50,
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0, 0, 0, 0),
-                                              iconPadding: EdgeInsetsDirectional
-                                                  .fromSTEB(0, 0, 0, 0),
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .primary,
-                                              textStyle:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodySmall
-                                                      .override(
-                                                        fontFamily:
-                                                            'Lexend Deca',
-                                                        color: Colors.white,
-                                                        fontSize: 14,
-                                                        fontWeight:
-                                                            FontWeight.normal,
-                                                      ),
-                                              elevation: 3,
-                                              borderSide: BorderSide(
-                                                color: Colors.transparent,
-                                                width: 1,
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(25.0),
-                                            ),
                                           ),
                                         ),
                                       ],
@@ -632,62 +526,92 @@ class _EditProfileWidgetState extends State<EditProfileWidget> {
                       ],
                     ),
                   ),
-                  Visibility(
-                    visible: widget.showBackButton ?? true,
-                    child: Align(
-                      alignment: AlignmentDirectional(0, -0.87),
-                      child: Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Container(
-                                  width: 40,
-                                  height: 40,
-                                  decoration: BoxDecoration(
-                                    color: FlutterFlowTheme.of(context)
-                                        .primaryBackground,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        blurRadius: 4,
-                                        color: Color(0x520E151B),
-                                        offset: Offset(0, 2),
-                                      )
-                                    ],
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: FlutterFlowIconButton(
-                                    borderColor: Colors.transparent,
-                                    borderRadius: 20,
-                                    borderWidth: 1,
-                                    buttonSize: 40,
-                                    fillColor: FlutterFlowTheme.of(context)
-                                        .primaryBackground,
-                                    icon: Icon(
-                                      Icons.arrow_back_rounded,
-                                      color: FlutterFlowTheme.of(context)
-                                          .secondaryText,
-                                      size: 20,
-                                    ),
-                                    onPressed: () async {
-                                      logFirebaseEvent(
-                                          'EDIT_PROFILE_arrow_back_rounded_ICN_ON_T');
-                                      logFirebaseEvent(
-                                          'IconButton_navigate_back');
-                                      context.pop();
+                  BottomButtonFixedWidget(
+                    buttonTitle: 'Salvar',
+                    onPressed: () async {
+                      HapticFeedback.selectionClick();
+
+                      if (_model.needUploadImage()) {
+                        try {
+                          final result =
+                              await UploadImageCall.call(_model.imagePath!);
+
+                          final json = jsonDecode(result.body);
+                          _model.setMedia(json);
+                        } catch (error) {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('Erro'),
+                                content: Text(
+                                    'Ocorreu um erro ao fazer o upload da imagem. Por favor, tente novamente.'),
+                                actions: [
+                                  TextButton(
+                                    child: Text('Fechar'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
                                     },
                                   ),
+                                ],
+                              );
+                            },
+                          );
+                        }
+                      }
+
+                      if (_model.textController1.text.trim().isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              'Preencha os campos para prosseguir.',
+                              style: TextStyle(
+                                color: FlutterFlowTheme.of(context).primaryText,
+                              ),
+                            ),
+                            duration: Duration(milliseconds: 4000),
+                            backgroundColor: FlutterFlowTheme.of(context).error,
+                          ),
+                        );
+                        return;
+                      }
+
+                      _model.setPersonal();
+
+                      final result = await PumpGroup.updateUserCall
+                          .call(personal: _model.personal);
+
+                      if (result.succeeded) {
+                        await context.pushNamed(
+                          'Home',
+                          extra: <String, dynamic>{
+                            kTransitionInfoKey: TransitionInfo(
+                              hasTransition: true,
+                              transitionType: PageTransitionType.fade,
+                            ),
+                          },
+                        );
+                      } else {
+                        logFirebaseEvent('Button_alert_dialog');
+                        await showDialog(
+                          context: context,
+                          builder: (alertDialogContext) {
+                            return AlertDialog(
+                              title: Text('Ooops'),
+                              content: Text(
+                                  'Ocorreu um erro inesperado. Por favor, tente novamente.'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(alertDialogContext),
+                                  child: Text('Ok'),
                                 ),
                               ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                            );
+                          },
+                        );
+                      }
+                    },
                   ),
                 ],
               );

@@ -287,7 +287,7 @@ class _WorkoutSheetPickerWidgetState extends State<WorkoutSheetPickerWidget>
                                     );
                                   }
                                   return ListView.builder(
-                                    padding: EdgeInsets.zero,
+                                    padding: EdgeInsetsDirectional.fromSTEB(16, 16, 0, 16),
                                     primary: false,
                                     shrinkWrap: true,
                                     scrollDirection: Axis.vertical,

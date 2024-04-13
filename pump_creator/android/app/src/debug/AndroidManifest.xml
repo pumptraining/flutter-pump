@@ -4,4 +4,8 @@
          to allow setting breakpoints, to provide hot reload, etc.
     -->
     <uses-permission android:name="android.permission.INTERNET"/>
+
+    <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="312791141775351"/>
+   	<meta-data android:name="com.facebook.sdk.ClientToken" android:value="53b8fe2fd099566eb6e8833dce81dd44"/>
+
 </manifest>

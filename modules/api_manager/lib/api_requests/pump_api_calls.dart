@@ -46,10 +46,17 @@ class PumpGroup {
   static WorkoutRatingsCall workoutRatingsCall = WorkoutRatingsCall();
   static UserDeleteAccountCall userDeleteAccountCall = UserDeleteAccountCall();
   static PersonalReviewCall personalReviewCall = PersonalReviewCall();
-  static GetPersonalReviewsCall getPersonalReviewsCall = GetPersonalReviewsCall();
-  static UserPurchaseWorkoutSheetCall userPurchaseWorkoutSheetCall = UserPurchaseWorkoutSheetCall();
-  static ChangePersonalInviteCall changePersonalInviteCall = ChangePersonalInviteCall();
-  static UpdateUserFCMTokenCall updateUserFCMTokenCall = UpdateUserFCMTokenCall();
+  static GetPersonalReviewsCall getPersonalReviewsCall =
+      GetPersonalReviewsCall();
+  static UserPurchaseWorkoutSheetCall userPurchaseWorkoutSheetCall =
+      UserPurchaseWorkoutSheetCall();
+  static ChangePersonalInviteCall changePersonalInviteCall =
+      ChangePersonalInviteCall();
+  static UpdateUserFCMTokenCall updateUserFCMTokenCall =
+      UpdateUserFCMTokenCall();
+  static PersonalListCall personalListCall = PersonalListCall();
+  static NewUserWorkoutSheetCompletedCall newUserWorkoutSheetCompletedCall =
+      NewUserWorkoutSheetCompletedCall();
 }
 
 class AuthCall {
@@ -71,10 +78,9 @@ class AuthCall {
   }
 }
 
-class WorkoutDetailsCall {
-  Future<ApiCallResponse> call({
-    String? trainingId = '',
-  }) {
+class WorkoutDetailsCall extends Requestable {
+  @override
+  Future<ApiCallResponse> call({params}) {
     return ApiManager.instance.makeApiCall(
       callName: 'WorkoutDetails',
       apiUrl: '${PumpGroup.baseUrl}/trainingDetails',
@@ -83,7 +89,7 @@ class WorkoutDetailsCall {
         ...PumpGroup.headers,
       },
       params: {
-        'trainingId': '${trainingId}',
+        'trainingId': '${params['trainingId']}',
       },
       returnBody: true,
       encodeBodyUtf8: false,
@@ -119,14 +125,15 @@ class WorkoutDetailsCall {
       );
 }
 
-class CompleteWorkoutCall {
-  Future<ApiCallResponse> call({
-    String? trainingId = '',
-    String? userId = '',
-    DateTime? newDate,
-    int? totalSecondsTime = 0,
-  }) {
-    final DateTime effectiveDate = newDate ?? DateTime.now().toLocal();
+class CompleteWorkoutCall extends Requestable {
+  @override
+  Future<ApiCallResponse> call({params}) {
+    final trainingId = params['trainingId'];
+    final userId = params['userId'];
+    final totalSecondsTime = params['totalSecondsTime'];
+
+    final DateTime effectiveDate =
+        params['newDate'] ?? DateTime.now().toLocal();
     dynamic json = {};
     json['workoutId'] = trainingId;
     json['userId'] = userId;
@@ -197,11 +204,11 @@ class FeedbackCall {
   }
 }
 
-class UserActivityCall {
-  Future<ApiCallResponse> call({
-    String? userId = '',
-    int? time = 7,
-  }) {
+class UserActivityCall extends Requestable {
+  @override
+  Future<ApiCallResponse> call({dynamic params}) {
+    final userId = params['userId'] ?? currentUserUid;
+    final time = params['time'] ?? 7;
     return ApiManager.instance.makeApiCall(
       callName: 'WorkoutDetails',
       apiUrl: '${PumpGroup.baseUrl}/activity/user-activity',
@@ -210,8 +217,8 @@ class UserActivityCall {
         ...PumpGroup.headers,
       },
       params: {
-        'userId': '${userId}',
-        'time': '${time}',
+        'userId': '$userId',
+        'time': '$time',
       },
       returnBody: true,
       encodeBodyUtf8: false,
@@ -221,10 +228,9 @@ class UserActivityCall {
   }
 }
 
-class GetCompletedWorkoutCall {
-  Future<ApiCallResponse> call({
-    String? userId = '',
-  }) {
+class GetCompletedWorkoutCall extends Requestable {
+  @override
+  Future<ApiCallResponse> call({dynamic params}) {
     return ApiManager.instance.makeApiCall(
       callName: 'GetCompletedWorkoutCall',
       apiUrl: '${PumpGroup.baseUrl}/activity/completed-workouts',
@@ -233,7 +239,7 @@ class GetCompletedWorkoutCall {
         ...PumpGroup.headers,
       },
       params: {
-        'userId': '$userId',
+        'userId': params['userId'],
       },
       returnBody: true,
       encodeBodyUtf8: false,
@@ -243,8 +249,9 @@ class GetCompletedWorkoutCall {
   }
 }
 
-class HomeWorkoutFilterCall {
-  Future<ApiCallResponse> call() {
+class HomeWorkoutFilterCall extends Requestable {
+  @override
+  Future<ApiCallResponse> call({dynamic params}) {
     return ApiManager.instance.makeApiCall(
       callName: 'HomeWorkoutFilter',
       apiUrl: '${PumpGroup.baseUrl}/home-workout/filter-content',
@@ -261,8 +268,9 @@ class HomeWorkoutFilterCall {
   }
 }
 
-class HomeWorkoutsCall {
-  Future<ApiCallResponse> call() {
+class HomeWorkoutsCall extends Requestable {
+  @override
+  Future<ApiCallResponse> call({dynamic params}) {
     return ApiManager.instance.makeApiCall(
       callName: 'HomeWorkouts',
       apiUrl: '${PumpGroup.baseUrl}/home-workout/home',
@@ -279,13 +287,12 @@ class HomeWorkoutsCall {
   }
 }
 
-class CategoryListCall {
-  Future<ApiCallResponse> call({
-    String? forwardUri = '',
-  }) {
+class CategoryListCall extends Requestable {
+  @override
+  Future<ApiCallResponse> call({dynamic params}) {
     return ApiManager.instance.makeApiCall(
       callName: 'CategoryList',
-      apiUrl: '${PumpGroup.baseUrl}${forwardUri}',
+      apiUrl: '${PumpGroup.baseUrl}${params['forwardUri']}',
       callType: ApiCallType.GET,
       headers: {
         ...PumpGroup.headers,
@@ -355,8 +362,9 @@ ${personalJson}''';
   }
 }
 
-class HomeWorkoutSheetsCall {
-  Future<ApiCallResponse> call() {
+class HomeWorkoutSheetsCall extends Requestable {
+  @override
+  Future<ApiCallResponse> call({dynamic params}) {
     return ApiManager.instance.makeApiCall(
       callName: 'HomeWorkoutSheets',
       apiUrl: '${PumpGroup.baseUrl}/workout-sheet/home',
@@ -373,13 +381,12 @@ class HomeWorkoutSheetsCall {
   }
 }
 
-class PersonalDetailsCall {
-  Future<ApiCallResponse> call({
-    String? forwardUri = '',
-  }) {
+class PersonalDetailsCall extends Requestable {
+  @override
+  Future<ApiCallResponse> call({dynamic params}) {
     return ApiManager.instance.makeApiCall(
       callName: 'PersonalDetails',
-      apiUrl: '${PumpGroup.baseUrl}/$forwardUri',
+      apiUrl: '${PumpGroup.baseUrl}/${params['forwardUri']}',
       callType: ApiCallType.GET,
       headers: {
         ...PumpGroup.headers,
@@ -392,15 +399,13 @@ class PersonalDetailsCall {
   }
 }
 
-class WorkoutSheetDetailsCall {
-  Future<ApiCallResponse> call({
-    String? workoutId = '',
-    String? userId = '',
-  }) {
+class WorkoutSheetDetailsCall extends Requestable {
+  @override
+  Future<ApiCallResponse> call({dynamic params}) {
     return ApiManager.instance.makeApiCall(
       callName: 'WorkoutSheetDetails',
       apiUrl:
-          '${PumpGroup.baseUrl}/workout-sheet-details?id=$workoutId&userId=$userId',
+          '${PumpGroup.baseUrl}/workout-sheet-details?id=${params['workoutId']}&userId=${params['userId']}',
       callType: ApiCallType.GET,
       headers: {
         ...PumpGroup.headers,
@@ -469,7 +474,33 @@ class UserHomeCall extends Requestable {
 class UserWorkoutSheetCompletedCall extends Requestable {
   @override
   Future<ApiCallResponse> call({dynamic params}) {
-    var apiUrl = '${PumpGroup.baseUrl}/workout-sheet/user-workout-sheet-completed';
+    var apiUrl =
+        '${PumpGroup.baseUrl}/workout-sheet/user-workout-sheet-completed';
+    if (params != null && params['customerId'] != null) {
+      final customerId = params['customerId'];
+      apiUrl =
+          '${BaseGroup.baseUrl}/workout-sheet/user-workout-sheet-completed?customerId=$customerId';
+    }
+    return ApiManager.instance.makeApiCall(
+      callName: 'UserWorkoutSheetCompleted',
+      apiUrl: apiUrl,
+      callType: ApiCallType.GET,
+      headers: {
+        ...PumpGroup.headers,
+      },
+      params: {},
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+    );
+  }
+}
+
+class NewUserWorkoutSheetCompletedCall extends Requestable {
+  @override
+  Future<ApiCallResponse> call({dynamic params}) {
+    var apiUrl =
+        '${PumpGroup.baseUrl}/workout-sheet/new-user-workout-sheet-completed';
     if (params != null && params['customerId'] != null) {
       final customerId = params['customerId'];
       apiUrl =
@@ -516,10 +547,7 @@ class UserCancelledWorkoutSheetCall extends Requestable {
 
 class UserStartedWorkoutSheetCall extends Requestable {
   @override
-  Future<ApiCallResponse> call({
-    dynamic params
-  }) {
-
+  Future<ApiCallResponse> call({dynamic params}) {
     final jsonData = _serializeJson(params);
     final body = '''
       $jsonData''';
@@ -541,13 +569,13 @@ class UserStartedWorkoutSheetCall extends Requestable {
   }
 }
 
-class WorkoutRatingsCall {
-  Future<ApiCallResponse> call({
-    String? workoutId = '',
-  }) {
+class WorkoutRatingsCall extends Requestable {
+  @override
+  Future<ApiCallResponse> call({dynamic params}) {
     return ApiManager.instance.makeApiCall(
       callName: 'WorkoutRatings',
-      apiUrl: '${PumpGroup.baseUrl}/workout/ratings?workoutId=$workoutId',
+      apiUrl:
+          '${PumpGroup.baseUrl}/workout/ratings?workoutId=${params['workoutId']}',
       callType: ApiCallType.GET,
       headers: {
         ...PumpGroup.headers,
@@ -566,7 +594,8 @@ class GetPersonalReviewsCall extends Requestable {
     final personalId = params['personalId'];
     return ApiManager.instance.makeApiCall(
       callName: 'GetPersonalReviewsCall',
-      apiUrl: '${PumpGroup.baseUrl}/personal/get-reviews?personalId=$personalId',
+      apiUrl:
+          '${PumpGroup.baseUrl}/personal/get-reviews?personalId=$personalId',
       callType: ApiCallType.GET,
       headers: {
         ...PumpGroup.headers,
@@ -631,8 +660,11 @@ ${personalJson}''';
   }
 }
 
-class UserPurchaseWorkoutSheetCall {
-  Future<ApiCallResponse> call() {
+class UserPurchaseWorkoutSheetCall extends Requestable {
+  @override
+  Future<ApiCallResponse> call({
+    dynamic params,
+  }) {
     return ApiManager.instance.makeApiCall(
       callName: 'UserPurchaseWorkoutSheet',
       apiUrl: '${PumpGroup.baseUrl}/workout-sheet/user-purchases',
@@ -692,6 +724,24 @@ ${personalJson}''';
       params: {},
       bodyType: BodyType.JSON,
       body: body,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+}
+
+class PersonalListCall extends Requestable {
+  @override
+  Future<ApiCallResponse> call({dynamic params}) {
+    return ApiManager.instance.makeApiCall(
+      callName: 'PersonalList',
+      apiUrl: '${PumpGroup.baseUrl}/personal/personal-list',
+      callType: ApiCallType.GET,
+      headers: {
+        ...PumpGroup.headers,
+      },
       returnBody: true,
       encodeBodyUtf8: false,
       decodeUtf8: false,

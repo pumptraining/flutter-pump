@@ -10,7 +10,6 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_flow/common/user_settings.dart';
-import 'package:flutter_flow/common/utils.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'backend/firebase/firebase_config.dart';
@@ -18,10 +17,10 @@ import 'package:flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter_flow/internationalization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
 import 'flutter_flow/nav/nav.dart';
 import 'index.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -103,6 +102,7 @@ Future<void> _setupRemoteConfig() async {
   ));
 
   await remoteConfig.setDefaults(const {"show_subscribe_view": true});
+  await remoteConfig.setDefaults(const {"show_user_feedback": true});
   await remoteConfig.fetchAndActivate();
 
   remoteConfig.onConfigUpdated.listen((event) async {
@@ -149,10 +149,12 @@ class _MyAppState extends State<MyApp> {
     userStream = pumpCreatorFirebaseUserStream()
       ..listen((user) => _appStateNotifier.update(user));
     jwtTokenStream.listen((_) {});
-    setThemeMode(_themeMode);
     Future.delayed(
       Duration(seconds: 1),
-      () => _appStateNotifier.stopShowingSplashImage(),
+      () {
+        _appStateNotifier.stopShowingSplashImage();
+        setThemeMode(_themeMode);
+      },
     );
 
     FirebaseAuth.instance.userChanges().listen((User? user) {
@@ -188,7 +190,10 @@ class _MyAppState extends State<MyApp> {
         GlobalCupertinoLocalizations.delegate,
       ],
       locale: _locale,
-      supportedLocales: const [Locale('en', ''), Locale('pt', 'BR'),],
+      supportedLocales: const [
+        Locale('en', ''),
+        Locale('pt', 'BR'),
+      ],
       theme: ThemeData(brightness: Brightness.light, useMaterial3: false),
       darkTheme: ThemeData(brightness: Brightness.dark, useMaterial3: false),
       themeMode: _themeMode,
@@ -224,63 +229,77 @@ class _NavBarPageState extends State<NavBarPage> {
     final tabs = {
       'Home': HomeWidget(),
       'HomeWorkoutSheets': HomeWorkoutSheetsWidget(),
-      'HomeWorkout': HomeWorkoutWidget(),
       'Activity': ActivityWidget(),
-      'Profile': ProfileWidget(),
     };
     final currentIndex = tabs.keys.toList().indexOf(_currentPageName);
+    final MediaQueryData queryData = MediaQuery.of(context);
 
     return Scaffold(
-      body: _currentPage ?? tabs[_currentPageName],
-      bottomNavigationBar: GNav(
-        selectedIndex: currentIndex,
-        onTabChange: (i) => setState(() {
+      body: MediaQuery(
+          data: queryData
+              .removeViewInsets(removeBottom: true)
+              .removeViewPadding(removeBottom: true),
+          child: _currentPage ?? tabs[_currentPageName]!),
+      extendBody: true,
+      bottomNavigationBar: FloatingNavbar(
+        currentIndex: currentIndex,
+        onTap: (i) => setState(() {
           _currentPage = null;
           _currentPageName = tabs.keys.toList()[i];
         }),
-        backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
-        color: FlutterFlowTheme.of(context).secondaryText,
-        activeColor: FlutterFlowTheme.of(context).info,
-        tabBackgroundColor: FlutterFlowTheme.of(context).primary,
-        tabBorderRadius: 100.0,
-        tabMargin: EdgeInsetsDirectional.fromSTEB(
-            8.0,
-            12.0,
-            8.0,
-            Utils.getBottomSafeArea(context) != 0
-                ? Utils.getBottomSafeArea(context)
-                : 12),
-        padding: EdgeInsetsDirectional.fromSTEB(8.0, 8.0, 8.0, 8.0),
-        gap: 8.0,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        duration: Duration(milliseconds: 500),
-        haptic: true,
-        tabs: [
-          GButton(
-            icon: currentIndex == 0 ? Icons.home_sharp : Icons.home_sharp,
-            text: 'Home',
-            iconSize: 24.0,
+        backgroundColor: Colors.white,
+        selectedItemColor: FlutterFlowTheme.of(context).primaryBackground,
+        unselectedItemColor: FlutterFlowTheme.of(context).secondaryText,
+        selectedBackgroundColor: Color(0x00000000),
+        borderRadius: 50.0,
+        itemBorderRadius: 8.0,
+        margin: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
+        padding: EdgeInsets.all(12.0),
+        width: double.infinity,
+        elevation: 0.0,
+        items: [
+          FloatingNavbarItem(
+            customWidget: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  currentIndex == 0 ? Icons.home_sharp : Icons.home_sharp,
+                  color: currentIndex == 0
+                      ? FlutterFlowTheme.of(context).primaryBackground
+                      : FlutterFlowTheme.of(context).secondaryText,
+                  size: currentIndex == 0 ? 24.0 : 24.0,
+                ),
+              ],
+            ),
           ),
-          GButton(
-            icon: Icons.featured_play_list_rounded,
-            text: 'Programas',
-            iconSize: 24.0,
+          FloatingNavbarItem(
+            customWidget: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.explore_rounded,
+                  color: currentIndex == 1
+                      ? FlutterFlowTheme.of(context).primaryBackground
+                      : FlutterFlowTheme.of(context).secondaryText,
+                  size: 24.0,
+                ),
+              ],
+            ),
           ),
-          GButton(
-            icon: Icons.fitness_center,
-            text: 'Treinos',
-            iconSize: 24.0,
+          FloatingNavbarItem(
+            customWidget: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.bar_chart_outlined,
+                  color: currentIndex == 2
+                      ? FlutterFlowTheme.of(context).primaryBackground
+                      : FlutterFlowTheme.of(context).secondaryText,
+                  size: 24.0,
+                ),
+              ],
+            ),
           ),
-          GButton(
-            icon: Icons.bar_chart_outlined,
-            text: 'Atividades',
-            iconSize: 24.0,
-          ),
-          GButton(
-            icon: Icons.person,
-            text: 'Perfil',
-            iconSize: 24.0,
-          )
         ],
       ),
     );

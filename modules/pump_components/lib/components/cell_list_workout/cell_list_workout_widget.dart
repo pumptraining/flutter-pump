@@ -22,6 +22,7 @@ class CellListWorkoutWidget extends StatefulWidget {
     required this.titleImage,
     required this.onTap,
     required this.onDetailTap,
+    this.isCheck,
   }) : super(key: key);
 
   final String title;
@@ -35,6 +36,7 @@ class CellListWorkoutWidget extends StatefulWidget {
   final String time;
   final String titleImage;
   final Color levelColor;
+  final bool? isCheck;
   final void Function(String) onTap;
   final void Function(String) onDetailTap;
 
@@ -68,10 +70,6 @@ class _CellListWorkoutWidgetState extends State<CellListWorkoutWidget> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      splashColor: Colors.transparent,
-      focusColor: Colors.transparent,
-      hoverColor: Colors.transparent,
-      highlightColor: Colors.transparent,
       onTap: () async {
         widget.onTap(widget.workoutId);
       },
@@ -79,8 +77,8 @@ class _CellListWorkoutWidgetState extends State<CellListWorkoutWidget> {
         Padding(
           padding: EdgeInsetsDirectional.fromSTEB(8.0, 0.0, 0.0, 0.0),
           child: Container(
-            width: 80.0,
-            height: 80.0,
+            width: 60.0,
+            height: 60.0,
             child: Stack(
               children: [
                 ClipRRect(
@@ -88,21 +86,25 @@ class _CellListWorkoutWidgetState extends State<CellListWorkoutWidget> {
                   child: widget.imageUrl.isNotEmpty
                       ? CachedNetworkImage(
                           imageUrl: widget.imageUrl,
-                          width: 80.0,
-                          height: 80.0,
+                          width: 60.0,
+                          height: 60.0,
+                          fadeInDuration: Duration(milliseconds: 500),
+                          fadeOutDuration: Duration(milliseconds: 500),
+                          maxHeightDiskCache: 200,
+                          memCacheHeight: 150,
                           fit: BoxFit.cover,
                         )
                       : Container(
-                          width: 80.0,
-                          height: 80.0,
+                          width: 60.0,
+                          height: 60.0,
                           color:
                               FlutterFlowTheme.of(context).primaryBackground),
                 ),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8.0),
                   child: Container(
-                    width: 80.0,
-                    height: 80.0,
+                    width: 60.0,
+                    height: 60.0,
                     decoration: BoxDecoration(
                       color: Color(0x331A1F24),
                     ),
@@ -116,30 +118,15 @@ class _CellListWorkoutWidgetState extends State<CellListWorkoutWidget> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              widget.time,
+                              '${widget.time}\'',
                               style: FlutterFlowTheme.of(context)
                                   .headlineMedium
                                   .override(
-                                    fontFamily: 'Poppins',
-                                    lineHeight: 1.0,
+                                    fontFamily: 'Montserrat',
                                     color: Colors.white,
                                   ),
                             ),
                           ],
-                        ),
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(6, 0, 6, 0),
-                          child: AutoSizeText(
-                            widget.titleImage,
-                            maxLines: 1,
-                            style: FlutterFlowTheme.of(context)
-                                .titleMedium
-                                .override(
-                                  fontFamily: 'Poppins',
-                                  lineHeight: 1.0,
-                                  color: Colors.white,
-                                ),
-                          ),
                         ),
                       ],
                     ),
@@ -158,31 +145,37 @@ class _CellListWorkoutWidgetState extends State<CellListWorkoutWidget> {
               mainAxisSize: MainAxisSize.max,
               children: [
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 12.0, 0.0, 0.0),
+                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 12.0, 16.0, 0.0),
                   child: AutoSizeText(
                     widget.title,
                     maxLines: 3,
-                    style: FlutterFlowTheme.of(context).bodyMedium,
+                    style: FlutterFlowTheme.of(context)
+                        .bodyMedium
+                        .override(fontFamily: 'Montserrat'),
                   ),
                 ),
                 Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 16.0, 0.0),
                   child: AutoSizeText(
-                    widget.subtitle,
+                    widget.subtitle.toLowerCase(),
                     maxLines: 3,
-                    style: FlutterFlowTheme.of(context).bodySmall.override(
-                          fontFamily: 'Poppins',
+                    style: FlutterFlowTheme.of(context).titleSmall.override(
+                          fontFamily: 'Montserrat',
                           color: FlutterFlowTheme.of(context).secondaryText,
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.w300,
                         ),
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
+                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 12.0),
                   child: AutoSizeText(
-                    widget.level,
-                    style: FlutterFlowTheme.of(context).bodySmall.override(
-                          fontFamily: 'Poppins',
+                    widget.level.toLowerCase(),
+                    style: FlutterFlowTheme.of(context).titleSmall.override(
+                          fontFamily: 'Montserrat',
                           color: widget.levelColor,
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.w300,
                         ),
                   ),
                 ),
@@ -190,7 +183,7 @@ class _CellListWorkoutWidgetState extends State<CellListWorkoutWidget> {
             ),
           ),
         ),
-        if (widget.isPicker)
+        if (widget.isPicker || ((widget.isCheck ?? false) && widget.isSelected))
           Padding(
             padding: EdgeInsetsDirectional.fromSTEB(0.0, 12.0, 0.0, 12.0),
             child: Column(
@@ -198,42 +191,54 @@ class _CellListWorkoutWidgetState extends State<CellListWorkoutWidget> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Theme(
-                    data: ThemeData(
-                      checkboxTheme: CheckboxThemeData(
-                        shape: widget.isSingleSelection
-                            ? CircleBorder()
-                            : RoundedRectangleBorder(),
-                      ),
-                      unselectedWidgetColor:
-                          FlutterFlowTheme.of(context).primaryBackground,
-                    ),
-                    child: Checkbox(
-                      value: widget.isSelected,
-                      onChanged: (newValue) async {
-                        setState(() => widget.onTap(widget.workoutId));
-                      },
-                      activeColor: FlutterFlowTheme.of(context).primary,
-                    ),
-                  ),
-                  Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 6.0, 0.0),
-                      child: FlutterFlowIconButton(
-                          borderColor: Colors.transparent,
-                          borderRadius: 30,
-                          borderWidth: 1,
-                          buttonSize: 34,
-                          fillColor: Colors.white,
-                          icon: Icon(
-                            Icons.arrow_forward,
-                            color:
-                                FlutterFlowTheme.of(context).primaryBackground,
+                  (widget.isCheck ?? false)
+                      ? Padding(
+                          padding: EdgeInsets.only(right: 24),
+                          child: Icon(
+                            Icons.check_outlined,
                             size: 16,
+                            color: FlutterFlowTheme.of(context).primary,
                           ),
-                          onPressed: () {
-                            widget.onDetailTap(widget.workoutId);
-                          })),
+                        )
+                      : Theme(
+                          data: ThemeData(
+                            checkboxTheme: CheckboxThemeData(
+                              shape: widget.isSingleSelection
+                                  ? CircleBorder()
+                                  : RoundedRectangleBorder(),
+                            ),
+                            unselectedWidgetColor: FlutterFlowTheme.of(context)
+                                .secondaryBackground,
+                          ),
+                          child: Checkbox(
+                            value: widget.isSelected,
+                            onChanged: (newValue) async {
+                              setState(() => widget.onTap(widget.workoutId));
+                            },
+                            activeColor: FlutterFlowTheme.of(context).primary,
+                          ),
+                        ),
+                  Visibility(
+                    visible: widget.isPicker,
+                    child: Padding(
+                        padding:
+                            EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 6.0, 0.0),
+                        child: FlutterFlowIconButton(
+                            borderColor: Colors.transparent,
+                            borderRadius: 30,
+                            borderWidth: 1,
+                            buttonSize: 34,
+                            fillColor: Colors.white,
+                            icon: Icon(
+                              Icons.arrow_forward,
+                              color: FlutterFlowTheme.of(context)
+                                  .primaryBackground,
+                              size: 16,
+                            ),
+                            onPressed: () {
+                              widget.onDetailTap(widget.workoutId);
+                            })),
+                  ),
                 ]),
           ),
       ]),

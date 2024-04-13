@@ -333,8 +333,8 @@ class _CustomerDetailsWidgetState extends State<CustomerDetailsWidget>
                                     alignment: AlignmentDirectional(0, 0),
                                     child: Card(
                                       clipBehavior: Clip.antiAliasWithSaveLayer,
-                                      color:
-                                          FlutterFlowTheme.of(context).secondaryBackground,
+                                      color: FlutterFlowTheme.of(context)
+                                          .secondaryBackground,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(40),
                                       ),
@@ -343,7 +343,8 @@ class _CustomerDetailsWidgetState extends State<CustomerDetailsWidget>
                                             12, 12, 12, 12),
                                         child: Icon(
                                           Icons.fitness_center,
-                                          color: FlutterFlowTheme.of(context).primaryText,
+                                          color: FlutterFlowTheme.of(context)
+                                              .primaryText,
                                           size: 24,
                                         ),
                                       ),
@@ -434,8 +435,8 @@ class _CustomerDetailsWidgetState extends State<CustomerDetailsWidget>
                                     alignment: AlignmentDirectional(0, 0),
                                     child: Card(
                                       clipBehavior: Clip.antiAliasWithSaveLayer,
-                                      color:
-                                          FlutterFlowTheme.of(context).secondaryBackground,
+                                      color: FlutterFlowTheme.of(context)
+                                          .secondaryBackground,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(40),
                                       ),
@@ -444,7 +445,8 @@ class _CustomerDetailsWidgetState extends State<CustomerDetailsWidget>
                                             12, 12, 12, 12),
                                         child: Icon(
                                           Icons.featured_play_list,
-                                          color: FlutterFlowTheme.of(context).primaryText,
+                                          color: FlutterFlowTheme.of(context)
+                                              .primaryText,
                                           size: 24,
                                         ),
                                       ),
@@ -683,7 +685,7 @@ class _CustomerDetailsWidgetState extends State<CustomerDetailsWidget>
         message:
             "\nO aluno ainda não se cadastrou no App Pump para receber os treinos.\n\nQuer compartilhar o convite?",
         onButtonPressed: () async {
-          String text = 'https://pumpapp.com.br';
+          String text = 'https://https://pump-personal-trainer.webflow.io/';
           String subject = 'Pump Training: Cadastre-se!';
 
           await Share.share('$subject\n$text');

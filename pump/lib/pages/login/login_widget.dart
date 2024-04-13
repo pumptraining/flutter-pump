@@ -795,8 +795,7 @@ class _LoginWidgetState extends State<LoginWidget>
                                 ),
                               ),
                             ),
-                          ).animateOnPageLoad(
-                              animationsMap['containerOnPageLoadAnimation']!),
+                          ),
                         ),
                       ],
                     ),

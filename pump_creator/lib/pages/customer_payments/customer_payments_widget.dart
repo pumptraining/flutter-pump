@@ -472,7 +472,7 @@ class _CustomerPaymentsWidgetState extends State<CustomerPaymentsWidget>
                         InkWell(
                           onTap: () async {
                             await launchURL(
-                                'https://pumpapp.com.br/termos-de-uso');
+                                'https://pump-personal-trainer.webflow.io/termos-de-uso');
                           },
                           child: Expanded(
                             child: Padding(

@@ -123,11 +123,12 @@ class WorkoutFilterModel extends FlutterFlowModel {
         (choiceChipsValueController3?.value?.length ?? 0) +
         (choiceChipsValueController4?.value?.length ?? 0);
 
-    if (filterCount == 0 && filteredWorkouts.length == homeFilter['workouts'].length) {
+    if (filterCount == 0 &&
+        filteredWorkouts.length == homeFilter['workouts'].length) {
       return 'Aplicar';
-    } 
+    }
 
-    return 'Ver ${filteredWorkouts.length} Treinos';
+    return '${filteredWorkouts.length} Treinos';
   }
 
   bool applyButtonIsEnabled() {

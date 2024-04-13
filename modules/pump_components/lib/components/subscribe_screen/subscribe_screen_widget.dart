@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:api_manager/api_requests/pump_creator_api_calls.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_flow/common/event_logger.dart';
 import 'package:flutter_flow/flutter_flow_icon_button.dart';
 import 'package:flutter_flow/flutter_flow_model.dart';
 import 'package:flutter_flow/flutter_flow_theme.dart';
@@ -83,11 +86,15 @@ class _SubscribeScreenWidgetState extends State<SubscribeScreenWidget> {
         ),
       );
 
+      unawaited(EventLogger.instance.logAddToCart(
+          id: data['paymentIntent'],
+          type: 'personal_subscribe',
+          price: data['amount'] ?? 0.0));
+
       displayPaymentSheet();
     } catch (e) {
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   SnackBar(content: Text('Error: $e')),
-      // );
+      unawaited(EventLogger.instance.logEvent('cancel_payment',
+          parameters: {'type': 'personal_subscribe'}));
     }
   }
 
@@ -95,7 +102,10 @@ class _SubscribeScreenWidgetState extends State<SubscribeScreenWidget> {
     try {
       await Stripe.instance.presentPaymentSheet().then((value) async {
         context.pop(true);
+        unawaited(EventLogger.instance.logPurchase());
       }).onError((error, stackTrace) {
+        unawaited(EventLogger.instance.logEvent('payment_error',
+          parameters: {'type': 'personal_subscribe'}));
         throw Exception(error);
       });
     } on StripeException catch (_) {
@@ -103,8 +113,12 @@ class _SubscribeScreenWidgetState extends State<SubscribeScreenWidget> {
         SnackBar(
             content: Text('Falha no pagamento. Por favor, tente novamente.')),
       );
+      unawaited(EventLogger.instance.logEvent('payment_error',
+          parameters: {'type': 'personal_subscribe'}));
     } catch (e) {
       debugPrint('$e');
+      unawaited(EventLogger.instance.logEvent('payment_error',
+          parameters: {'type': 'personal_subscribe'}));
     }
   }
 
@@ -125,7 +139,7 @@ class _SubscribeScreenWidgetState extends State<SubscribeScreenWidget> {
           : FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
+        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
         body: Stack(
           children: [
             Align(
@@ -141,7 +155,7 @@ class _SubscribeScreenWidgetState extends State<SubscribeScreenWidget> {
                         height: 255.0,
                         decoration: BoxDecoration(
                           color:
-                              FlutterFlowTheme.of(context).secondaryBackground,
+                              FlutterFlowTheme.of(context).primaryBackground,
                           image: DecorationImage(
                             fit: BoxFit.cover,
                             image: CachedNetworkImageProvider(
@@ -347,7 +361,7 @@ class _SubscribeScreenWidgetState extends State<SubscribeScreenWidget> {
                         alignment: AlignmentDirectional(-1.0, 0.0),
                         child: Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(
-                              24.0, 0.0, 24.0, 0.0),
+                              24.0, 6.0, 24.0, 0.0),
                           child: AutoSizeText(
                             'Assine agora e ganhe mais agilidade na gestão de treinos e alunos',
                             textAlign: TextAlign.start,
@@ -402,7 +416,7 @@ class _SubscribeScreenWidgetState extends State<SubscribeScreenWidget> {
                                                 color:
                                                     FlutterFlowTheme.of(context)
                                                         .primary,
-                                                fontSize: 19.0,
+                                                fontSize: 18.0,
                                                 fontWeight: FontWeight.normal,
                                               ),
                                         ),
@@ -434,7 +448,7 @@ class _SubscribeScreenWidgetState extends State<SubscribeScreenWidget> {
                         thickness: 1.0,
                         indent: 56.0,
                         endIndent: 24.0,
-                        color: FlutterFlowTheme.of(context).primaryBackground,
+                        color: FlutterFlowTheme.of(context).secondaryBackground,
                       ),
                       Row(
                         mainAxisSize: MainAxisSize.max,
@@ -472,7 +486,7 @@ class _SubscribeScreenWidgetState extends State<SubscribeScreenWidget> {
                                               color:
                                                   FlutterFlowTheme.of(context)
                                                       .primary,
-                                              fontSize: 19.0,
+                                              fontSize: 18.0,
                                               fontWeight: FontWeight.normal,
                                             ),
                                       ),
@@ -503,7 +517,7 @@ class _SubscribeScreenWidgetState extends State<SubscribeScreenWidget> {
                         thickness: 1.0,
                         indent: 56.0,
                         endIndent: 24.0,
-                        color: FlutterFlowTheme.of(context).primaryBackground,
+                        color: FlutterFlowTheme.of(context).secondaryBackground,
                       ),
                       Row(
                         mainAxisSize: MainAxisSize.max,
@@ -533,7 +547,7 @@ class _SubscribeScreenWidgetState extends State<SubscribeScreenWidget> {
                                   text: TextSpan(
                                     children: [
                                       TextSpan(
-                                        text: 'Programas de treino\n',
+                                        text: 'Programas de Treino\n',
                                         style: FlutterFlowTheme.of(context)
                                             .bodyMedium
                                             .override(
@@ -541,7 +555,7 @@ class _SubscribeScreenWidgetState extends State<SubscribeScreenWidget> {
                                               color:
                                                   FlutterFlowTheme.of(context)
                                                       .primary,
-                                              fontSize: 19.0,
+                                              fontSize: 18.0,
                                               fontWeight: FontWeight.normal,
                                             ),
                                       ),
@@ -572,7 +586,7 @@ class _SubscribeScreenWidgetState extends State<SubscribeScreenWidget> {
                         thickness: 1.0,
                         indent: 56.0,
                         endIndent: 24.0,
-                        color: FlutterFlowTheme.of(context).primaryBackground,
+                        color: FlutterFlowTheme.of(context).secondaryBackground,
                       ),
                       Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 32),
@@ -612,7 +626,7 @@ class _SubscribeScreenWidgetState extends State<SubscribeScreenWidget> {
                                                 color:
                                                     FlutterFlowTheme.of(context)
                                                         .primary,
-                                                fontSize: 19.0,
+                                                fontSize: 18.0,
                                                 fontWeight: FontWeight.normal,
                                               ),
                                         ),
@@ -695,10 +709,10 @@ class _SubscribeScreenWidgetState extends State<SubscribeScreenWidget> {
                 width: MediaQuery.sizeOf(context).width * 1.0,
                 height: 110.0,
                 decoration: BoxDecoration(
-                  color: FlutterFlowTheme.of(context).primaryBackground,
+                  color: FlutterFlowTheme.of(context).secondaryBackground,
                   boxShadow: [
                     BoxShadow(
-                      blurRadius: 5.0,
+                      blurRadius: 20.0,
                       color: FlutterFlowTheme.of(context).primary,
                       offset: Offset(0.0, -1.0),
                     )

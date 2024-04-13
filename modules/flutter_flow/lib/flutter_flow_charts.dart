@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_flow/flutter_flow_theme.dart';
 import 'package:intl/intl.dart';
 
 export 'flutter_flow_charts.dart';
@@ -32,8 +33,24 @@ class FlutterFlowLineChart extends StatelessWidget {
           lineTouchData: LineTouchData(
             handleBuiltInTouches: chartStylingInfo.enableTooltip,
             touchTooltipData: LineTouchTooltipData(
-              tooltipBgColor: chartStylingInfo.tooltipBackgroundColor,
-            ),
+                getTooltipItems: (touchedSpots) {
+                  return touchedSpots.map((LineBarSpot touchedSpot) {
+                    final textStyle = FlutterFlowTheme.of(context)
+                        .bodyMedium
+                        .override(
+                          fontFamily: 'Montserrat',
+                          color: FlutterFlowTheme.of(context).primaryBackground,
+                          fontWeight: FontWeight.normal,
+                        );
+                    final value = touchedSpot.y.toInt();
+                    final title =
+                        value == 0 ? '-' : '${touchedSpot.y.toInt()}min';
+                    return LineTooltipItem(title, textStyle);
+                  }).toList();
+                },
+                tooltipBgColor: chartStylingInfo.tooltipBackgroundColor,
+                fitInsideHorizontally: true,
+                fitInsideVertically: true),
           ),
           gridData: FlGridData(show: chartStylingInfo.showGrid),
           borderData: FlBorderData(
@@ -240,10 +257,8 @@ class FlutterFlowPieChart extends StatelessWidget {
                     ? data.radius.first
                     : data.radius[index],
                 borderSide: BorderSide(
-                  color: (otherPropsLength == 1
-                          ? data.borderColor?.first
-                          : data.borderColor?.elementAt(index)) ??
-                      Colors.transparent,
+                  color:
+                      data.borderColor?.elementAt(index) ?? Colors.transparent,
                   width: (otherPropsLength == 1
                           ? data.borderWidth?.first
                           : data.borderWidth?.elementAt(index)) ??

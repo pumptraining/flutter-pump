@@ -135,20 +135,114 @@ class _AddCustomerWidgetState extends State<AddCustomerWidget> {
   }
 
   Widget buildContent(BuildContext context) {
-    return GestureDetector(onTap: () {
-      if (_model.textFieldFocusNode1 != null && _model.textFieldFocusNode1!.hasFocus) {
-        _model.textFieldFocusNode1!.unfocus();
-      }
-    },
-    child: Stack(
-      children: [
-        SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Visibility(
-                visible: !_model.isEdit,
-                child: Padding(
+    return GestureDetector(
+      onTap: () {
+        if (_model.textFieldFocusNode1 != null &&
+            _model.textFieldFocusNode1!.hasFocus) {
+          _model.textFieldFocusNode1!.unfocus();
+        }
+      },
+      child: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Visibility(
+                  visible: !_model.isEdit,
+                  child: Padding(
+                    padding:
+                        EdgeInsetsDirectional.fromSTEB(16.0, 24.0, 16.0, 0.0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              0.0, 16.0, 0.0, 0.0),
+                          child: Text(
+                            'Informações do aluno',
+                            style: FlutterFlowTheme.of(context).bodyLarge,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: !_model.isEdit,
+                  child: Padding(
+                    padding:
+                        EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                0.0, 16.0, 0.0, 0.0),
+                            child: TextFormField(
+                              controller: _model.textController1,
+                              focusNode: _model.textFieldFocusNode1,
+                              obscureText: false,
+                              autocorrect: false,
+                              decoration: InputDecoration(
+                                labelText: 'E-mail',
+                                labelStyle:
+                                    FlutterFlowTheme.of(context).labelMedium,
+                                hintStyle:
+                                    FlutterFlowTheme.of(context).labelMedium,
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: FlutterFlowTheme.of(context)
+                                        .primaryBackground,
+                                    width: 2.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: FlutterFlowTheme.of(context).primary,
+                                    width: 2.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: FlutterFlowTheme.of(context).error,
+                                    width: 2.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                focusedErrorBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: FlutterFlowTheme.of(context).error,
+                                    width: 2.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                filled: true,
+                                fillColor: FlutterFlowTheme.of(context)
+                                    .secondaryBackground,
+                              ),
+                              style: FlutterFlowTheme.of(context).bodyMedium,
+                              maxLength: 200,
+                              maxLengthEnforcement: MaxLengthEnforcement.none,
+                              buildCounter: (context,
+                                      {required currentLength,
+                                      required isFocused,
+                                      maxLength}) =>
+                                  null,
+                              keyboardType: TextInputType.emailAddress,
+                              validator: _model.textController1Validator
+                                  .asValidator(context),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Padding(
                   padding:
                       EdgeInsetsDirectional.fromSTEB(16.0, 24.0, 16.0, 0.0),
                   child: Row(
@@ -158,228 +252,150 @@ class _AddCustomerWidgetState extends State<AddCustomerWidget> {
                         padding:
                             EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
                         child: Text(
-                          'Informações do aluno',
+                          'Selecione as tags',
                           style: FlutterFlowTheme.of(context).bodyLarge,
                         ),
                       ),
                     ],
                   ),
                 ),
-              ),
-              Visibility(
-                visible: !_model.isEdit,
-                child: Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(16.0, 8.0, 16.0, 0.0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Flexible(
+                        child: Text(
+                          'Facilite a gestão e acompanhamento, atribuindo tags de nível, objetivo e preferências',
+                          style: FlutterFlowTheme.of(context)
+                              .bodySmall
+                              .override(
+                                fontFamily: 'Poppins',
+                                color:
+                                    FlutterFlowTheme.of(context).secondaryText,
+                                fontSize: 12.0,
+                              ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(16, 24.0, 16.0, 0.0),
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       Expanded(
                         child: Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 16.0, 0.0, 0.0),
-                          child: TextFormField(
-                            controller: _model.textController1,
-                            focusNode: _model.textFieldFocusNode1,
-                            obscureText: false,
-                            autocorrect: false,
-                            decoration: InputDecoration(
-                              labelText: 'E-mail',
-                              labelStyle:
-                                  FlutterFlowTheme.of(context).labelMedium,
-                              hintStyle:
-                                  FlutterFlowTheme.of(context).labelMedium,
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: FlutterFlowTheme.of(context)
-                                      .primaryBackground,
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: FlutterFlowTheme.of(context).primary,
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              errorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: FlutterFlowTheme.of(context).error,
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              focusedErrorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: FlutterFlowTheme.of(context).error,
-                                  width: 2.0,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              filled: true,
-                              fillColor: FlutterFlowTheme.of(context)
-                                  .secondaryBackground,
-                            ),
-                            style: FlutterFlowTheme.of(context).bodyMedium,
-                            maxLength: 200,
-                            maxLengthEnforcement: MaxLengthEnforcement.none,
-                            buildCounter: (context,
-                                    {required currentLength,
-                                    required isFocused,
-                                    maxLength}) =>
-                                null,
-                            keyboardType: TextInputType.emailAddress,
-                            validator: _model.textController1Validator
-                                .asValidator(context),
+                          padding: EdgeInsetsDirectional.fromSTEB(0, 8, 8, 16),
+                          child: Wrap(
+                            spacing: 6.0,
+                            runSpacing: 6.0,
+                            children: _model.tags!.map((element) {
+                              return TagComponentWidget(
+                                alpha: 0.4,
+                                title: element.title,
+                                tagColor: element.color,
+                                selected: element.isSelected,
+                                maxHeight: 28,
+                                borderRadius: 14,
+                                onTagPressed: () {
+                                  setState(() {
+                                    element.isSelected = !element.isSelected;
+                                  });
+                                },
+                              );
+                            }).toList(),
                           ),
                         ),
                       ),
                     ],
                   ),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(16.0, 24.0, 16.0, 0.0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Padding(
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 32.0, 0.0, 0.0),
+                  child: FFButtonWidget(
+                    onPressed: () async {
+                      _dialogBuilder(context);
+                    },
+                    text: 'Nova Tag',
+                    icon: Icon(
+                      Icons.add,
+                      size: 20,
+                    ),
+                    options: FFButtonOptions(
+                      height: 40.0,
                       padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
-                      child: Text(
-                        'Selecione as tags',
-                        style: FlutterFlowTheme.of(context).bodyLarge,
+                          EdgeInsetsDirectional.fromSTEB(8.0, 0.0, 16.0, 0.0),
+                      iconPadding:
+                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                      color: FlutterFlowTheme.of(context).primaryText,
+                      textStyle: FlutterFlowTheme.of(context)
+                          .titleSmall
+                          .override(
+                            fontFamily: 'Poppins',
+                            color:
+                                FlutterFlowTheme.of(context).primaryBackground,
+                            fontSize: 14.0,
+                          ),
+                      elevation: 3.0,
+                      borderSide: BorderSide(
+                        color: FlutterFlowTheme.of(context).primaryText,
+                        width: 1.0,
                       ),
+                      borderRadius: BorderRadius.circular(20.0),
                     ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(16.0, 8.0, 16.0, 0.0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Flexible(
-                      child: Text(
-                        'Facilite a gestão e acompanhamento, atribuindo tags de nível, objetivo e preferências',
-                        style: FlutterFlowTheme.of(context).bodySmall.override(
-                              fontFamily: 'Poppins',
-                              color: FlutterFlowTheme.of(context).secondaryText,
-                              fontSize: 12.0,
-                            ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(16, 24.0, 16.0, 0.0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(0, 8, 8, 16),
-                        child: Wrap(
-                          spacing: 6.0,
-                          runSpacing: 6.0,
-                          children: _model.tags!.map((element) {
-                            return TagComponentWidget(
-                              title: element.title,
-                              tagColor: element.color,
-                              selected: element.isSelected,
-                              maxHeight: 28,
-                              onTagPressed: () {
-                                setState(() {
-                                  element.isSelected = !element.isSelected;
-                                });
-                              },
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(0.0, 32.0, 0.0, 0.0),
-                child: FFButtonWidget(
-                  onPressed: () async {
-                    _dialogBuilder(context);
-                  },
-                  text: 'Nova Tag',
-                  options: FFButtonOptions(
-                    width: 150.0,
-                    height: 40.0,
-                    padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                    iconPadding:
-                        EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                    color: FlutterFlowTheme.of(context).primaryBackground,
-                    textStyle: FlutterFlowTheme.of(context).titleSmall.override(
-                          fontFamily: 'Poppins',
-                          color: FlutterFlowTheme.of(context).primary,
-                          fontSize: 14.0,
-                        ),
-                    elevation: 3.0,
-                    borderSide: BorderSide(
-                      color: FlutterFlowTheme.of(context).primary,
-                      width: 1.0,
-                    ),
-                    borderRadius: BorderRadius.circular(20.0),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-        BottomButtonFixedWidget(
-            buttonTitle: _bottomButtonText,
-            onPressed: () async {
-              if (_model.textFieldFocusNode1!.hasFocus) {
-                _model.textFieldFocusNode1!.unfocus();
-                return;
-              }
+          BottomButtonFixedWidget(
+              buttonTitle: _bottomButtonText,
+              onPressed: () async {
+                if (_model.textFieldFocusNode1!.hasFocus) {
+                  _model.textFieldFocusNode1!.unfocus();
+                  return;
+                }
 
-              if (_model.isEdit) {
+                if (_model.isEdit) {
+                  dynamic payload = {};
+                  payload['tags'] = _model.getSelectedTags();
+                  payload['email'] = _model.email;
+
+                  final result =
+                      await BaseGroup.editCustomerTagCall.call(params: payload);
+
+                  await requestResponse(
+                      result.succeeded, 'Tags atualizadas.', true);
+                  return;
+                }
+
+                String? errorMessage = _model.validateEmail();
+
+                if (errorMessage != null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        errorMessage,
+                      ),
+                    ),
+                  );
+                  return;
+                }
+
                 dynamic payload = {};
                 payload['tags'] = _model.getSelectedTags();
-                payload['email'] = _model.email;
+                payload['email'] = _model.textController1.text;
 
                 final result =
-                    await BaseGroup.editCustomerTagCall.call(params: payload);
+                    await BaseGroup.inviteCustomersCall.call(params: payload);
 
                 await requestResponse(
-                    result.succeeded, 'Tags atualizadas.', true);
-                return;
-              }
-
-              String? errorMessage = _model.validateEmail();
-
-              if (errorMessage != null) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      errorMessage,
-                    ),
-                  ),
-                );
-                return;
-              }
-
-              dynamic payload = {};
-              payload['tags'] = _model.getSelectedTags();
-              payload['email'] = _model.textController1.text;
-
-              final result =
-                  await BaseGroup.inviteCustomersCall.call(params: payload);
-
-              await requestResponse(
-                  result.succeeded, 'Convite enviado.', false);
-            }),
-      ],
-    ),
+                    result.succeeded, 'Convite enviado.', false);
+              }),
+        ],
+      ),
     );
   }
 

@@ -4,20 +4,19 @@ import 'package:flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 
 class TagComponentWidget extends StatefulWidget {
-  const TagComponentWidget(
-      {Key? key,
-      required this.title,
-      required this.tagColor,
-      required this.selected,
-      this.onTagPressed,
-      this.maxHeight, 
-      this.unselectedColor,
-      this.alpha = 0.7,
-      this.borderWidth = 1.0,
-      this.borderRadius = 4,
-      this.selectedTextColor,
-      })
-      : super(key: key);
+  const TagComponentWidget({
+    Key? key,
+    required this.title,
+    required this.tagColor,
+    required this.selected,
+    this.onTagPressed,
+    this.maxHeight,
+    this.unselectedColor,
+    this.alpha = 0.7,
+    this.borderWidth = 1.0,
+    this.borderRadius = 4,
+    this.selectedTextColor,
+  }) : super(key: key);
 
   final String title;
   final Color tagColor;
@@ -83,8 +82,10 @@ class _TagComponentWidgetState extends State<TagComponentWidget> {
             border: Border.all(
               width: widget.borderWidth,
               color: widget.selected
-                  ? widget.tagColor.withOpacity(widget.alpha != 1 ? (widget.alpha + 0.1) : 1)
-                  : widget.unselectedColor ?? FlutterFlowTheme.of(context).secondaryBackground,
+                  ? widget.tagColor
+                      .withOpacity(widget.alpha != 1 ? (widget.alpha + 0.1) : 1)
+                  : widget.unselectedColor ??
+                      FlutterFlowTheme.of(context).secondaryBackground,
             ),
           ),
           child: Padding(
@@ -99,12 +100,12 @@ class _TagComponentWidgetState extends State<TagComponentWidget> {
                     child: Text(
                       widget.title,
                       style: FlutterFlowTheme.of(context).bodyMedium.override(
-                            fontFamily: 'Lexend Deca',
+                            fontFamily: 'Montserrat',
                             color: widget.selected
                                 ? selectedTextColor
                                 : FlutterFlowTheme.of(context).secondaryText,
                             fontSize: 12,
-                            fontWeight: FontWeight.normal,
+                            fontWeight: FontWeight.w500,
                           ),
                       softWrap: false,
                       overflow: TextOverflow.visible,

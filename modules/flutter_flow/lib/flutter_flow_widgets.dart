@@ -80,7 +80,8 @@ class _FFButtonWidgetState extends State<FFButtonWidget> {
             child: Container(
               width: 23,
               height: 23,
-              child: CircularProgressIndicator(strokeWidth: 1.0,
+              child: CircularProgressIndicator(
+                strokeWidth: 1.0,
                 valueColor: AlwaysStoppedAnimation<Color>(
                   widget.options.textStyle!.color ?? Colors.white,
                 ),
@@ -176,25 +177,56 @@ class _FFButtonWidgetState extends State<FFButtonWidget> {
     );
 
     if ((widget.icon != null || widget.iconData != null) && !loading) {
-      return Container(
+      final ButtonStyle flatButtonStyle = TextButton.styleFrom(
+        foregroundColor: widget.options.textStyle?.color,
+        alignment: Alignment.center,
+        shape: RoundedRectangleBorder(
+          borderRadius: widget.options.borderRadius ?? BorderRadius.circular(8),
+          side: widget.options.borderSide ?? BorderSide.none,
+        ),
+        backgroundColor: widget.options.color,
+      );
+
+      return SizedBox(
         height: widget.options.height,
         width: widget.options.width,
-        child: ElevatedButton.icon(
-          icon: Padding(
-            padding: widget.options.iconPadding ?? EdgeInsets.zero,
-            child: widget.icon ??
-                FaIcon(
-                  widget.iconData,
-                  size: widget.options.iconSize,
-                  color: widget.options.iconColor ??
-                      widget.options.textStyle!.color,
-                ),
+        child: TextButton(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                widget.text,
+                style: widget.options.textStyle,
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 4, right: 4),
+                child: widget.icon ?? Container(),
+              )
+            ],
           ),
-          label: textWidget,
-          onPressed: onPressed,
-          style: style,
+          onPressed: widget.onPressed,
+          style: flatButtonStyle,
         ),
       );
+      // return Container(
+      // height: widget.options.height,
+      // width: widget.options.width,
+      //   child: ElevatedButton.icon(
+      //     label: textWidget,
+      //     icon: Padding(
+      //       padding: widget.options.iconPadding ?? EdgeInsets.zero,
+      //       child: widget.icon ??
+      //           FaIcon(
+      //             widget.iconData,
+      //             size: widget.options.iconSize,
+      //             color: widget.options.iconColor ??
+      //                 widget.options.textStyle!.color,
+      //           ),
+      //     ),
+      //     onPressed: onPressed,
+      //     style: style,
+      //   ),
+      // );
     }
 
     return Container(

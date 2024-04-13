@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:api_manager/auth/firebase_auth/auth_util.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter_flow/common/event_logger.dart';
 import 'package:flutter_flow/flutter_flow_model.dart';
 import 'package:api_manager/api_requests/pump_creator_api_calls.dart';
 import 'package:flutter_flow/flutter_flow_animations.dart';
@@ -646,13 +647,10 @@ class _SignInWidgetState extends State<SignInWidget>
     final storage = await SharedPreferences.getInstance();
     await storage.setString('uid', currentUserUid);
 
-    if (isNew && !isApple) {
-      context.goNamedAuth('EditProfile', context.mounted, queryParameters: {
-        'showBackButton': serializeParam(false, ParamType.bool)!
-      });
-    } else {
-      context.goNamedAuth('Home', context.mounted);
-    }
+    EventLogger.instance
+        .setUserData(name: currentUserDisplayName, email: currentUserEmail);
+
+    context.goNamedAuth('Home', context.mounted);
   }
 
   String? validateEmail(String? email) {

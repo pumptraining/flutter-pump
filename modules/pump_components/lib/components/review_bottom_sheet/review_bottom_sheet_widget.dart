@@ -2,12 +2,12 @@ import 'package:api_manager/api_requests/pump_api_calls.dart';
 import 'package:api_manager/auth/firebase_auth/auth_util.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_flow/flutter_flow_icon_button.dart';
 import 'package:flutter_flow/flutter_flow_model.dart';
 import 'package:flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter_flow/flutter_flow_util.dart';
 import 'package:flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:pump_components/components/header_component/header_component_widget.dart';
 import 'review_bottom_sheet_model.dart';
 export 'review_bottom_sheet_model.dart';
 
@@ -75,7 +75,7 @@ class _ReviewBottomSheetWidgetState extends State<ReviewBottomSheetWidget> {
         child: Container(
           width: double.infinity,
           decoration: BoxDecoration(
-            color: FlutterFlowTheme.of(context).secondaryBackground,
+            color: Colors.white,
             boxShadow: [
               BoxShadow(
                 blurRadius: 4.0,
@@ -106,87 +106,17 @@ class _ReviewBottomSheetWidgetState extends State<ReviewBottomSheetWidget> {
                         width: 50.0,
                         height: 4.0,
                         decoration: BoxDecoration(
-                          color: FlutterFlowTheme.of(context).alternate,
+                          color: FlutterFlowTheme.of(context).secondaryText,
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                       ),
                     ),
                   ],
                 ),
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 8.0, 0.0, 0.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              16.0, 0.0, 0.0, 0.0),
-                          child: Text(
-                            'Avaliação',
-                            style: FlutterFlowTheme.of(context)
-                                .headlineSmall
-                                .override(
-                                  fontFamily: 'Outfit',
-                                  fontWeight: FontWeight.normal,
-                                ),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Align(
-                          alignment: AlignmentDirectional(1.00, 0.00),
-                          child: Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                16.0, 0.0, 16.0, 0.0),
-                            child: FlutterFlowIconButton(
-                              borderColor: FlutterFlowTheme.of(context)
-                                  .primaryBackground,
-                              borderRadius: 20.0,
-                              borderWidth: 1.0,
-                              buttonSize: 40.0,
-                              fillColor: FlutterFlowTheme.of(context)
-                                  .primaryBackground,
-                              icon: Icon(
-                                Icons.close,
-                                color: FlutterFlowTheme.of(context).primaryText,
-                                size: 24.0,
-                              ),
-                              onPressed: () async {
-                                Navigator.pop(context);
-                              },
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Align(
-                  alignment: AlignmentDirectional(-1.00, -1.00),
-                  child: Padding(
-                    padding:
-                        EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 12.0),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            'Toque para dar uma nota',
-                            style: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  fontFamily: 'Readex Pro',
-                                  color: FlutterFlowTheme.of(context)
-                                      .secondaryText,
-                                ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                HeaderComponentWidget(
+                  title: 'Avaliação',
+                  titleColor: Colors.black,
+                  subtitle: 'Toque para dar uma nota',
                 ),
                 Align(
                   alignment: AlignmentDirectional(-1.00, 0.00),
@@ -210,12 +140,12 @@ class _ReviewBottomSheetWidgetState extends State<ReviewBottomSheetWidget> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 12.0),
+                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 8.0, 0.0, 0.0),
                   child: Container(
                     decoration: BoxDecoration(),
                     child: Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(
-                          12.0, 24.0, 12.0, 12.0),
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(12.0, 8.0, 12.0, 0.0),
                       child: TextFormField(
                         focusNode: _unfocusNode,
                         onChanged: (value) {
@@ -230,40 +160,41 @@ class _ReviewBottomSheetWidgetState extends State<ReviewBottomSheetWidget> {
                           hintStyle: FlutterFlowTheme.of(context).labelMedium,
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(
-                              color: FlutterFlowTheme.of(context)
-                                  .primaryBackground,
-                              width: 2.0,
+                              color: FlutterFlowTheme.of(context).secondaryText,
+                              width: 0.3,
                             ),
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(
                               color: FlutterFlowTheme.of(context).primary,
-                              width: 2.0,
+                              width: 1.0,
                             ),
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                           errorBorder: OutlineInputBorder(
                             borderSide: BorderSide(
                               color: FlutterFlowTheme.of(context).error,
-                              width: 2.0,
+                              width: 1.0,
                             ),
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                           focusedErrorBorder: OutlineInputBorder(
                             borderSide: BorderSide(
                               color: FlutterFlowTheme.of(context).error,
-                              width: 2.0,
+                              width: 1.0,
                             ),
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                           filled: true,
-                          fillColor:
-                              FlutterFlowTheme.of(context).secondaryBackground,
+                          fillColor: Colors.white,
                           contentPadding: EdgeInsetsDirectional.fromSTEB(
                               20.0, 24.0, 20.0, 24.0),
                         ),
-                        style: FlutterFlowTheme.of(context).bodyMedium,
+                        style: FlutterFlowTheme.of(context).bodyMedium.override(
+                              fontFamily: 'Montserrat',
+                              color: Colors.black,
+                            ),
                         maxLines: 3,
                         maxLength: 200,
                         validator:
@@ -335,24 +266,22 @@ class _ReviewBottomSheetWidgetState extends State<ReviewBottomSheetWidget> {
                               ));
                             }
                           },
-                    text: 'Enviar',
+                    text: 'Enviar'.toUpperCase(),
                     options: FFButtonOptions(
                       width: double.infinity,
                       height: 50,
                       padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
                       iconPadding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-                      color: FlutterFlowTheme.of(context).primary,
+                      color: FlutterFlowTheme.of(context).primaryBackground,
                       textStyle:
-                          FlutterFlowTheme.of(context).titleSmall.override(
-                                fontFamily: 'Readex Pro',
+                          FlutterFlowTheme.of(context).headlineMedium.override(
+                                fontFamily: 'Montserrat',
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
                                 color: Colors.white,
                               ),
-                      borderSide: BorderSide(
-                        color: Colors.transparent,
-                        width: 1,
-                      ),
                       borderRadius: BorderRadius.circular(25),
-                      disabledColor: FlutterFlowTheme.of(context).accent2,
+                      disabledColor: FlutterFlowTheme.of(context).secondaryText,
                       disabledTextColor: Colors.white,
                     ),
                   ),

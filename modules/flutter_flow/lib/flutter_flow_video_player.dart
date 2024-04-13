@@ -167,25 +167,36 @@ class _FlutterFlowVideoPlayerState extends State<FlutterFlowVideoPlayer>
   @override
   Widget build(BuildContext context) => FittedBox(
         fit: BoxFit.cover,
-        child: Container(
-          height: height,
-          width: width,
-          child: _chewieController != null &&
-                  (widget.lazyLoad ||
-                      _chewieController!
-                          .videoPlayerController.value.isInitialized)
-              ? Chewie(controller: _chewieController!)
-              : (_chewieController != null &&
-                      _chewieController!.videoPlayerController.value.hasError)
-                  ? Text('Error playing video')
-                  : Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        CircularProgressIndicator(strokeWidth: 1.0,),
-                        SizedBox(height: 20),
-                        Text('Loading'),
-                      ],
-                    ),
+        child: GestureDetector(
+          onDoubleTap: () {
+            if (_videoPlayerController?.value.isPlaying ?? false) {
+              _videoPlayerController?.pause();
+            } else {
+              _videoPlayerController?.play();
+            }
+          },
+          child: Container(
+            height: height,
+            width: width,
+            child: _chewieController != null &&
+                    (widget.lazyLoad ||
+                        _chewieController!
+                            .videoPlayerController.value.isInitialized)
+                ? Chewie(controller: _chewieController!)
+                : (_chewieController != null &&
+                        _chewieController!.videoPlayerController.value.hasError)
+                    ? Text('Error playing video')
+                    : Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          CircularProgressIndicator(
+                            strokeWidth: 1.0,
+                          ),
+                          SizedBox(height: 20),
+                          Text('Loading'),
+                        ],
+                      ),
+          ),
         ),
       );
 }

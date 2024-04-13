@@ -404,7 +404,7 @@ class _AddWorkoutSheetPlanWidgetState extends State<AddWorkoutSheetPlanWidget> {
                                 size: 20,
                               ),
                               options: FFButtonOptions(
-                                height: 34,
+                                height: 40,
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     16, 0, 16, 0),
                                 iconPadding:
@@ -416,12 +416,7 @@ class _AddWorkoutSheetPlanWidgetState extends State<AddWorkoutSheetPlanWidget> {
                                         fontFamily: 'Poppins',
                                         color: FlutterFlowTheme.of(context)
                                             .primaryBackground),
-                                elevation: 3,
-                                borderSide: BorderSide(
-                                  color: FlutterFlowTheme.of(context).info,
-                                  width: 1,
-                                ),
-                                borderRadius: BorderRadius.circular(17),
+                                borderRadius: BorderRadius.circular(20),
                               ),
                               showLoadingIndicator: false,
                             ),

@@ -8,6 +8,8 @@ import 'package:flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter_flow/form_field_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:pump/flutter_flow/nav/nav.dart';
+import 'package:pump_components/components/bottom_button_fixed/bottom_button_fixed_widget.dart';
+import 'package:pump_components/components/header_component/header_component_widget.dart';
 import 'workout_filter_model.dart';
 export 'workout_filter_model.dart';
 
@@ -42,7 +44,7 @@ class _WorkoutFilterWidgetState extends State<WorkoutFilterWidget> {
 
     if (widget.selectedFilter != null) {
       setState(() {
-        _model.setSelectedFilter(widget.selectedFilter);  
+        _model.setSelectedFilter(widget.selectedFilter);
       });
     }
   }
@@ -231,28 +233,21 @@ class _WorkoutFilterWidgetState extends State<WorkoutFilterWidget> {
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    HeaderComponentWidget(title: 'Filtre por'),
                     Padding(
                       padding:
-                          EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 0.0, 0.0),
-                      child: Text(
-                        'Filtre por',
-                        style: FlutterFlowTheme.of(context).headlineMedium,
-                      ),
-                    ),
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 12.0, 16.0, 0.0),
+                          EdgeInsetsDirectional.fromSTEB(0.0, 28.0, 16.0, 0.0),
                       child: FlutterFlowIconButton(
                         borderColor: Colors.transparent,
                         borderRadius: 30.0,
                         borderWidth: 1.0,
-                        buttonSize: 40.0,
+                        buttonSize: 34.0,
                         fillColor:
                             FlutterFlowTheme.of(context).primaryBackground,
                         icon: Icon(
                           Icons.close_rounded,
                           color: FlutterFlowTheme.of(context).primaryText,
-                          size: 20.0,
+                          size: 16.0,
                         ),
                         onPressed: () async {
                           context.pop();
@@ -275,7 +270,8 @@ class _WorkoutFilterWidgetState extends State<WorkoutFilterWidget> {
                                 child: SizedBox(
                                   width: 40.0,
                                   height: 40.0,
-                                  child: CircularProgressIndicator(strokeWidth: 1.0,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 1.0,
                                     valueColor: AlwaysStoppedAnimation<Color>(
                                       FlutterFlowTheme.of(context).primary,
                                     ),
@@ -296,55 +292,12 @@ class _WorkoutFilterWidgetState extends State<WorkoutFilterWidget> {
                       ),
               ],
             ),
-            Align(
-              alignment: AlignmentDirectional(0.0, 1.0),
-              child: Container(
-                width: MediaQuery.sizeOf(context).width * 1.0,
-                height: 66.0 + bottomValue,
-                decoration: BoxDecoration(
-                  color: FlutterFlowTheme.of(context).secondaryBackground,
-                  boxShadow: [
-                    BoxShadow(
-                      blurRadius: 4.0,
-                      color: Color(0x33000000),
-                      offset: Offset(0.0, 2.0),
-                    )
-                  ],
-                ),
-                child: Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(
-                      16.0, 16.0, 16.0, bottomValue),
-                  child: FFButtonWidget(
-                    onPressed: () {
-                      if (_model.applyButtonIsEnabled()) {
-                        HapticFeedback.mediumImpact();
-                        Navigator.pop(context, _model.getFilterResult());
-                      }
-                    },
-                    text: _model.applyFilterTitle(),
-                    options: FFButtonOptions(
-                      width: double.infinity,
-                      height: 50.0,
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                      iconPadding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                      color: _model.applyButtonIsEnabled() ? FlutterFlowTheme.of(context).primary : Color.fromARGB(255, 103, 210, 148),
-                      textStyle: 
-                          FlutterFlowTheme.of(context).titleSmall.override(
-                                fontFamily: 'Readex Pro',
-                                color: Colors.white,
-                              ),
-                      borderSide: BorderSide(
-                        color: Colors.transparent,
-                        width: 1.0,
-                      ),
-                      borderRadius: BorderRadius.circular(25.0),
-                    ),
-                  ),
-                ),
-              ),
-            ),
+            BottomButtonFixedWidget(
+                buttonTitle: _model.applyFilterTitle(),
+                onPressed: () async {
+                  HapticFeedback.mediumImpact();
+                  Navigator.pop(context, _model.getFilterResult());
+                }),
           ],
         ),
       ),
@@ -366,21 +319,7 @@ class _WorkoutFilterWidgetState extends State<WorkoutFilterWidget> {
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(16.0, 24.0, 0.0, 0.0),
-                  child: Text(
-                    'Nível',
-                    style: FlutterFlowTheme.of(context).titleMedium.override(
-                          fontFamily: 'Readex Pro',
-                          color: FlutterFlowTheme.of(context).primaryText,
-                        ),
-                  ),
-                ),
-              ],
-            ),
+            HeaderComponentWidget(title: 'Nível'),
             Padding(
               padding: EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 0.0),
               child: Row(
@@ -405,7 +344,7 @@ class _WorkoutFilterWidgetState extends State<WorkoutFilterWidget> {
                           backgroundColor: FlutterFlowTheme.of(context).primary,
                           textStyle:
                               FlutterFlowTheme.of(context).bodyMedium.override(
-                                    fontFamily: 'Readex Pro',
+                                    fontFamily: 'Montserrat',
                                     color: FlutterFlowTheme.of(context).info,
                                   ),
                           iconColor: FlutterFlowTheme.of(context).primaryText,
@@ -418,7 +357,7 @@ class _WorkoutFilterWidgetState extends State<WorkoutFilterWidget> {
                           textStyle: FlutterFlowTheme.of(context)
                               .bodyMedium
                               .override(
-                                fontFamily: 'Readex Pro',
+                                fontFamily: 'Montserrat',
                                 color:
                                     FlutterFlowTheme.of(context).secondaryText,
                               ),
@@ -441,21 +380,7 @@ class _WorkoutFilterWidgetState extends State<WorkoutFilterWidget> {
                 ],
               ),
             ),
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(16.0, 24.0, 0.0, 0.0),
-                  child: Text(
-                    'Objetivo',
-                    style: FlutterFlowTheme.of(context).titleMedium.override(
-                          fontFamily: 'Readex Pro',
-                          color: FlutterFlowTheme.of(context).primaryText,
-                        ),
-                  ),
-                ),
-              ],
-            ),
+            HeaderComponentWidget(title: 'Objetivo'),
             Padding(
               padding: EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 0.0),
               child: Row(
@@ -473,7 +398,7 @@ class _WorkoutFilterWidgetState extends State<WorkoutFilterWidget> {
                           backgroundColor: FlutterFlowTheme.of(context).primary,
                           textStyle:
                               FlutterFlowTheme.of(context).bodyMedium.override(
-                                    fontFamily: 'Readex Pro',
+                                    fontFamily: 'Montserrat',
                                     color: FlutterFlowTheme.of(context).info,
                                   ),
                           iconColor: FlutterFlowTheme.of(context).primaryText,
@@ -486,7 +411,7 @@ class _WorkoutFilterWidgetState extends State<WorkoutFilterWidget> {
                           textStyle: FlutterFlowTheme.of(context)
                               .bodyMedium
                               .override(
-                                fontFamily: 'Readex Pro',
+                                fontFamily: 'Montserrat',
                                 color:
                                     FlutterFlowTheme.of(context).secondaryText,
                               ),
@@ -509,21 +434,7 @@ class _WorkoutFilterWidgetState extends State<WorkoutFilterWidget> {
                 ],
               ),
             ),
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(16.0, 24.0, 0.0, 0.0),
-                  child: Text(
-                    'Músculos',
-                    style: FlutterFlowTheme.of(context).titleMedium.override(
-                          fontFamily: 'Readex Pro',
-                          color: FlutterFlowTheme.of(context).primaryText,
-                        ),
-                  ),
-                ),
-              ],
-            ),
+            HeaderComponentWidget(title: 'Músculos'),
             Padding(
               padding: EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 0.0),
               child: Row(
@@ -541,7 +452,7 @@ class _WorkoutFilterWidgetState extends State<WorkoutFilterWidget> {
                           backgroundColor: FlutterFlowTheme.of(context).primary,
                           textStyle:
                               FlutterFlowTheme.of(context).bodyMedium.override(
-                                    fontFamily: 'Readex Pro',
+                                    fontFamily: 'Montserrat',
                                     color: FlutterFlowTheme.of(context).info,
                                   ),
                           iconColor: FlutterFlowTheme.of(context).primaryText,
@@ -554,7 +465,7 @@ class _WorkoutFilterWidgetState extends State<WorkoutFilterWidget> {
                           textStyle: FlutterFlowTheme.of(context)
                               .bodyMedium
                               .override(
-                                fontFamily: 'Readex Pro',
+                                fontFamily: 'Montserrat',
                                 color:
                                     FlutterFlowTheme.of(context).secondaryText,
                               ),
@@ -577,21 +488,7 @@ class _WorkoutFilterWidgetState extends State<WorkoutFilterWidget> {
                 ],
               ),
             ),
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(16.0, 24.0, 0.0, 0.0),
-                  child: Text(
-                    'Equipamentos',
-                    style: FlutterFlowTheme.of(context).titleMedium.override(
-                          fontFamily: 'Readex Pro',
-                          color: FlutterFlowTheme.of(context).primaryText,
-                        ),
-                  ),
-                ),
-              ],
-            ),
+            HeaderComponentWidget(title: 'Equipamentos'),
             Padding(
               padding: EdgeInsetsDirectional.fromSTEB(16.0, 12.0, 16.0, 0.0),
               child: Row(
@@ -609,7 +506,7 @@ class _WorkoutFilterWidgetState extends State<WorkoutFilterWidget> {
                           backgroundColor: FlutterFlowTheme.of(context).primary,
                           textStyle:
                               FlutterFlowTheme.of(context).bodyMedium.override(
-                                    fontFamily: 'Readex Pro',
+                                    fontFamily: 'Montserrat',
                                     color: FlutterFlowTheme.of(context).info,
                                   ),
                           iconColor: FlutterFlowTheme.of(context).primaryText,
@@ -622,7 +519,7 @@ class _WorkoutFilterWidgetState extends State<WorkoutFilterWidget> {
                           textStyle: FlutterFlowTheme.of(context)
                               .bodyMedium
                               .override(
-                                fontFamily: 'Readex Pro',
+                                fontFamily: 'Montserrat',
                                 color:
                                     FlutterFlowTheme.of(context).secondaryText,
                               ),

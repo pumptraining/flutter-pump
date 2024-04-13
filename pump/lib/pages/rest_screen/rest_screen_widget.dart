@@ -3,7 +3,10 @@ import 'package:flutter_flow/flutter_flow_model.dart';
 import 'package:flutter_flow/nav/serialization_util.dart';
 import 'package:flutter_flow/transition_info.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pump/flutter_flow/nav/nav.dart';
+import 'package:pump_components/components/bottom_button_fixed/bottom_button_fixed_widget.dart';
+import 'package:pump_components/components/cell_list_workout/cell_list_workout_widget.dart';
 import '/components/information_bottom_sheet_widget.dart';
 import 'package:flutter_flow/flutter_flow_animations.dart';
 import 'package:flutter_flow/flutter_flow_icon_button.dart';
@@ -148,21 +151,6 @@ class _RestScreenWidgetState extends State<RestScreenWidget>
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
         body: Stack(
           children: [
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 1,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    FlutterFlowTheme.of(context).primary,
-                    FlutterFlowTheme.of(context).secondary
-                  ],
-                  stops: [0, 1],
-                  begin: AlignmentDirectional(0, -1),
-                  end: AlignmentDirectional(0, 1),
-                ),
-              ),
-            ),
             Column(
               mainAxisSize: MainAxisSize.max,
               children: [
@@ -179,9 +167,9 @@ class _RestScreenWidgetState extends State<RestScreenWidget>
                               TextSpan(
                                 text: 'Relaxe,',
                                 style: FlutterFlowTheme.of(context)
-                                    .displayMedium
+                                    .displaySmall
                                     .override(
-                                      fontFamily: 'Outfit',
+                                      fontFamily: 'Montserrat',
                                       color: FlutterFlowTheme.of(context).info,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -193,7 +181,7 @@ class _RestScreenWidgetState extends State<RestScreenWidget>
                                 ),
                               )
                             ],
-                            style: FlutterFlowTheme.of(context).displayMedium,
+                            style: FlutterFlowTheme.of(context).displaySmall,
                           ),
                         ),
                       ),
@@ -209,19 +197,6 @@ class _RestScreenWidgetState extends State<RestScreenWidget>
                           Expanded(
                             child: Stack(
                               children: [
-                                Align(
-                                  alignment: Alignment.center,
-                                  child: Align(
-                                    alignment: Alignment.center,
-                                    child: Lottie.network(
-                                      'https://assets6.lottiefiles.com/packages/lf20_w4NUp4.json',
-                                      // width: 200,
-                                      // height: 200,
-                                      fit: BoxFit.cover,
-                                      animate: true,
-                                    ),
-                                  ),
-                                ),
                                 Align(
                                   alignment: Alignment.center,
                                   child: Align(
@@ -256,11 +231,11 @@ class _RestScreenWidgetState extends State<RestScreenWidget>
                                             style: FlutterFlowTheme.of(context)
                                                 .displayLarge
                                                 .override(
-                                                  fontFamily: 'Outfit',
+                                                  fontFamily: 'Montserrat',
                                                   color: FlutterFlowTheme.of(
                                                           context)
                                                       .info,
-                                                  fontSize: 64,
+                                                  fontSize: 74,
                                                 ),
                                           ),
                                         ),
@@ -404,288 +379,79 @@ class _RestScreenWidgetState extends State<RestScreenWidget>
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 114),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
-                          child: Container(
-                            width: 100,
-                            height: 80,
-                            decoration: BoxDecoration(
-                              color: FlutterFlowTheme.of(context)
-                                  .secondaryBackground,
-                              boxShadow: [
-                                BoxShadow(
-                                  blurRadius: 4,
-                                  color: Color(0x33000000),
-                                  offset: Offset(0, 2),
-                                )
-                              ],
-                              borderRadius: BorderRadius.circular(16),
-                              shape: BoxShape.rectangle,
-                            ),
-                            child: InkWell(
-                              splashColor: Colors.transparent,
-                              focusColor: Colors.transparent,
-                              hoverColor: Colors.transparent,
-                              highlightColor: Colors.transparent,
-                              onTap: () async {
-                                final result = await context.pushNamed(
-                                  'WorkoutList',
-                                  queryParameters: {
-                                    'workout': serializeParam(
-                                      _model.workout,
-                                      ParamType.JSON,
-                                      true,
-                                    ),
-                                    'personalImageUrl': serializeParam(
-                                      _model.personalImageUrl,
-                                      ParamType.String,
-                                    ),
-                                    'changedWorkout': serializeParam(
-                                      _model.changedWorkout,
-                                      ParamType.JSON,
-                                      true,
-                                    ),
-                                  }.withoutNulls,
-                                  extra: <String, dynamic>{
-                                    kTransitionInfoKey: TransitionInfo(
-                                      hasTransition: true,
-                                      transitionType:
-                                          PageTransitionType.bottomToTop,
-                                    ),
-                                  },
-                                );
-
-                                if (result != null) {
-                                  setState(() {
-                                    _model.changeSet = true;
-                                    _model.currentSetIndex =
-                                        int.parse(result.toString());
-                                    _model.selectedPersonalNote = false;
-
-                                    if (!_model.timerController.isRunning) {
-                                      Navigator.pop(
-                                          context, _model.currentSetIndex);
-                                    }
-                                  });
-                                }
-                              },
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Expanded(
-                                    child: Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          8, 8, 8, 8),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                            child: CachedNetworkImage(
-                                              imageUrl: _model
-                                                  .getNextExerciseImageUrl(),
-                                              width: 60,
-                                              height: 60,
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(8, 0, 0, 0),
-                                              child: Column(
-                                                mainAxisSize: MainAxisSize.max,
-                                                children: [
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0, 0),
-                                                    child: Padding(
-                                                      padding:
-                                                          EdgeInsetsDirectional
-                                                              .fromSTEB(
-                                                                  0, 12, 0, 0),
-                                                      child: Row(
-                                                        mainAxisSize:
-                                                            MainAxisSize.max,
-                                                        children: [
-                                                          Expanded(
-                                                            child: AutoSizeText(
-                                                              _model
-                                                                  .getNextExerciseTitle(),
-                                                              style: FlutterFlowTheme
-                                                                      .of(context)
-                                                                  .bodyLarge,
-                                                              maxLines: 1,
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Row(
-                                                    mainAxisSize:
-                                                        MainAxisSize.max,
-                                                    children: [
-                                                      Expanded(
-                                                        child: Text(
-                                                          _model
-                                                              .getNextExerciseSubtitle(),
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                fontFamily:
-                                                                    'Readex Pro',
-                                                                color: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .secondaryText,
-                                                              ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          FlutterFlowIconButton(
-                                            borderColor:
-                                                FlutterFlowTheme.of(context)
-                                                    .primaryBackground,
-                                            borderRadius: 20,
-                                            borderWidth: 1,
-                                            buttonSize: 40,
-                                            fillColor:
-                                                FlutterFlowTheme.of(context)
-                                                    .primaryBackground,
-                                            icon: Icon(
-                                              Icons.list,
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .primaryText,
-                                              size: 16,
-                                            ),
-                                            onPressed: () async {
-                                              final result =
-                                                  await context.pushNamed(
-                                                'WorkoutList',
-                                                queryParameters: {
-                                                  'workout': serializeParam(
-                                                    _model.workout,
-                                                    ParamType.JSON,
-                                                    true,
-                                                  ),
-                                                  'personalImageUrl':
-                                                      serializeParam(
-                                                    _model.personalImageUrl,
-                                                    ParamType.String,
-                                                  ),
-                                                  'changedWorkout':
-                                                      serializeParam(
-                                                    _model.changedWorkout,
-                                                    ParamType.JSON,
-                                                    true,
-                                                  ),
-                                                }.withoutNulls,
-                                                extra: <String, dynamic>{
-                                                  kTransitionInfoKey:
-                                                      TransitionInfo(
-                                                    hasTransition: true,
-                                                    transitionType:
-                                                        PageTransitionType
-                                                            .bottomToTop,
-                                                  ),
-                                                },
-                                              );
-
-                                              if (result != null) {
-                                                setState(() {
-                                                  _model.changeSet = true;
-                                                  _model.currentSetIndex =
-                                                      int.parse(
-                                                          result.toString());
-                                                  _model.selectedPersonalNote =
-                                                      false;
-
-                                                  if (!_model.timerController
-                                                      .isRunning) {
-                                                    Navigator.pop(context,
-                                                        _model.currentSetIndex);
-                                                  }
-                                                });
-                                              }
-                                            },
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                    padding: EdgeInsetsDirectional.fromSTEB(8, 0, 8, 0),
+                    child: CellListWorkoutWidget(
+                        workoutId: '',
+                        title: _model.getNextExerciseTitle(),
+                        subtitle: _model.getNextExerciseSubtitle(),
+                        imageUrl: _model.getNextExerciseImageUrl(),
+                        level: 'próximo',
+                        levelColor: FlutterFlowTheme.of(context).secondaryText,
+                        time: '',
+                        titleImage: '',
+                        onTap: (p0) async {
+                          final result = await context.pushNamed(
+                            'WorkoutList',
+                            queryParameters: {
+                              'workout': serializeParam(
+                                _model.workout,
+                                ParamType.JSON,
+                                true,
                               ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                              'personalImageUrl': serializeParam(
+                                _model.personalImageUrl,
+                                ParamType.String,
+                              ),
+                              'changedWorkout': serializeParam(
+                                _model.changedWorkout,
+                                ParamType.JSON,
+                                true,
+                              ),
+                            }.withoutNulls,
+                            extra: <String, dynamic>{
+                              kTransitionInfoKey: TransitionInfo(
+                                hasTransition: true,
+                                transitionType: PageTransitionType.bottomToTop,
+                              ),
+                            },
+                          );
+
+                          if (result != null) {
+                            setState(() {
+                              _model.changeSet = true;
+                              _model.currentSetIndex =
+                                  int.parse(result.toString());
+                              _model.selectedPersonalNote = false;
+
+                              if (!_model.timerController.isRunning) {
+                                Navigator.pop(context, _model.currentSetIndex);
+                              }
+                            });
+                          }
+                        },
+                        onDetailTap: (p0) {})),
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(8, 0, 8, 114),
+                  child: Divider(
+                    indent: 78,
+                    color: FlutterFlowTheme.of(context).secondaryText,
+                    height: 1,
+                    endIndent: 16,
                   ),
                 ),
               ],
             ),
-            Align(
-              alignment: AlignmentDirectional(0, 1),
-              child: InkWell(
-                splashColor: Colors.transparent,
-                focusColor: Colors.transparent,
-                hoverColor: Colors.transparent,
-                highlightColor: Colors.transparent,
-                onTap: () async {
+            BottomButtonFixedWidget(
+                buttonTitle: 'Próximo',
+                icon: FaIcon(
+                  Icons.arrow_forward_rounded,
+                  size: 22,
+                ),
+                onPressed: () async {
                   await flutterLocalNotificationsPlugin.cancel(0);
                   HapticFeedback.mediumImpact();
                   Navigator.pop(context, _model.currentSetIndex);
-                },
-                child: Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: FlutterFlowTheme.of(context).secondaryBackground,
-                    boxShadow: [
-                      BoxShadow(
-                        blurRadius: 5,
-                        color: Color(0x411D2429),
-                        offset: Offset(0, -2),
-                      )
-                    ],
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(0),
-                      bottomRight: Radius.circular(0),
-                      topLeft: Radius.circular(16),
-                      topRight: Radius.circular(16),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 44),
-                    child: Text(
-                      'Pular',
-                      textAlign: TextAlign.center,
-                      style:
-                          FlutterFlowTheme.of(context).headlineMedium.override(
-                                fontFamily: 'Outfit',
-                                color: FlutterFlowTheme.of(context).primary,
-                                fontSize: 22,
-                                fontWeight: FontWeight.w500,
-                              ),
-                    ),
-                  ),
-                ),
-              ).animateOnPageLoad(
-                  animationsMap['containerOnPageLoadAnimation']!),
-            ),
+                }),
           ],
         ),
       ),
