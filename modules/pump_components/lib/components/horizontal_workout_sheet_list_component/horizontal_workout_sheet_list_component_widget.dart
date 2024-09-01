@@ -49,31 +49,33 @@ class _HorizontalWorkoutSheetListComponentWidgetState
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: EdgeInsets.only(top: 16),
-        child: CarouselSlider(
-            items: [
-              ...widget.dtoList.map((element) {
-                return InkWell(
-                  onTap: () {
-                    widget.onTap?.call(element);
-                  },
-                  child: CardWorkoutSheetComponentWidget(dto: element),
-                );
-              }).toList()
-            ],
-            options: CarouselOptions(
-              height: MediaQuery.sizeOf(context).height * 0.3,
-              aspectRatio: 16 / 9,
-              disableCenter: true,
-              viewportFraction: 0.9,
-              initialPage: 0,
-              enableInfiniteScroll: false,
-              reverse: false,
-              autoPlay: false,
-              autoPlayCurve: Curves.fastOutSlowIn,
-              enlargeCenterPage: true,
-              enlargeFactor: 0.22,
-              scrollDirection: Axis.horizontal,
-            )));
+      padding: EdgeInsets.only(top: 16),
+      child: CarouselSlider(
+        items: [
+          ...widget.dtoList.map((element) {
+            return InkWell(
+              onTap: () {
+                widget.onTap?.call(element);
+              },
+              child: CardWorkoutSheetComponentWidget(dto: element),
+            );
+          }).toList()
+        ],
+        options: CarouselOptions(
+          height: MediaQuery.sizeOf(context).height * 0.3,
+          aspectRatio: 16 / 9,
+          disableCenter: true,
+          viewportFraction: 0.9,
+          initialPage: 0,
+          enableInfiniteScroll: false,
+          reverse: false,
+          autoPlay: false,
+          autoPlayCurve: Curves.fastOutSlowIn,
+          enlargeCenterPage: true,
+          enlargeFactor: 0.22,
+          scrollDirection: Axis.horizontal,
+        ),
+      ),
+    );
   }
 }

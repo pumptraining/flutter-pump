@@ -1,29 +1,27 @@
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter_flow/flutter_flow_model.dart';
-import 'package:flutter_flow/nav/serialization_util.dart';
-import 'package:flutter_flow/transition_info.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:pump/flutter_flow/nav/nav.dart';
-import 'package:pump_components/components/bottom_button_fixed/bottom_button_fixed_widget.dart';
-import 'package:pump_components/components/cell_list_workout/cell_list_workout_widget.dart';
-import '/components/information_bottom_sheet_widget.dart';
-import 'package:flutter_flow/flutter_flow_animations.dart';
-import 'package:flutter_flow/flutter_flow_icon_button.dart';
-import 'package:flutter_flow/flutter_flow_theme.dart';
-import 'package:flutter_flow/flutter_flow_timer.dart';
-import 'package:flutter_flow/flutter_flow_util.dart';
 import 'package:badges/badges.dart' as badges;
-import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:lottie/lottie.dart';
+import 'package:flutter_flow/flutter_flow_animations.dart';
+import 'package:flutter_flow/flutter_flow_model.dart';
+import 'package:flutter_flow/flutter_flow_theme.dart';
+import 'package:flutter_flow/flutter_flow_timer.dart';
+import 'package:flutter_flow/flutter_flow_util.dart';
+import 'package:flutter_flow/nav/serialization_util.dart';
+import 'package:flutter_flow/transition_info.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:pump/flutter_flow/nav/nav.dart';
+import 'package:pump_components/components/bottom_button_fixed/bottom_button_fixed_widget.dart';
+import 'package:pump_components/components/cell_list_workout/cell_list_workout_widget.dart';
+import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
+
+import '/components/information_bottom_sheet_widget.dart';
 import 'rest_screen_model.dart';
+
 export 'rest_screen_model.dart';
 
 class RestScreenWidget extends StatefulWidget {
@@ -443,7 +441,7 @@ class _RestScreenWidgetState extends State<RestScreenWidget>
             ),
             BottomButtonFixedWidget(
                 buttonTitle: 'Próximo',
-                icon: FaIcon(
+                icon: Icon(
                   Icons.arrow_forward_rounded,
                   size: 22,
                 ),

@@ -1,12 +1,14 @@
 import 'dart:math';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_flow/flutter_flow_theme.dart';
 import 'package:intl/intl.dart';
 
-export 'flutter_flow_charts.dart';
 export 'package:fl_chart/fl_chart.dart'
     show BarAreaData, FlDotData, LineChartBarData, BarChartAlignment;
+
+export 'flutter_flow_charts.dart';
 
 class FlutterFlowLineChart extends StatelessWidget {
   const FlutterFlowLineChart({
@@ -48,7 +50,6 @@ class FlutterFlowLineChart extends StatelessWidget {
                     return LineTooltipItem(title, textStyle);
                   }).toList();
                 },
-                tooltipBgColor: chartStylingInfo.tooltipBackgroundColor,
                 fitInsideHorizontally: true,
                 fitInsideVertically: true),
           ),
@@ -170,7 +171,8 @@ class FlutterFlowBarChart extends StatelessWidget {
         barTouchData: BarTouchData(
           handleBuiltInTouches: chartStylingInfo.enableTooltip,
           touchTooltipData: BarTouchTooltipData(
-            tooltipBgColor: chartStylingInfo.tooltipBackgroundColor,
+            getTooltipColor: (BarChartGroupData group) =>
+                chartStylingInfo.tooltipBackgroundColor ?? Colors.black,
           ),
         ),
         alignment: alignment,
@@ -513,7 +515,7 @@ FlTitlesData getTitlesData(
               ),
         axisNameSize: xAxisLabelInfo.titleTextStyle?.fontSize != null
             ? xAxisLabelInfo.titleTextStyle!.fontSize! + 12
-            : null,
+            : 0,
         sideTitles: SideTitles(
           getTitlesWidget: (val, _) => getXTitlesWidget != null
               ? getXTitlesWidget(val, _)
@@ -536,7 +538,7 @@ FlTitlesData getTitlesData(
               ),
         axisNameSize: yAxisLabelInfo.titleTextStyle?.fontSize != null
             ? yAxisLabelInfo.titleTextStyle!.fontSize! + 12
-            : null,
+            : 0,
         sideTitles: SideTitles(
           getTitlesWidget: (val, _) => Text(
             formatLabel(yAxisLabelInfo.labelFormatter, val),

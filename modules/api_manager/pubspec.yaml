@@ -4,7 +4,7 @@ version: 1.0.0
 # repository: https://github.com/my_org/my_repo
 
 environment:
-  sdk: ">=3.0.0 <4.0.0"
+  sdk: ">=3.2.0 <4.0.0"
 
 # Add regular dependencies here.
 dependencies:
@@ -12,24 +12,24 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  http: ^0.13.3
-  equatable: ^2.0.3
-  http_parser: ^4.0.0
-  mime_type: ^1.0.0
-  firebase_auth: 4.16.0
-  shared_preferences: ^2.0.15
-  sign_in_with_apple: 4.3.0
-  sign_in_with_apple_platform_interface: 1.0.0
-  sign_in_with_apple_web: 1.0.1
-  firebase_crashlytics: 3.4.9
-  firebase_crashlytics_platform_interface: ^3.6.16
-  rxdart: ^0.27.7
-  google_sign_in: 6.0.2
-  google_sign_in_android: 6.1.8
-  google_sign_in_ios: 5.6.1
-  google_sign_in_platform_interface: 2.4.0
-  google_sign_in_web: 0.11.0+2
-  json_path: 0.4.1
+  http: ">=0.13.3"
+  equatable: ">=2.0.3"
+  http_parser: ">=4.0.0"
+  mime_type: ">=1.0.0"
+  firebase_auth: ">=5.1.0"
+  shared_preferences: ">=2.0.15"
+  sign_in_with_apple: ">=4.3.0"
+  sign_in_with_apple_platform_interface: ">=1.0.0"
+  sign_in_with_apple_web: ">=1.0.1"
+  firebase_crashlytics: ">=3.4.9"
+  firebase_crashlytics_platform_interface: ">=3.6.16"
+  rxdart: ">=0.27.7"
+  google_sign_in: ">=6.0.2"
+  google_sign_in_android: ">=6.1.8"
+  google_sign_in_ios: ">=5.6.1"
+  google_sign_in_platform_interface: ">=2.4.0"
+  google_sign_in_web: ">=0.11.0+2"
+  json_path: ">=0.4.1"
   flutter_flow:
     path: ../flutter_flow
   pump_components:

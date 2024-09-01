@@ -59,7 +59,7 @@ class _FlutterFlowTimerState extends State<FlutterFlowTimer> {
       if (mounted) setState(() {});
     });
     // Add listener for actions executed on timer.
-    widget.timer.execute.listen((event) => _initTimer(shouldUpdate: true));
+    widget.timer.secondTime.listen((event) => _initTimer(shouldUpdate: true));
     // Add listener for when ther timer ends.
     widget.timer.fetchEnded.listen((_) => onEnded());
   }

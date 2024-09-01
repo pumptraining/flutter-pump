@@ -1,21 +1,24 @@
 import 'dart:async';
+
 import 'package:aligned_dialog/aligned_dialog.dart';
 import 'package:api_manager/api_requests/pump_api_calls.dart';
 import 'package:api_manager/auth/firebase_auth/auth_util.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_flow/flutter_flow_model.dart';
 import 'package:flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter_flow/flutter_flow_util.dart';
-import 'package:flutter/material.dart';
 import 'package:pump/flutter_flow/nav/nav.dart';
 import 'package:pump_components/components/header_component/header_component_widget.dart';
 import 'package:pump_components/components/information_dialog/information_dialog_widget.dart';
 import 'package:pump_components/components/pump_app_bar/pump_app_bar.dart';
 import 'package:pump_components/components/simple_row_component/simple_row_component_widget.dart';
-export 'package:pump/pages/personal_profile/profile14_other_user_model.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'profile_details_model.dart';
+
+export 'package:pump/pages/personal_profile/profile14_other_user_model.dart';
 
 class ProfileDetailsWidget extends StatefulWidget {
   const ProfileDetailsWidget({
@@ -57,7 +60,9 @@ class _ProfileDetailsWidgetState extends State<ProfileDetailsWidget>
     return Scaffold(
       backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
       appBar: PumpAppBar(title: 'Mais Opções'),
-      body: buildContent(context),
+      body: SingleChildScrollView(
+        child: buildContent(context),
+      ),
     );
   }
 
@@ -116,7 +121,7 @@ class _ProfileDetailsWidgetState extends State<ProfileDetailsWidget>
   }
 
   void _sharePersonalTrainerPressed() {
-    Share.share('https://https://pump-personal-trainer.webflow.io/');
+    Share.share('https://pump-personal-trainer.webflow.io/');
   }
 
   void _termsOfUsePressed() {

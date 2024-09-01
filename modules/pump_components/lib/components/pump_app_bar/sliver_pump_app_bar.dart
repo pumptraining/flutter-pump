@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -39,6 +40,7 @@ class _SliverPumpAppBarState extends State<SliverPumpAppBar>
 
   @override
   Widget build(BuildContext context) {
+    final expandedHeight = MediaQuery.sizeOf(context).height * 0.45;
     Color appBarBackgroundColor = widget.imageUrl.isNotEmpty
         ? FlutterFlowTheme.of(context).primaryBackground
         : FlutterFlowTheme.of(context).secondaryBackground;
@@ -46,7 +48,7 @@ class _SliverPumpAppBarState extends State<SliverPumpAppBar>
     if (widget.scrollController.hasClients &&
         widget.scrollController.offset < kToolbarHeight &&
         widget.imageUrl.isNotEmpty) {
-      appBarBackgroundColor = FlutterFlowTheme.of(context).secondaryBackground;
+      appBarBackgroundColor = FlutterFlowTheme.of(context).primaryBackground;
     } else {
       appBarBackgroundColor = FlutterFlowTheme.of(context).primaryBackground;
     }
@@ -70,7 +72,7 @@ class _SliverPumpAppBarState extends State<SliverPumpAppBar>
           },
         ),
       ),
-      expandedHeight: MediaQuery.sizeOf(context).height * 0.25,
+      expandedHeight: expandedHeight,
       pinned: true,
       floating: false,
       snap: false,
@@ -79,9 +81,14 @@ class _SliverPumpAppBarState extends State<SliverPumpAppBar>
       automaticallyImplyLeading: true,
       actions: widget.actions,
       flexibleSpace: FlexibleSpaceBar(
-        titlePadding: EdgeInsets.fromLTRB(_leftPadding, 16, _leftPadding, 16),
+        titlePadding: EdgeInsets.only(
+          left: _leftPadding,
+          right: _leftPadding,
+          bottom: 16,
+        ),
         title: AutoSizeText(
           widget.title,
+          minFontSize: 12,
           maxLines: 2,
           style: FlutterFlowTheme.of(context).headlineMedium.override(
                 fontFamily: 'Montserrat',
@@ -94,12 +101,9 @@ class _SliverPumpAppBarState extends State<SliverPumpAppBar>
         background: ClipRRect(
           borderRadius: BorderRadius.circular(0),
           child: widget.imageUrl.isNotEmpty
-              ? CachedNetworkImage(
-                  fadeInDuration: Duration(milliseconds: 500),
-                  fadeOutDuration: Duration(milliseconds: 500),
+              ? GradientImage(
                   imageUrl: widget.imageUrl,
-                  fit: BoxFit.cover,
-                  alignment: Alignment.center,
+                  height: expandedHeight,
                 )
               : null,
         ),
@@ -141,4 +145,53 @@ class SliverPumpAppBar extends StatefulWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
+}
+
+class GradientImage extends StatelessWidget {
+  final String imageUrl;
+  final double height;
+
+  const GradientImage({
+    Key? key,
+    required this.imageUrl,
+    required this.height,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(0),
+      child: Stack(
+        children: [
+          CachedNetworkImage(
+            fadeInDuration: Duration(milliseconds: 500),
+            fadeOutDuration: Duration(milliseconds: 500),
+            imageUrl: imageUrl,
+            fit: BoxFit.cover,
+            alignment: Alignment.center,
+            width: double.infinity,
+            height: double.infinity,
+          ),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              height: height,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                  colors: [
+                    FlutterFlowTheme.of(context).primaryBackground,
+                    Colors.transparent,
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }

@@ -1,11 +1,10 @@
-import 'package:flutter_flow/common/utils.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_flow/flutter_flow_model.dart';
+import 'package:flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:pump/common/map_skill_level.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
-import 'package:flutter_flow/flutter_flow_theme.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 
 class HomePageModel extends FlutterFlowModel {
   ///  State fields for stateful widgets in this page.
@@ -126,7 +125,9 @@ class HomePageModel extends FlutterFlowModel {
             reps = exercise['tempRepArray'][i];
             seconds = exercise['tempRepArray'][i];
           } else {
-            reps = exercise['rep'];
+            if (exercise['rep'] != null) {
+              reps = exercise['rep'];
+            }
             seconds = exercise['seconds'];
           }
 
@@ -209,7 +210,9 @@ class HomePageModel extends FlutterFlowModel {
       return '';
     }
 
-    if (exercise['rep'] != null && exercise['rep'].toString().isNotEmpty) {
+    if (exercise['rep'] != null &&
+        exercise['rep'] > 0 &&
+        exercise['rep'].toString().isNotEmpty) {
       return '${exercise['rep']}x ${exercise['title']}';
     }
     return '${exercise['seconds']}s ${exercise['title']}';
@@ -222,7 +225,9 @@ class HomePageModel extends FlutterFlowModel {
       return '';
     }
 
-    if (exercise['rep'] != null && exercise['rep'].toString().isNotEmpty) {
+    if (exercise['rep'] != null &&
+        exercise['rep'] > 0 &&
+        exercise['rep'].toString().isNotEmpty) {
       return '${exercise['rep']} repetições ${exercise['title']}';
     }
     return '${exercise['seconds']} segundos ${exercise['title']}';
@@ -258,7 +263,9 @@ class HomePageModel extends FlutterFlowModel {
       return '${current['pause']}s';
     }
 
-    if (exercise['rep'] != null && exercise['rep'].toString().isNotEmpty) {
+    if (exercise['rep'] != null &&
+        exercise['rep'] > 0 &&
+        exercise['rep'].toString().isNotEmpty) {
       return '${exercise['rep']}x ${exercise['title']}';
     }
     return '${exercise['seconds']}s ${exercise['title']}';

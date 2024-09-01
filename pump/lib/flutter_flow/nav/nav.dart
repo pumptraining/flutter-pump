@@ -6,7 +6,6 @@ import 'package:flutter_flow/nav/serialization_util.dart';
 import 'package:flutter_flow/transition_info.dart';
 import 'package:pump/pages/personal_list/personal_list_widget.dart';
 import 'package:pump/pages/profile_details/profile_details_widget.dart';
-import 'package:pump/pages/sheets_list/sheets_list_widget.dart';
 import 'package:pump_workout/pages/workout_completed_list/workout_completed_list_widget.dart';
 import 'package:pump_workout_sheet/completed_workout_sheet_list/completed_workout_sheet_list_widget.dart';
 import 'package:pump/pages/edit_profile/edit_profile_widget.dart';

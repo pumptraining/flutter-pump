@@ -141,6 +141,7 @@ class _FlutterFlowVideoPlayerState extends State<FlutterFlowVideoPlayer>
       allowPlaybackSpeedChanging: widget.allowPlaybackSpeedMenu,
     );
 
+    _videoPlayerController?.setVolume(0);
     _videoPlayers.add(_videoPlayerController!);
     _videoPlayerController!.addListener(() {
       if (_videoPlayerController!.value.hasError && !_loggedError) {

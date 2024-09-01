@@ -1,0 +1,6 @@
+# melos_managed_dependency_overrides: api_manager,flutter_flow
+dependency_overrides:
+  api_manager:
+    path: ../api_manager
+  flutter_flow:
+    path: ../flutter_flow

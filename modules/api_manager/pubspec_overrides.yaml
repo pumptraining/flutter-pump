@@ -1,0 +1,6 @@
+# melos_managed_dependency_overrides: flutter_flow,pump_components
+dependency_overrides:
+  flutter_flow:
+    path: ../flutter_flow
+  pump_components:
+    path: ../pump_components

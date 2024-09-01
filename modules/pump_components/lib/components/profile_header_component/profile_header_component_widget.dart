@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_flow/common/utils.dart';
 import 'package:flutter_flow/flutter_flow_model.dart';
 import 'package:flutter_flow/flutter_flow_theme.dart';
+
 import 'profile_header_component_model.dart';
+
 export 'profile_header_component_model.dart';
 
 class ProfileHeaderComponentWidget extends StatefulWidget {
@@ -66,7 +68,7 @@ class _ProfileHeaderComponentWidgetState
       },
       child: Container(
         width: double.infinity,
-        height: 84 + (widget.safeArea ? Utils.getTopSafeArea(context) : 0),
+        height: 86 + (widget.safeArea ? Utils.getTopSafeArea(context) : 0),
         decoration: BoxDecoration(
           color: Colors.transparent,
         ),

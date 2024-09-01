@@ -4,7 +4,6 @@ import 'package:flutter_flow/nav/serialization_util.dart';
 import 'package:flutter_flow/transition_info.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:api_manager/auth/firebase_auth/auth_util.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pump/flutter_flow/nav/nav.dart';
 import 'package:pump_components/components/bottom_button_fixed/bottom_button_fixed_widget.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
@@ -1425,7 +1424,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                                   : (_model.showRest()
                                                       ? 'Intervalo'
                                                       : 'Próximo'),
-                                          icon: FaIcon(
+                                          icon: Icon(
                                             _model.getNextExercise() == null
                                                 ? Icons.arrow_forward_rounded
                                                 : _model.showRest()

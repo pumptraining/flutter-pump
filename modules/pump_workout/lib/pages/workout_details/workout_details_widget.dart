@@ -99,6 +99,10 @@ class _WorkoutDetailsWidgetState extends State<WorkoutDetailsWidget>
                       ? Container()
                       : BottomButtonFixedWidget(
                           buttonTitle: 'Começar',
+                          icon: Icon(
+                            Icons.arrow_forward_rounded,
+                            size: 22,
+                          ),
                           onPressed: () async {
                             HapticFeedback.mediumImpact();
                             await context.pushNamed(

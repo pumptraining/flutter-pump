@@ -1,11 +1,8 @@
 import 'dart:io';
 
 import 'package:api_manager/common/loader_state.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:api_manager/api_requests/pump_api_calls.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_flow/flutter_flow_animations.dart';
 import 'package:flutter_flow/flutter_flow_icon_button.dart';
 import 'package:flutter_flow/flutter_flow_model.dart';
 import 'package:flutter_flow/nav/serialization_util.dart';
@@ -14,7 +11,6 @@ import 'package:pump/pages/personal_profile/profile14_other_user_model.dart';
 import 'package:flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter_flow/flutter_flow_util.dart';
 import 'package:flutter_flow/flutter_flow_widgets.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pump/pages/sheets_list/sheets_list_widget.dart';
@@ -97,7 +93,7 @@ class _Profile14OtherUserWidgetState extends State<Profile14OtherUserWidget>
               size: 20.0,
             ),
             onPressed: () async {
-              String text = 'https://https://pump-personal-trainer.webflow.io/';
+              String text = 'https://pump-personal-trainer.webflow.io/';
               String subject = 'Pump Training: Cadastre-se!';
 
               await Share.share('$subject\n$text');
@@ -127,7 +123,7 @@ class _Profile14OtherUserWidgetState extends State<Profile14OtherUserWidget>
                         _model.content['personal']['phone'] != null),
                     child: BottomButtonFixedWidget(
                       buttonTitle: 'Solicitar Consultoria',
-                      icon: FaIcon(
+                      icon: Icon(
                         FontAwesomeIcons.whatsapp,
                       ),
                       onPressed: () async {

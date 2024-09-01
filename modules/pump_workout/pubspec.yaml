@@ -4,7 +4,7 @@ version: 1.0.0
 # repository: https://github.com/my_org/my_repo
 
 environment:
-  sdk: ">=3.0.0 <4.0.0"
+  sdk: ">=3.2.0 <4.0.0"
 
 # Add regular dependencies here.
 dependencies:
@@ -12,20 +12,21 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  go_router: 7.1.1
-  cached_network_image: ^3.2.3
-  fl_chart: 0.55.0
-  expandable: 5.0.1
-  page_transition: 2.0.4
-  flutter_animate: 4.1.1+1
-  auto_size_text: 3.0.0
-  smooth_page_indicator: 1.0.1
+  go_router: '>=7.1.1'
+  cached_network_image: '>=3.2.3'
+  fl_chart: '>=0.55.0'
+  expandable: '>=5.0.1'
+  page_transition: '>=2.0.4'
+  flutter_animate: '>=4.1.1+1'
+  auto_size_text: '>=3.0.0'
+  smooth_page_indicator: '>=1.0.1'
   flutter_flow:
     path: ../flutter_flow
   api_manager:
     path: ../api_manager
   pump_components:
     path: ../pump_components
+
 
 dev_dependencies:
   lints: ^2.0.0

@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:api_manager/api_manager/api_manager.dart';
 import 'package:api_manager/auth/firebase_auth/auth_util.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_flow/flutter_flow_util.dart';
 import 'package:http/http.dart' as http;
+
 import '../common/requestable.dart';
 
 export '../common/api_call_response.dart';
@@ -14,7 +16,7 @@ export '../common/requestable.dart';
 
 class Environment {
   static String get baseUrl {
-    // return 'https://pump-api.herokuapp.com/api/v1';
+    return 'https://pump-api.herokuapp.com/api/v1';
     return kReleaseMode
         ? 'https://pump-api.herokuapp.com/api/v1'
         : 'http://localhost:4242/api/v1';

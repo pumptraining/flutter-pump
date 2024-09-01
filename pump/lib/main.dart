@@ -1,26 +1,29 @@
 import 'dart:async';
 import 'dart:io';
+
 import 'package:api_manager/api_manager/api_manager.dart';
 import 'package:api_manager/api_requests/pump_api_calls.dart';
 import 'package:api_manager/auth/firebase_auth/auth_util.dart';
 import 'package:api_manager/auth/firebase_auth/firebase_user_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_flow/common/user_settings.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_web_plugins/url_strategy.dart';
-import 'backend/firebase/firebase_config.dart';
+import 'package:flutter_flow/common/utils.dart';
 import 'package:flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter_flow/internationalization.dart';
-import 'package:flutter/foundation.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
+
+import 'backend/firebase/firebase_config.dart';
 import 'flutter_flow/nav/nav.dart';
 import 'index.dart';
-import 'package:flutter_stripe/flutter_stripe.dart';
-import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -144,6 +147,11 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
 
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky,
+        overlays: [
+          SystemUiOverlay.bottom,
+        ]);
+
     _appStateNotifier = AppStateNotifier.instance;
     _router = createRouter(_appStateNotifier);
     userStream = pumpCreatorFirebaseUserStream()
@@ -203,7 +211,11 @@ class _MyAppState extends State<MyApp> {
 }
 
 class NavBarPage extends StatefulWidget {
-  NavBarPage({Key? key, this.initialPage, this.page}) : super(key: key);
+  NavBarPage({
+    Key? key,
+    this.initialPage,
+    this.page,
+  }) : super(key: key);
 
   final String? initialPage;
   final Widget? page;
@@ -233,6 +245,9 @@ class _NavBarPageState extends State<NavBarPage> {
     };
     final currentIndex = tabs.keys.toList().indexOf(_currentPageName);
     final MediaQueryData queryData = MediaQuery.of(context);
+    final double bottomSpacing = Utils.getBottomSafeArea(context) == 0.0
+        ? 16
+        : Utils.getBottomSafeArea(context) - 16;
 
     return Scaffold(
       body: MediaQuery(
@@ -253,8 +268,8 @@ class _NavBarPageState extends State<NavBarPage> {
         selectedBackgroundColor: Color(0x00000000),
         borderRadius: 50.0,
         itemBorderRadius: 8.0,
-        margin: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
-        padding: EdgeInsets.all(12.0),
+        margin: EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, bottomSpacing),
+        padding: EdgeInsets.all(8.0),
         width: double.infinity,
         elevation: 0.0,
         items: [

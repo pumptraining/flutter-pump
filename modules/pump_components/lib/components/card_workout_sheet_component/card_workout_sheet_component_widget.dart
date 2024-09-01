@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_flow/flutter_flow_model.dart';
 import 'package:flutter_flow/flutter_flow_theme.dart';
 import 'package:pump_components/components/tag_component/tag_component_widget.dart';
+
 import 'card_workout_sheet_component_model.dart';
+
 export 'card_workout_sheet_component_model.dart';
 
 class CardWorkoutSheetDTO {
@@ -69,10 +71,9 @@ class _CardWorkoutSheetComponentWidgetState
       width: widget.dto.width ?? MediaQuery.sizeOf(context).width * 0.8,
       height: widget.dto.height ?? MediaQuery.sizeOf(context).height * 1.0,
       decoration: BoxDecoration(
-          color: FlutterFlowTheme.of(context).secondaryBackground,
-          borderRadius: BorderRadius.circular(8.0),
-          border:
-              Border.all(color: FlutterFlowTheme.of(context).secondaryText)),
+        color: FlutterFlowTheme.of(context).secondaryBackground,
+        borderRadius: BorderRadius.circular(8.0),
+      ),
       child: Stack(
         children: [
           ClipRRect(

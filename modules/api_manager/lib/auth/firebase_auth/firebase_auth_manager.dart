@@ -1,16 +1,18 @@
 import 'dart:async';
+
+import 'package:api_manager/auth/firebase_auth/auth_util.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+
 import '../../api_manager/api_manager.dart';
 import '../auth_manager.dart';
-
 import 'anonymous_auth.dart';
 import 'apple_auth.dart';
 import 'email_auth.dart';
 import 'firebase_user_provider.dart';
 import 'google_auth.dart';
 import 'jwt_token_auth.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 
 export '../base_auth_user_provider.dart';
 
@@ -247,7 +249,6 @@ class FirebaseAuthManager extends AuthManager
     try {
       final userCredential = await signInFunc();
       if (userCredential?.user != null) {
-
         ApiManager.setFirebaseUser(userCredential?.user);
       }
       return userCredential == null
@@ -266,5 +267,9 @@ class FirebaseAuthManager extends AuthManager
       );
       return null;
     }
+  }
+
+  bool isUserAdmin() {
+    return currentUserEmail == 'vinicius.minozzi@pumpapp.com.br';
   }
 }

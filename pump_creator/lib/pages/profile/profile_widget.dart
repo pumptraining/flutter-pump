@@ -875,7 +875,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                             logFirebaseEvent('Container_navigate_to');
 
                             Share.share(
-                                'https://https://pump-personal-trainer.webflow.io/');
+                                'https://pump-personal-trainer.webflow.io/');
                           },
                           child: Container(
                             width: double.infinity,

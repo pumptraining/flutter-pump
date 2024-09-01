@@ -1,20 +1,22 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_flow/common/utils.dart';
 import 'package:flutter_flow/flutter_flow_model.dart';
 import 'package:flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter_flow/flutter_flow_widgets.dart';
-import 'package:flutter/material.dart';
 import 'package:pump_components/components/bottom_button_fixed/bottom_button_fixed_model.dart';
-import 'package:font_awesome_flutter/src/fa_icon.dart';
 import 'package:pump_components/components/bottom_gradient_component/bottom_gradient_component_widget.dart';
 
 class BottomButtonFixedWidget extends StatefulWidget {
-  const BottomButtonFixedWidget(
-      {Key? key, required this.buttonTitle, required this.onPressed, this.icon})
-      : super(key: key);
+  const BottomButtonFixedWidget({
+    Key? key,
+    required this.buttonTitle,
+    required this.onPressed,
+    this.icon,
+  }) : super(key: key);
 
   final String buttonTitle;
   final Future<void> Function() onPressed;
-  final FaIcon? icon;
+  final Icon? icon;
 
   @override
   // ignore: library_private_types_in_public_api
@@ -57,9 +59,8 @@ class _BottomButtonFixedState extends State<BottomButtonFixedWidget> {
               ? 16
               : Utils.getBottomSafeArea(context),
           child: FFButtonWidget(
-            showLoadingIndicator: true,
             onPressed: () async {
-              await widget.onPressed();
+              await widget.onPressed.call();
             },
             icon: widget.icon,
             text: widget.buttonTitle.toUpperCase(),

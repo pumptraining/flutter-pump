@@ -1,19 +1,15 @@
-import 'dart:io';
 import 'package:api_manager/api_requests/pump_api_calls.dart';
 import 'package:api_manager/auth/firebase_auth/auth_util.dart';
 import 'package:api_manager/common/loader_state.dart';
-import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_flow/common/utils.dart';
-import 'package:flutter_flow/flutter_flow_animations.dart';
 import 'package:flutter_flow/flutter_flow_icon_button.dart';
 import 'package:flutter_flow/flutter_flow_model.dart';
 import 'package:flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter_flow/flutter_flow_util.dart';
-import 'package:flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter_flow/nav/serialization_util.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pump_components/components/bottom_button_fixed/bottom_button_fixed_widget.dart';
 import 'package:pump_components/components/cell_list_workout/cell_list_workout_widget.dart';
@@ -21,9 +17,10 @@ import 'package:pump_components/components/header_component/header_component_wid
 import 'package:pump_components/components/profile_header_component/profile_header_component_widget.dart';
 import 'package:pump_components/components/pump_app_bar/sliver_pump_app_bar.dart';
 import 'package:pump_components/components/two_count_component/two_count_component_widget.dart';
+
 import 'workout_sheet_details_model.dart';
+
 export 'workout_sheet_details_model.dart';
-import 'package:flutter_stripe/flutter_stripe.dart';
 
 class WorkoutSheetDetailsWidget extends StatefulWidget {
   const WorkoutSheetDetailsWidget(
@@ -95,16 +92,11 @@ class _WorkoutSheetDetailsWidgetState extends State<WorkoutSheetDetailsWidget>
             colors: PaymentSheetAppearanceColors(
               primary: FlutterFlowTheme.of(context).primary,
             ),
-            shapes: PaymentSheetShape(
-              borderWidth: 4,
-              shadow: PaymentSheetShadowParams(color: Colors.red),
-            ),
             primaryButton: PaymentSheetPrimaryButtonAppearance(
               colors: PaymentSheetPrimaryButtonTheme(
                 light: PaymentSheetPrimaryButtonThemeColors(
-                  background: Color.fromARGB(255, 231, 235, 30),
-                  text: Color.fromARGB(255, 235, 92, 30),
-                  border: Color.fromARGB(255, 235, 92, 30),
+                  background: FlutterFlowTheme.of(context).primary,
+                  text: FlutterFlowTheme.of(context).primaryText,
                 ),
               ),
             ),
@@ -112,12 +104,12 @@ class _WorkoutSheetDetailsWidgetState extends State<WorkoutSheetDetailsWidget>
         ),
       );
 
-      displayPaymentSheet();
+      await displayPaymentSheet();
       // ignore: empty_catches
     } catch (e) {}
   }
 
-  displayPaymentSheet() async {
+  Future<void> displayPaymentSheet() async {
     try {
       await Stripe.instance.presentPaymentSheet().then((value) async {
         final response = await PumpGroup.userStartedWorkoutSheetCall(
@@ -160,6 +152,10 @@ class _WorkoutSheetDetailsWidgetState extends State<WorkoutSheetDetailsWidget>
                   _model.isPersonal
                       ? Container()
                       : BottomButtonFixedWidget(
+                          icon: Icon(
+                            Icons.arrow_forward_rounded,
+                            size: 22,
+                          ),
                           onPressed: () async {
                             HapticFeedback.mediumImpact();
 
@@ -295,14 +291,26 @@ class _WorkoutSheetDetailsWidgetState extends State<WorkoutSheetDetailsWidget>
                     Visibility(
                       visible: !_model.isPersonal,
                       child: ProfileHeaderComponentWidget(
-                          rightIcon: Icons.arrow_forward_ios,
-                          rightIconSize: 12,
-                          intent: 16,
-                          endIntent: 16,
-                          safeArea: false,
-                          subtitle: 'Criado por',
-                          imageUrl: _model.content['personalImageUrl'],
-                          name: _model.content['personalName']),
+                        rightIcon: Icons.arrow_forward_ios,
+                        rightIconSize: 12,
+                        intent: 16,
+                        endIntent: 16,
+                        safeArea: false,
+                        subtitle: 'Criado por',
+                        imageUrl: _model.content['personalImageUrl'],
+                        name: _model.content['personalName'],
+                        onTap: () {
+                          context.pushNamed(
+                            'PersonalProfile',
+                            queryParameters: {
+                              'forwardUri': serializeParam(
+                                'personal/details?personalId=${_model.content?['personalId']}&userId=$currentUserUid',
+                                ParamType.String,
+                              ),
+                            },
+                          );
+                        },
+                      ),
                     ),
                     SizedBox(
                       height: 8,
@@ -358,7 +366,9 @@ class _WorkoutSheetDetailsWidgetState extends State<WorkoutSheetDetailsWidget>
                                 onTap: (p0) async {
                                   final amount = _model.content?['amount'];
 
-                                  if (amount == null || _model.isPersonal) {
+                                  if (amount == null ||
+                                      _model.isPersonal ||
+                                      authManager.isUserAdmin()) {
                                     await context.pushNamed(
                                       'WorkoutDetails',
                                       queryParameters: {

@@ -1,0 +1,204 @@
+#---------------------------------- Fastlane env ----------------------------------#
+
+ENV["FASTLANE_USER"] = "v.minozzi@me.com"
+ENV["FASTLANE_PASSWORD"] = "@@Prk1991"
+ENV["FASTLANE_ITC_TEAM_ID"] = "H6R55LXW96"
+ENV["FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD"] = ""
+ENV["FASTLANE_XCODE_LIST_TIMEOUT"] = ""
+ENV["FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT"] = ""
+ENV['FASTLANE_ITC_TEAM_NAME'] = ""
+ENV["MATCH_PASSWORD"] = "@@Prk1991"
+ENV["MATCH_KEYCHAIN_PASSWORD"] = "@@Prk1991"
+ENV['SPACESHIP_AVOID_XCODE_API'] = '0'
+
+#----------------------------------------------------------------------------------#
+
+default_platform(:ios)
+xcversion(version: "~> 15.2")
+
+def proj
+  {
+      plist: "./Runner/Info.plist",
+      scheme: "Framework",
+      workspace: "Runner.xcworkspace",
+      xcodeproj: "Runner.xcodeproj",
+      bitcode: false
+  }
+end
+
+def fastlane
+  {
+      git_url: "https://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@github.com/vminozzi/Pump.git",
+      username: "v.minozzi@me.com",
+      branch: "Pump",
+      app_identifier: "br.com.pump",
+      app_watchapp_identifier: "br.com.pump.watchkitapp",
+      readonly: true,
+      fastlane_enterprise: 'fastlane_enterprise',
+      coverage_files_to_ignore: [
+        'AppDelegate.swift',
+        '*View.swift',
+        '*Cell.swift',
+        'Pods/*'
+      ]
+  }
+end
+
+#----------------------- Scan App ------------------------#
+
+lane :scan_app_local do
+
+  scan(
+      scheme: proj[:scheme],
+      workspace: proj[:workspace],
+      clean: true,
+      code_coverage: true,
+      output_directory: './fastlane/output',
+      device: "iPhone 11 Pro"
+  )
+
+end
+
+#----------------------- Certificates and provisionning profiles ------------------------#
+
+desc "Generate provisionning profiles"
+lane :match_appstore do
+
+  match(
+    git_branch: fastlane[:branch],
+    git_url: fastlane[:git_url],
+    username: fastlane[:username],
+    type: "appstore",
+    app_identifier: fastlane[:app_identifier],
+    readonly: fastlane[:readonly],
+    keychain_name: fastlane[:fastlane_enterprise],
+    template_name: "Pump"
+  )
+
+end
+
+lane :match_watchapp_appstore do
+
+  match(
+    git_branch: "PumpWatchApp",
+    git_url: fastlane[:git_url],
+    username: fastlane[:username],
+    type: "appstore",
+    app_identifier: fastlane[:app_watchapp_identifier],
+    readonly: fastlane[:readonly],
+    keychain_name: fastlane[:fastlane_enterprise],
+    template_name: "PumpWatchApp"
+  )
+
+end
+
+lane :match__watchappextension_appstore do
+
+  match(
+    git_branch: fastlane[:branch],
+    git_url: fastlane[:git_url],
+    username: fastlane[:username],
+    type: "appstore",
+    app_identifier: fastlane[:app_identifier],
+    readonly: fastlane[:readonly],
+    keychain_name: fastlane[:fastlane_enterprise],
+    template_name: "Pump"
+  )
+
+end
+
+lane :match_development do
+
+  match(
+    git_branch: fastlane[:branch],
+    git_url: fastlane[:git_url],
+    username: fastlane[:username],
+    type: "development",
+    app_identifier: fastlane[:app_identifier],
+    readonly: fastlane[:readonly],
+    keychain_name: fastlane[:fastlane_enterprise],
+    template_name: "Pump"
+  )
+
+end
+
+#---------------------------------- Access keychain ----------------------------------#
+
+def ensure_temp_keychain_local(name)
+  delete_keychain(
+      name: name
+  ) if File.exist? File.expand_path("~/Library/Keychains/#{name}-db")
+  create_keychain(
+      name: name,
+      password: 'temppassword',
+      unlock: true,
+      timeout: 0
+  )
+end
+  
+lane :ensure_keychain_local do
+  ensure_temp_keychain_local 'fastlane_enterprise'
+end
+  
+lane :security do
+  sh "security set-key-partition-list -S apple-tool:,apple: -s -k temppassword ~/Library/Keychains/fastlane_enterprise-db"
+end
+
+#----------------------- Upload Testflight ------------------------#
+
+lane :upload_testflight do |options|
+
+  match_appstore
+  security
+
+  ci_build_number = options[:ci_build_number]
+  increment_build_number(
+    build_number: "#{ci_build_number}",
+    xcodeproj: proj[:xcodeprojRelease]
+  )
+
+  gym(scheme: proj[:schemeRelease], 
+      workspace: proj[:workspace], 
+      include_bitcode: proj[:bitcode],
+      silent: true,
+      clean: true,
+      xcargs: "-UseModernBuildSystem=NO",
+      export_method: "app-store",
+      archive_path: "./fastlane/output/build/archive/",
+      output_directory: "./fastlane/output/iphoneos/Release/"
+  )
+  
+  apiKey = app_store_connect_api_key(
+      key_id: "XNQ6C4V3T4",
+      issuer_id: "69a6de80-cbf9-47e3-e053-5b8c7c11a4d1",
+      # key_filepath: "./AuthKey_4X7MZSR249.p8"
+      key_content: "-----BEGIN PRIVATE KEY-----\nMIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgawHFZLh5dn7BERT4\nq3n1DdtStuhkE7ZKkQmROkVbuX6gCgYIKoZIzj0DAQehRANCAAQFsPVVCBF8xQ44\nvAh/LpG3zXBco/3tp8G2saiNVkDg9NOV1s1Csomn0I/JsRaxlnTT8C1ONa0bsqzw\nKaMkpOC3\n-----END PRIVATE KEY-----",
+  )
+
+  upload_to_testflight(
+    skip_waiting_for_build_processing: true,
+    team_id: fastlane[:team_id],
+    api_key: apiKey
+  )
+
+end
+
+lane :download_dsyms_file do
+
+  apiKey = app_store_connect_api_key(
+      key_id: "4X7MZSR249",
+      issuer_id: "69a6de80-cbf9-47e3-e053-5b8c7c11a4d1",
+      key_filepath: "../fastlane/AuthKey_4X7MZSR249.p8"
+  )
+
+  
+  download_dsyms(
+  api_key: apiKey,
+  username: "v.minozzi@me.com",
+  app_identifier: fastlane[:app_identifier],
+  version: "1.4.0",
+  build_number: "20230313.01",
+  output_directory: "./"
+  )
+
+end

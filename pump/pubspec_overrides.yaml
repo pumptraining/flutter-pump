@@ -1,0 +1,14 @@
+# melos_managed_dependency_overrides: api_manager,flutter_flow,pump_activity,pump_components,pump_workout,pump_workout_sheet
+dependency_overrides:
+  api_manager:
+    path: ../modules/api_manager
+  flutter_flow:
+    path: ../modules/flutter_flow
+  pump_activity:
+    path: ../modules/pump_activity
+  pump_components:
+    path: ../modules/pump_components
+  pump_workout:
+    path: ../modules/pump_workout
+  pump_workout_sheet:
+    path: ../modules/pump_workout_sheet

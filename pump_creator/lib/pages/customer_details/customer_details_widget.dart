@@ -685,7 +685,7 @@ class _CustomerDetailsWidgetState extends State<CustomerDetailsWidget>
         message:
             "\nO aluno ainda não se cadastrou no App Pump para receber os treinos.\n\nQuer compartilhar o convite?",
         onButtonPressed: () async {
-          String text = 'https://https://pump-personal-trainer.webflow.io/';
+          String text = 'https://pump-personal-trainer.webflow.io/';
           String subject = 'Pump Training: Cadastre-se!';
 
           await Share.share('$subject\n$text');

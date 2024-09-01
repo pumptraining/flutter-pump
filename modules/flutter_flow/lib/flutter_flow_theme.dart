@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 const kThemeModeKey = '__theme_mode__';
@@ -14,9 +13,7 @@ abstract class FlutterFlowTheme {
   }
 
   static ThemeMode get themeMode {
-    return (_prefs?.getBool(kThemeModeKey) ?? false)
-        ? ThemeMode.dark
-        : ThemeMode.light;
+    return ThemeMode.dark;
   }
 
   static void saveThemeMode(ThemeMode mode) {
